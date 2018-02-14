@@ -73,3 +73,10 @@ $rit_brown: #513127;
 .profile-list {
 	list-style: none;
 }
+
+.favorited-classes-title {
+  background-color: $rit_orange;
+  a {
+    color: white;
+  }
+}
