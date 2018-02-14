@@ -53,3 +53,19 @@
 
 @include motion-ui-transitions;
 @include motion-ui-animations;
+
+$rit_orange: #F36E21;
+$rit_brown: #513127;
+
+.rit-orange {
+  background-color: $rit_orange;
+}
+
+.rit-brown {
+  background-color: $rit_brown;
+  color: white;
+}
+
+.nav {
+  background-color: $rit_orange;
+}
