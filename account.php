@@ -1,5 +1,51 @@
 <!doctype html>
 <html class="no-js" lang="en">
+<?php
+
+    $config = parse_ini_file('./config.ini');
+
+    // Try and connect to the database
+    $connection = mysqli_connect('localhost',$config['username'],$config['password'],$config['dbname']);
+
+    // If connection was not successful, handle the error
+    if($connection === false) {
+        // Handle error - notify administrator, log to a file, show an error screen, etc.
+    }
+
+    function db_connect() {
+        static $connection;
+
+        if(!isset($connection)) {
+            $config = parse_ini_file('../config.ini');
+            $connection = mysqli_connect('localhost',$config['username'],$config['password'],$config['dbname']);
+        }
+
+        // If connection was not successful, handle the error
+        if($connection === false) {
+            return mysqli_connect_error();
+        }
+        return $connection;
+    }
+
+    function db_query($query) {
+        // Connect to the database
+        $connection = db_connect();
+
+        // Query the database
+        $result = mysqli_query($connection,$query);
+
+        return $result;
+    }
+
+    function db_query($query) {
+        $connection = db_connect();
+
+        $result = mysqli_query($connection,$query);
+
+        return $result;
+    }
+?>
+
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -86,6 +132,17 @@
           <div class="tabs-panel is-active" id="panel1v">
             <table class="hover">
               <tr>
+                <!--For loop for query here, delete everything else-->
+                 <?php
+                    //get all the data for the classes the user is in
+                    // prepare and bind
+                    //$stmt = $conn->prepare("SELECT * FROM class where class_id = (SELECT class_id FROM student_to_class WHERE student_id = ?)");
+                    //$stmt->bind_param("s", $student_id);
+                    //$stmt->execute();
+
+
+
+                  ?>
                 <th>Course</th>
                 <th>Section</th>
                 <th>Time</th>
