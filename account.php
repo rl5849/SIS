@@ -36,14 +36,6 @@
 
         return $result;
     }
-
-    function db_query($query) {
-        $connection = db_connect();
-
-        $result = mysqli_query($connection,$query);
-
-        return $result;
-    }
 ?>
 
   <head>
