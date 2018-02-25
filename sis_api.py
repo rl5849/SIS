@@ -7,8 +7,6 @@ from json import dumps
 from flask import jsonify
 
 
-
-
 app = Flask(__name__)
 api = Api(app)
 
@@ -22,7 +20,7 @@ class Students(Resource):
     def get(self):
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='127.0.0.1',
+                             host='129.21.208.253',
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
