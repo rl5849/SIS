@@ -30,7 +30,6 @@ class Students(Resource):
         return jsonify(result)
 
 
-
 api.add_resource(Students, '/students')
 
 
