@@ -27,7 +27,7 @@ class Students(Resource):
 
         cur = db.cursor()
         query = cur.execute("select * from students")
-        result = {'students':[dict(zip(tuple (query.keys()) ,i)) for i in query.cursor]}
+        result = {'students':[dict(zip(tuple (query.keys()) ,i)) for i in query]}
         return jsonify(result)
 
 
