@@ -12,7 +12,7 @@
 	  <div class="top-bar-left">
 		<ul class="dropdown menu" data-dropdown-menu>
 		  <li class="menu-text">SIS++</li>
-		  <li><a href="course_list.html">Course List</a></li>
+		  <li><a href="course_list.php">Course List</a></li>
 		  <li>
 			<a href="#">Admin</a>
 			<ul class="menu vertical">
@@ -25,22 +25,22 @@
 	  </div>
 	  <div class="top-bar-right">
 		<ul class="dropdown menu" data-dropdown-menu>
-      <!--<form action="course_search.html" method="get">-->
+      <!--<form action="course_search.php" method="get">-->
         <ul class="menu">
           <li><input type="search" placeholder="Class Search"></li>
-          <li><button type="submit" class="button" formaction="course_search.html">Search</button></li> <!-- Search functionality here-->
+          <li><button type="submit" class="button" formaction="course_search.php">Search</button></li> <!-- Search functionality here-->
         </ul>
       <!--<form>-->
 			<li>
-				<a href="account.html">Welcome, Big boyyy</a> <!-- Name here -->
+				<a href="account.php">Welcome, Big boyyy</a> <!-- Name here -->
 			</li>
 			<li>
 				<a href="#"></a>
 				<ul class="menu vertical">
-				  <li><a href="account.html">Profile</a></li>
-				  <li><a href="account.html">Classes</a></li>
+				  <li><a href="account.php">Profile</a></li>
+				  <li><a href="account.php">Classes</a></li>
 				  <li><a href="https://www.linkedin.com/">LinkedIn</a></li>
-				  <li><a href="login.html">Logout</a></li> <!-- we need to make sure this actually logs them out-->
+				  <li><a href="login.php">Logout</a></li> <!-- we need to make sure this actually logs them out-->
 				</ul>
 			</li>
 		</ul>
@@ -102,7 +102,7 @@
               </tr>
               
               <tr>
-                <td><a href="course_view.html">SWEN-344</a></td>
+                <td><a href="course_view.php">SWEN-344</a></td>
                 <td>01</td>
                 <td>10:10 am - 11:05 am</td>
                 <td>Danny Boye</td>
