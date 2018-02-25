@@ -21,7 +21,7 @@ class Students(Resource):
 
     def get(self):
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
-                             password=self.config.get('database', 'password'),
+                             passwd=self.config.get('database', 'password'),
                              host='127.0.0.1',
                              db=self.config.get('database', 'dbname'))
 
