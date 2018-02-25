@@ -30,6 +30,7 @@ class Students(Resource):
         #result = {'students':[dict(zip(tuple (query.keys()) ,i)) for i in query]}
         return jsonify(query)
 
+class 
 
 api.add_resource(Students, '/students')
 
