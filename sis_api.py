@@ -23,7 +23,7 @@ class Students(Resource):
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              password=self.config.get('database', 'password'),
                              host='127.0.0.1',
-                             database=self.config.get('database', 'dbname'))
+                             db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
         query = cur.execute("select * from students")
