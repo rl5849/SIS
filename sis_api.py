@@ -6,9 +6,6 @@ from sqlalchemy import create_engine
 from json import dumps
 from flask.ext.jsonpify import jsonify
 
-config = ConfigParser.ConfigParser()
-config.read('./API/config.ini')
-
 
 
 
@@ -18,11 +15,15 @@ api = Api(app)
 
 
 class Students(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+
+
     def get(self):
-        db = MySQLdb.connect(user=config.get('database', 'username'),
-                             password=config.get('database', 'password'),
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             password=self.config.get('database', 'password'),
                              host='127.0.0.1',
-                             database=config.get('database', 'dbname'))
+                             database=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
         query = cur.execute("select * from students")
@@ -34,4 +35,4 @@ api.add_resource(Students, '/students')
 
 
 if __name__ == '__main__':
-     app.run(port='5002')
+     app.run(port=5002)
