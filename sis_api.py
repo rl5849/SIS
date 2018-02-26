@@ -21,9 +21,12 @@ class Students(Resource):
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
-        query = cur.execute("select * from students")
-        #result = {'students':[dict(zip(tuple (query.keys()) ,i)) for i in query]}
-        return jsonify(query)
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT * FROM students")
+        query = cur.fetchall()
+        result = {'students': query}
+        return jsonify(result)
         
 api.add_resource(Students, '/students')
 
