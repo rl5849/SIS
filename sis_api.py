@@ -9,7 +9,7 @@ from flask import jsonify
 
 app = Flask(__name__)
 api = Api(app)
-
+# TODO REMOVE
 class Students(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
@@ -30,6 +30,23 @@ class Students(Resource):
         
 api.add_resource(Students, '/students')
 
+"""
+Gets a list of all classes for a student and a semester
+"""
+class GetClasses(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="error",
+                      )
+
+api.add_resource(GetClasses, '/GetClasses')
+
+"""
+Gets all information about a student
+"""
 class GetStudentInformation(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
@@ -45,5 +62,210 @@ class GetStudentInformation(Resource):
                       )
 
 api.add_resource(GetStudentInformation, '/GetStudentInformation')
+
+"""
+Gets all favorited classes for the student
+"""
+class GetFavoritedClasses(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="error",
+                      )
+
+api.add_resource(GetFavoritedClasses, '/GetFavoritedClasses')
+
+"""
+Get all information about a user
+"""
+#TODO: Determine if this is useful
+class GetUser(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        student_id="123456789",
+                        student_name="Betty White",
+                        date_of_birth="Jan 17, 1922",
+                        profile_pic="https://i0.wp.com/radaronline.com/wp-content/uploads/2017/05/betty-white-secret-suitor-split-pp.jpg?fit=640%2C420&ssl=1",
+                        gender="F",
+                        graduation_year="2020",
+                      )
+
+api.add_resource(GetUser, '/GetUser')
+
+"""
+Gets all courses in a given semester given other conditions
+"""
+class GetCourses(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="error",
+                      )
+
+api.add_resource(GetCourses, '/GetCourses')
+
+"""
+Gets all information about a course
+"""
+class GetCourseInfo(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        course_id="123456789",
+                        course_name="Web Engineering",
+                        course_description="This is a course description",
+                      )
+
+api.add_resource(GetCourseInfo, '/GetCourseInfo')
+
+"""
+Enrolls a student in a course
+"""
+class EnrollStudent(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="success",
+                      )
+
+api.add_resource(EnrollStudent, '/EnrollStudent')
+
+"""
+Removes a student from a course
+"""
+class DropStudent(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="success",
+                      )
+
+api.add_resource(DropStudent, '/DropStudent')
+
+"""
+Adds a class to a student's list of favorite classes
+"""
+class FavoriteClass(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="success",
+                      )
+
+api.add_resource(FavoriteClass, '/FavoriteClass')
+
+"""
+Removes a class to a student's list of favorite classes
+"""
+class UnfavoriteClass(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="success",
+                      )
+
+api.add_resource(UnfavoriteClass, '/UnfavoriteClass')
+
+"""
+Gets a grade for a class and a student
+"""
+class GetGrade(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        grade="A",
+                      )
+
+api.add_resource(GetGrade, '/GetGrade')
+
+"""
+Modifies the attributes of a class
+"""
+class ModClass(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="success",
+                      )
+
+api.add_resource(ModClass, '/ModClass')
+
+"""
+Modifies the attributes of a course
+"""
+class ModCourse(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="success",
+                      )
+
+api.add_resource(ModCourse, '/ModCourse')
+
+"""
+Modifies the attributes of a professor
+"""
+class ModProfessor(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="success",
+                      )
+
+api.add_resource(ModProfessor, '/ModProfessor')
+
+"""
+Modifies the attributes of a profile
+"""
+class ModProfile(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="success",
+                      )
+
+api.add_resource(ModProfile, '/ModProfile')
+
+"""
+Requests approval of an admin for a new user, which has requested to be flagged as a professor
+"""
+class RequestProfessorApproval(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+    
+    def get(self):
+        return jsonify(
+                        message="success",
+                      )
+
+api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
+
 if __name__ == '__main__':
      app.run(port=5002)
