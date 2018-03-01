@@ -35,7 +35,7 @@ class student_class(Resource):
                     "WHERE student_to_class.student_id = %s",
                     [student_id])
         query = cur.fetchall()
-        result = {'students_classes': [dict(zip(["class_id", "name", "room_number", "capacity", "num_enrolled", "time", "course_id", "rofessor_id", "student_id ", "class_id"], i)) for i in query]}
+        result = {'students_classes': [dict(zip(["class_id", "name", "room_number", "capacity", "num_enrolled", "time", "course_id", "professor_id", "student_id ", "class_id"], i)) for i in query]}
 
         return jsonify(result)
         
@@ -110,6 +110,10 @@ Gets all information about a student
 class GetStudentInformation(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
+
+
+
+
     
     def get(self):
         return jsonify(
@@ -144,16 +148,35 @@ Get all information about a user
 class GetUser(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
-    
+
     def get(self):
-        return jsonify(
-                        student_id="123456789",
-                        student_name="Betty White",
-                        date_of_birth="Jan 17, 1922",
-                        profile_pic="https://i0.wp.com/radaronline.com/wp-content/uploads/2017/05/betty-white-secret-suitor-split-pp.jpg?fit=640%2C420&ssl=1",
-                        gender="F",
-                        graduation_year="2020",
-                      )
+        # Get student id
+        parser = reqparse.RequestParser()
+        parser.add_argument('student_id', type=int)
+        student_id = parser.parse_args().get("student_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host='129.21.208.253',
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT * FROM students "
+                    "WHERE student_id = %s",
+                    [student_id])
+        query = cur.fetchall()
+        #Get variable names
+        cur.execute("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'students'")
+
+        column_names = cur.fetchall()
+        column_names_clean = [x[0] for x in column_names]
+
+        result = {'student_info': [dict(zip(
+            column_names_clean, i)) for i in query]}
+
+        return jsonify(result)
 
 api.add_resource(GetUser, '/GetUser')
 
