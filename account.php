@@ -61,8 +61,8 @@
 				$student_info = json_decode($student_info, true);
 			?>
 		  <li><?php echo ($student_info["student_info"][0]["student_name"])?></li> <!---->
-		  <li></li>
-		  <li></li>
+		  <li><?php echo ($student_info["student_info"][0]["date_of_birth"])?></li>
+		  <li><?php echo ($student_info["student_info"][0]["graduation_year"])?></li>
         </ul>
       </div>
       <div class="large-2 medium-2 small-3 cell">
