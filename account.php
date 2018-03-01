@@ -62,7 +62,7 @@
       </div>
       <div class="large-2 medium-2 small-3 cell">
         <ul class="profile-list">
-          <p><input type="submit" class="button expanded rit-orange" value="LinkedIn"></input></p>
+          <p><input type="submit" href="https://www.linkedin.com"class="button expanded rit-orange" value="LinkedIn"></input></p>
           <li>GPA</li>
         </ul>
       </div>
@@ -86,57 +86,31 @@
           <div class="tabs-panel is-active" id="panel1v">
             <table class="hover">
               <tr>
-                <!--For loop for query here, delete everything else-->
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+              </tr> <!--For loop for query here, delete everything else-->
                  <?php
                     //get all the data for the classes the user is in
-                    // prepare and bind
-                    //$stmt = $conn->prepare("SELECT * FROM class where class_id = (SELECT class_id FROM student_to_class WHERE student_id = ?)");
-                    //$stmt->bind_param("s", $student_id);
-                    //$stmt->execute();
-                  ?>
-                <th>Course</th>
-                <th>Section</th>
-                <th>Time</th>
-                <th>Instructor</th>
-                <th>Room</th>
-              </tr>
-              
-              <tr>
-                <td><a href="course_view.html">SWEN-344</a></td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              
+//                 $response = file_get_contents('http://127.0.0.1/student_class?student_id=1');
+//                 $response = json_decode($response);
+//
+//                 //For each class object
+//                 foreach ($response as $class_enrolled){
+//                     echo("<tr>");
+//                     foreach($class_enrolled as $class_name=>$value) {
+//                         echo("<td><a href=\"course_view.html\">SWEN-344</a></td>");
+//                         echo("<td>01</td>");
+//                         echo("<td>10:10 am - 11:05 am</td>");
+//                         echo("<td>Danny Boye</td>");
+//                         echo("<td>GOL 1520</td>");
+//
+//                     }
+//                     echo("<tr>");
+//                 }
+                 ?>
             <table>
           </div>
           <div class="tabs-panel" id="panel2v">
