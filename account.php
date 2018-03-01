@@ -55,14 +55,13 @@
       </div>
       <div class="large-4 medium-4 small-4 cell">
         <ul class="profile-list">
-			<?php echo "<script>alert('php works');</script>"?>
 			<?php
 				$student_id = 1;
 				$student_info = file_get_contents("localhost:5002/GetUser?student_id=".$student_id);
 				$student_info = json_decode($student_info, True)["student_info"];
-				
+				echo "<script>alert('php works');</script>"
 			?>
-		  <li><?php echo $student_info["student_name"]?></li>
+		  <li><?php echo $student_info->student_name?></li>
 		  <li><?php echo $student_info["date_of_birth"]?></li>
 		  <li><?php echo $student_info["graduation_year"]?></li>
         </ul>
