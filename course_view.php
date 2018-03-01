@@ -47,7 +47,7 @@
     <?php
 				$course_id = 1;
 				$course_info = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=".$student_id);
-				$course_info = json_decode($student_info, true);
+				$course_info = json_decode($course_info, true);
       ?>
 
 	</div>
@@ -57,7 +57,7 @@
         
         <div class="large-4 medium-4 small-4 cell">
           <ul class="profile-list">
-            <li><?php echo ($student_info["course_info"][0]["course_name"])?></li>
+            <li><?php echo ($course_info["course_info"][0]["course_name"])?></li>
             <li>SWEN-344</li>
           </ul>
         </div>
