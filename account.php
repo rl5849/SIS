@@ -57,7 +57,7 @@
         <ul class="profile-list">
 			<?php
 				$student_id = 1;
-				$student_info = file_get_contents("localhost:5002/GetUser?student_id=".$student_id);
+				$student_info = file_get_contents("http://127.0.0.1:5002/GetUser?student_id=".$student_id);
 				$student_info = json_decode($student_info, True)["student_info"];
 				echo "<script>alert('".$student_info."');</script>"
 			?>
