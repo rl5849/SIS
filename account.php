@@ -61,7 +61,7 @@
 				$student_info = json_decode($student_info, True);
 				echo "<script>alert('".$student_info."');</script>"
 			?>
-		  <li><?php echo $student_info->student_name?></li>
+		  <li><?php echo $student_info->student_info->student_name?></li>
 		  <li><?php echo $student_info["date_of_birth"]?></li>
 		  <li><?php echo $student_info["graduation_year"]?></li>
         </ul>
