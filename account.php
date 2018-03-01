@@ -58,7 +58,7 @@
 			<?php
 				$student_id = 1;
 				$student_info = file_get_contents("http://127.0.0.1:5002/GetUser?student_id=".$student_id);
-				$student_info = json_decode($student_info, True);
+				$student_info = json_decode($student_info);
 				echo "<script>alert('".$student_info."');</script>"
 			?>
 		  <li><?php echo $student_info->student_info->student_name?></li>
