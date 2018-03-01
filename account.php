@@ -55,9 +55,15 @@
       </div>
       <div class="large-4 medium-4 small-4 cell">
         <ul class="profile-list">
-          <li>Name</li>
-          <li>Major</li>
-          <li>Expected Grad. Term</li>
+			<?php
+				$student_id = 1;
+				$student_info = file_get_contents("https://localhost:5002/GetUser?student_id=".$student_id);
+				$student_info = json_decode($student_info, True)["student_info"];
+				
+			?>
+		  <li><?php echo $student_info["student_name"]?></li>
+		  <li><?php echo $student_info["date_of_birth"]?></li>
+		  <li><?php echo $student_info["graduation_year"]?></li>
         </ul>
       </div>
       <div class="large-2 medium-2 small-3 cell">
