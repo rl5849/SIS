@@ -55,6 +55,7 @@
       </div>
       <div class="large-4 medium-4 small-4 cell">
         <ul class="profile-list">
+			<?php echo "<script>alert('php works');</script>"?>
 			<?php
 				$student_id = 1;
 				$student_info = file_get_contents("localhost:5002/GetUser?student_id=".$student_id);
