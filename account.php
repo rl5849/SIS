@@ -59,7 +59,7 @@
 				$student_id = 1;
 				$student_info = file_get_contents("localhost:5002/GetUser?student_id=".$student_id);
 				$student_info = json_decode($student_info, True)["student_info"];
-				echo "<script>alert('php works');</script>"
+				echo "<script>alert('".$student_info."');</script>"
 			?>
 		  <li><?php echo $student_info->student_name?></li>
 		  <li><?php echo $student_info["date_of_birth"]?></li>
