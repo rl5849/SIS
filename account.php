@@ -10,10 +10,8 @@
   </head>
   <body>
 	<div w3-include-html="nav.php"></div>
-	
-	<div class="grid-container">
   
-    <!-- Load Nav Bar -->
+  <!-- Load Nav Bar -->
     <div id="nav-placeholder"></div>
 
     <script>
@@ -22,6 +20,8 @@
     });
     </script>
     <!-- End load Nave Bar -->
+	
+	<div class="grid-container">
   
     <div class="grid-x grid-padding-x" style="padding-top: 2%;">
       <div class="large-12 medium-12 small-12 columns">
