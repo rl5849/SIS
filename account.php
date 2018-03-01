@@ -12,7 +12,7 @@
 	  <div class="top-bar-left">
 		<ul class="dropdown menu" data-dropdown-menu>
 		  <li class="menu-text">SIS++</li>
-		  <li><a href="course_list.html">Course List</a></li>
+		  <li><a href="course_list.php">Course List</a></li>
 		  <li>
 			<a href="#">Admin</a>
 			<ul class="menu vertical">
@@ -25,22 +25,22 @@
 	  </div>
 	  <div class="top-bar-right">
 		<ul class="dropdown menu" data-dropdown-menu>
-      <!--<form action="course_search.html" method="get">-->
+      <!--<form action="course_search.php" method="get">-->
         <ul class="menu">
           <li><input type="search" placeholder="Class Search"></li>
-          <li><button type="submit" class="button" formaction="course_search.html">Search</button></li> <!-- Search functionality here-->
+          <li><button type="submit" class="button" formaction="course_search.php">Search</button></li> <!-- Search functionality here-->
         </ul>
       <!--<form>-->
 			<li>
-				<a href="account.html">Welcome, Big boyyy</a> <!-- Name here -->
+				<a href="account.php">Welcome, Big boyyy</a> <!-- Name here -->
 			</li>
 			<li>
 				<a href="#"></a>
 				<ul class="menu vertical">
-				  <li><a href="account.html">Profile</a></li>
-				  <li><a href="account.html">Classes</a></li>
+				  <li><a href="account.php">Profile</a></li>
+				  <li><a href="account.php">Classes</a></li>
 				  <li><a href="https://www.linkedin.com/">LinkedIn</a></li>
-				  <li><a href="login.html">Logout</a></li> <!-- we need to make sure this actually logs them out-->
+				  <li><a href="login.php">Logout</a></li> <!-- we need to make sure this actually logs them out-->
 				</ul>
 			</li>
 		</ul>
@@ -86,31 +86,57 @@
           <div class="tabs-panel is-active" id="panel1v">
             <table class="hover">
               <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
-              </tr> <!--For loop for query here, delete everything else-->
+                <!--For loop for query here, delete everything else-->
                  <?php
                     //get all the data for the classes the user is in
-//                 $response = file_get_contents('http://127.0.0.1/student_class?student_id=1');
-//                 $response = json_decode($response);
-//
-//                 //For each class object
-//                 foreach ($response as $class_enrolled){
-//                     echo("<tr>");
-//                     foreach($class_enrolled as $class_name=>$value) {
-//                         echo("<td><a href=\"course_view.html\">SWEN-344</a></td>");
-//                         echo("<td>01</td>");
-//                         echo("<td>10:10 am - 11:05 am</td>");
-//                         echo("<td>Danny Boye</td>");
-//                         echo("<td>GOL 1520</td>");
-//
-//                     }
-//                     echo("<tr>");
-//                 }
-                 ?>
+                    // prepare and bind
+                    //$stmt = $conn->prepare("SELECT * FROM class where class_id = (SELECT class_id FROM student_to_class WHERE student_id = ?)");
+                    //$stmt->bind_param("s", $student_id);
+                    //$stmt->execute();
+                  ?>
+                <th>Course</th>
+                <th>Section</th>
+                <th>Time</th>
+                <th>Instructor</th>
+                <th>Room</th>
+              </tr>
+              
+              <tr>
+                <td><a href="course_view.php">SWEN-344</a></td>
+                <td>01</td>
+                <td>10:10 am - 11:05 am</td>
+                <td>Danny Boye</td>
+                <td>GOL 1520</td>
+              </tr>
+              <tr>
+                <td>SWEN-344</td>
+                <td>01</td>
+                <td>10:10 am - 11:05 am</td>
+                <td>Danny Boye</td>
+                <td>GOL 1520</td>
+              </tr>
+              <tr>
+                <td>SWEN-344</td>
+                <td>01</td>
+                <td>10:10 am - 11:05 am</td>
+                <td>Danny Boye</td>
+                <td>GOL 1520</td>
+              </tr>
+              <tr>
+                <td>SWEN-344</td>
+                <td>01</td>
+                <td>10:10 am - 11:05 am</td>
+                <td>Danny Boye</td>
+                <td>GOL 1520</td>
+              </tr>
+              <tr>
+                <td>SWEN-344</td>
+                <td>01</td>
+                <td>10:10 am - 11:05 am</td>
+                <td>Danny Boye</td>
+                <td>GOL 1520</td>
+              </tr>
+              
             <table>
           </div>
           <div class="tabs-panel" id="panel2v">
