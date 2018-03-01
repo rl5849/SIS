@@ -1,7 +1,9 @@
 <div class="top-bar">
-
-
-
+	<?php
+		$user_id = 1;
+		$user_info = file_get_contents("http://127.0.0.1:5002/GetUser?student_id=".$user_id);
+		$user_info = json_decode($student_info, true);
+	?>
   <div class="top-bar-left">
 	<ul class="dropdown menu" data-dropdown-menu>
 	  <li class="menu-text">SIS++</li>
@@ -25,7 +27,7 @@
 	</ul>
   <!--<form>-->
 		<li>
-			<a href="account.php">Welcome, Big boyyy</a> <!-- Name here -->
+			<a href="account.php">Welcome, <?php echo ($user_info["student_info"][0]["student_name"])?></a> <!-- Name here -->
 		</li>
 		<li>
 			<a href="#"></a>
