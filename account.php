@@ -59,11 +59,12 @@
 				$student_id = 1;
 				$student_info = file_get_contents("http://127.0.0.1:5002/GetUser?student_id=".$student_id);
 				$student_info = json_decode($student_info, true);
-				//echo "<script>alert('".$student_info."');</script>";
 			?>
-		  <li><?php echo $student_info->student_info[0]->student_name?></li>
-		  <li><?php echo $student_info["date_of_birth"]?></li>
-		  <li><?php echo $student_info["graduation_year"]?></li>
+		  <li><?php echo $student_info->student_info[0]->student_name
+				echo "<script>alert('".$student_info->student_info[0]->student_name."');</script>";
+				?></li>
+		  <li><?php //echo $student_info["date_of_birth"]?></li>
+		  <li><?php //echo $student_info["graduation_year"]?></li>
         </ul>
       </div>
       <div class="large-2 medium-2 small-3 cell">
