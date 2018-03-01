@@ -39,15 +39,19 @@
         <div class="large-6 medium-6 small-5 cell">
           <ul class="profile-list">
             <li>GOL-1520</li>
-            <li>10:10 am - 11:05am</li>
+            <li>10:10 am - 11:05am</li> <!-- needs getclassinfo -->
             <li>Krutzy Boyy</li>
           </ul>
         </div>
         <div class="large-2 medium-2 small-3 cell">
           <ul class="profile-list">
-            <li>          
-              <p><input type="submit" class="button expanded rit-orange" value="Favorite"></input></p>
-              <p><input type="submit" class="button expanded rit-orange" value="Enroll/Drop"></input></p>
+            <li> 
+            <form action="http://127.0.0.1:5002/FavoriteClass" method="get">         
+              <p><input type="submit" class="button expanded rit-orange" value="Favorite"></input></p> <!-- make this a post? isnt necessary for r1-->
+            </form>                                                                                    <!-- might need to specify student id -->
+            <form action="http://127.0.0.1:5002/EnrollStudent" method="get">   
+              <p><input type="submit" class="button expanded rit-orange" value="Enroll"></input></p>
+            </form>
             </li>
           </ul>
         </div>
