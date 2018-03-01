@@ -60,7 +60,7 @@
 				$student_info = file_get_contents("http://127.0.0.1:5002/GetUser?student_id=".$student_id);
 				$student_info = json_decode($student_info, true);
 			?>
-		  <li><?php echo ($student_info[0])?></li> <!---->
+		  <li><?php echo ($student_info)?></li> <!---->
 		  <li></li>
 		  <li></li>
         </ul>
