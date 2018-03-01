@@ -6,43 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIS - Course List</title>
     <link rel="stylesheet" href="css/app.css">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
   <body>
-	<div class="top-bar">
-	  <div class="top-bar-left">
-		<ul class="dropdown menu" data-dropdown-menu>
-		  <li class="menu-text">SIS++</li>
-		  <li><a href="course_list.php">Course List</a></li>
-		  <li>
-			<a href="#">Admin</a>
-			<ul class="menu vertical">
-			  <li><a href="#">Admin Action 1</a></li>
-			  <li><a href="#">Admin Action 2</a></li>
-			  <li><a href="#">Admin Action 3</a></li>
-			</ul>
-		  </li>
-		</ul>
-	  </div>
-	  <div class="top-bar-right">
-		<ul class="dropdown menu" data-dropdown-menu>
-			<ul class="menu">
-			  <li><input type="search" placeholder="Class Search"></li>
-			  <li><button type="button" class="button">Search</button></li>
-			</ul>
-			<li>
-				<a href="account.php">Welcome, Big boyyy</a>
-			</li>
-			<li>
-				<a href="#"></a>
-				<ul class="menu vertical">
-				  <li><a href="account.php">Profile</a></li>
-				  <li><a href="account.php">Classes</a></li>
-				  <li><a href="https://www.linkedin.com/">LinkedIn</a></li>
-				  <li><a href="login.php">Logout</a></li> <!-- we need to make sure this actually logs them out-->
-				</ul>
-			</li>
-		</ul>
-    </div>
+    <!-- Load Nav Bar -->
+    <div id="nav-placeholder"></div>
+
+    <script>
+    $(function(){
+      $("#nav-placeholder").load("nav.php");
+    });
+    </script>
+    <!-- End load Nave Bar -->
     
     <?php
 				$course_id = 1;
