@@ -37,7 +37,7 @@
                   <th>Room</th>
               </tr>
               <?php
-                $courses = file_get_contents("http://127.0.0.1:5002/GetCourses");
+                $courses = file_get_contents("http://127.0.0.1:5002/GetCourses"); //getclasses?
                 $courses = json_decode($courses, true);
                 $courses = $courses["courses"];
 

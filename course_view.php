@@ -46,7 +46,7 @@
         <div class="large-2 medium-2 small-3 cell">
           <ul class="profile-list">
             <li>          
-              <p><input type="submit" class="button expanded rit-orange" value="Favorite"></input></p> <!-- make this a post? isnt necessary for r1-->
+              <p><input type="submit" class="button expanded rit-orange" value="Favorite"></input></p> <!-- make this a post? just gonna leave it blank for now-->
               <p><input type="submit" class="button expanded rit-orange" value="Enroll"></input></p>
             </li>
           </ul>
@@ -64,7 +64,7 @@
             <div class="card-section">
               <ul class="profile-list">
                 <li>3 Credit Hours</li>
-                <li>Enrolled: 40/40</li>
+                <li>Enrolled: 40/40</li> <!-- needs getPrereqs -->
                 <li>Wait List: 3/10</li>
                 <li>...</li>
               </ul>
@@ -77,7 +77,7 @@
               Description
             </div>
             <div class="card-section">
-              This class is very good, yes!
+              <?php echo ($course_info["course_info"][0]["course_description"])?>
             </div>
           </div>
         </div>
