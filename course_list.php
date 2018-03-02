@@ -44,7 +44,7 @@
                 foreach ($courses as $course){
               ?>
               <tr>
-                <td><a href="course_view.php/CourseId=<?php echo $course["course_id"];?>"><?php echo $course["course_name"];?></a></td>
+                <td><a href="course_view.php?course_id=<?php echo $course["course_id"];?>"><?php echo $course["course_name"];?></a></td>
                 <td>01</td>
                 <td>Varies</td>
                 <td>Varies</td>

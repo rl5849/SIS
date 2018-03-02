@@ -20,7 +20,7 @@
     <!-- End load Nave Bar -->
     
     <?php
-				$course_id = 1;
+				$course_id = $_GET["course_id"];
 				$course_info = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=".$course_id);
 				$course_info = json_decode($course_info, true);
       ?>
