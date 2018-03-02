@@ -27,54 +27,32 @@
           <li><input type="search" placeholder="Enter a course ID, Instructor, Time, etc. (ex. SWEN-344)" style="width:200%"></li>
           <li><button type="button" class="button" style="margin-left:267%;">Search</button></li>
         </ul>
-        
-        <table class="hover" style="margin-top:2%;">
-          <tr>
-            <th>Course</th>
-            <th>Section</th>
-            <th>Time</th>
-            <th>Instructor</th>
-            <th>Room</th>
-          </tr>
-          
-          
-          <tr>
-            
-            <td><a href="course_view.php">SWEN-344</a></td>
-            <td>01</td>
-            <td>10:10 am - 11:05 am</td>
-            <td>Danny Boye</td>
-            <td>GOL 1520</td>
-          </tr>
-          
-          <tr>
-            <td>SWEN-344</td>
-            <td>01</td>
-            <td>10:10 am - 11:05 am</td>
-            <td>Danny Boye</td>
-            <td>GOL 1520</td>
-          </tr>
-          <tr>
-            <td>SWEN-344</td>
-            <td>01</td>
-            <td>10:10 am - 11:05 am</td>
-            <td>Danny Boye</td>
-            <td>GOL 1520</td>
-          </tr>
-          <tr>
-            <td>SWEN-344</td>
-            <td>01</td>
-            <td>10:10 am - 11:05 am</td>
-            <td>Danny Boye</td>
-            <td>GOL 1520</td>
-          </tr>
-          <tr>
-            <td>SWEN-344</td>
-            <td>01</td>
-            <td>10:10 am - 11:05 am</td>
-            <td>Danny Boye</td>
-            <td>GOL 1520</td>
-          </tr>
+
+          <table class="hover" style="margin-top:2%;">
+              <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+              </tr>
+              <?php
+                $courses = file_get_contents("http://127.0.0.1:5002/GetCourses");
+                $courses = json_decode($courses, true);
+                $courses = $courses["courses"];
+
+                foreach ($courses as $course){
+              ?>
+              <tr>
+                <td><a href="course_view.php/CourseId=<?php echo $course["course_id"];?>"><?php echo $course["course_name"];?></a></td>
+                <td>01</td>
+                <td>Varies</td>
+                <td>Varies</td>
+                <td>GOL 1520</td>
+              </tr>
+
+              <?php } ?>
+
         </table>
       </div>
     </div>

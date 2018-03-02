@@ -41,11 +41,12 @@
               <tr>
                 <!--For loop for query here, delete everything else-->
                  <?php
-                    //get all the data for the classes the user is in
-                    // prepare and bind
-                    //$stmt = $conn->prepare("SELECT * FROM class where class_id = (SELECT class_id FROM student_to_class WHERE student_id = ?)");
-                    //$stmt->bind_param("s", $student_id);
-                    //$stmt->execute();
+
+
+
+
+
+
                   ?>
                 <th>Course</th>
                 <th>Section</th>
@@ -55,7 +56,7 @@
               </tr>
               
               <tr>
-                <td><a href="course_view.php">SWEN-344</a></td>
+                <td><a href="course_view.html">SWEN-344</a></td>
                 <td>01</td>
                 <td>10:10 am - 11:05 am</td>
                 <td>Danny Boye</td>
