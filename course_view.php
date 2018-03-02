@@ -45,13 +45,9 @@
         </div>
         <div class="large-2 medium-2 small-3 cell">
           <ul class="profile-list">
-            <li> 
-            <form action="http://127.0.0.1:5002/FavoriteClass" method="get">         
+            <li>          
               <p><input type="submit" class="button expanded rit-orange" value="Favorite"></input></p> <!-- make this a post? isnt necessary for r1-->
-            </form>                                                                                    <!-- might need to specify student id -->
-            <form action="http://127.0.0.1:5002/EnrollStudent" method="get">   
               <p><input type="submit" class="button expanded rit-orange" value="Enroll"></input></p>
-            </form>
             </li>
           </ul>
         </div>
