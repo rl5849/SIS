@@ -54,8 +54,7 @@
 @include motion-ui-transitions;
 @include motion-ui-animations;
 
-$rit_orange: #F36E21;
-$rit_brown: #513127;
+
 
 .rit-orange {
   background-color: $rit_orange;
@@ -76,7 +75,23 @@ $rit_brown: #513127;
 
 .favorited-classes-title {
   background-color: $rit_orange;
+  color: $rit_brown;
   a {
     color: white;
+    &:hover {
+      background-color: darken($rit_orange, 5);
+      color: $rit_brown;
+    }
   }
 }
+
+
+
+
+
+
+
+
+
+
+

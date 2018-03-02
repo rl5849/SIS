@@ -98,6 +98,12 @@ $global-prototype-breakpoints: false;
 $global-color-pick-contrast-tolerance: 0;
 $print-transparent-backgrounds: true;
 
+// User-defined values
+$rit_orange: #F36E21;
+$rit_orange_light: #FF853C;
+$rit_orange_very_light: #FF9657;
+$rit_brown: #513127;
+
 @include add-foundation-colors;
 
 // 2. Breakpoints
@@ -778,7 +784,7 @@ $table-head-background: smart-scale($table-background, $table-color-scale / 2);
 $table-head-row-hover: darken($table-head-background, $table-hover-scale);
 $table-foot-background: smart-scale($table-background, $table-color-scale);
 $table-foot-row-hover: darken($table-foot-background, $table-hover-scale);
-$table-head-font-color: $body-font-color;
+$table-head-font-color: $rit_brown;
 $table-foot-font-color: $body-font-color;
 $show-header-for-stacked: false;
 $table-stack-breakpoint: medium;
@@ -788,11 +794,11 @@ $table-stack-breakpoint: medium;
 
 $tab-margin: 0;
 $tab-background: $white;
-$tab-color: $primary-color;
-$tab-background-active: $light-gray;
-$tab-active-color: $primary-color;
+$tab-color: $rit_brown;
+$tab-background-active: $rit_orange_very_light;
+$tab-active-color: $rit_brown;
 $tab-item-font-size: rem-calc(12);
-$tab-item-background-hover: $white;
+$tab-item-background-hover: $rit_orange_very_light;
 $tab-item-padding: 1.25rem 1.5rem;
 $tab-expand-max: 6;
 $tab-content-background: $white;
