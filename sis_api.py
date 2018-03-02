@@ -144,15 +144,49 @@ api.add_resource(GetUser, '/GetUser')
 
 """
 Gets all courses in a given semester given other conditions
+Specify a course id to get that course only
 """
 class GetCourses(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
-    
+
     def get(self):
-        return jsonify(
-                        message="error",
-                      )
+        # Get student id
+        course_id = None
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('course_id', type=int)
+            course_id = parser.parse_args().get("course_id")
+        except: #didnt specify one, so what
+            pass
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host='129.21.208.253',
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        if course_id:
+            cur.execute("SELECT * FROM courses "
+                        "WHERE course_id = %s",
+                        [course_id])
+        else:
+            cur.execute("SELECT * FROM courses")
+
+        query = cur.fetchall()
+        # Get variable names
+        cur.execute(
+            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'courses'")
+
+        column_names = cur.fetchall()
+        column_names_clean = [x[0] for x in column_names]
+
+        result = {'courses': [dict(zip(
+            column_names_clean, i)) for i in query]}
+
+        return jsonify(result)
 
 api.add_resource(GetCourses, '/GetCourses')
 
