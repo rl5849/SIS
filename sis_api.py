@@ -12,7 +12,7 @@ api = Api(app)
 
 
 ###Use a student ID to get all their classes currently enrolled
-class student_class(Resource):
+class GetStudentsClasses(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
 
@@ -35,11 +35,18 @@ class student_class(Resource):
                     "WHERE student_to_class.student_id = %s",
                     [student_id])
         query = cur.fetchall()
-        result = {'students_classes': [dict(zip(["class_id", "name", "room_number", "capacity", "num_enrolled", "time", "course_id", "professor_id", "student_id ", "class_id"], i)) for i in query]}
+        # Get variable names
+        cur.execute(
+            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'classes'")
 
+        column_names = cur.fetchall()
+        column_names_clean = [x[0] for x in column_names]
+
+        result = {'students_classes': [dict(zip(
+            column_names_clean, i)) for i in query]}
         return jsonify(result)
         
-api.add_resource(student_class, '/student_class')
+api.add_resource(GetStudentsClasses, '/GetStudentsClasses')
 
 
 ###Add a new student
@@ -259,7 +266,7 @@ class GetClasses(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        if class:
+        if class_id:
             cur.execute("SELECT * FROM classes "
                         "WHERE class_id = %s",
                         [class_id])
@@ -291,7 +298,7 @@ class GetClassInfo(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
 
-    def get(self)
+    def get(self):
         # Get class id
         parser = reqparse.RequestParser()
         parser.add_argument('class_id', type=int)
@@ -462,6 +469,45 @@ class RequestProfessorApproval(Resource):
                       )
 
 api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
+
+
+"""
+Get Professor name by id, use to get professor name from id associated with a class
+"""
+
+
+class GetProfessorByID(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('professor_id', type=int)
+        professor_id = parser.parse_args().get("professor_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host='129.21.208.253',
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT professor_name FROM professors "
+                    "WHERE professor_id = %s",
+                    [professor_id])
+        query = cur.fetchall()
+
+        print query
+        result = {'professor_name': query[0][0]}
+
+        return jsonify(result)
+
+
+api.add_resource(GetProfessorByID, '/GetProfessorByID')
+
+
 
 if __name__ == '__main__':
      app.run(port=5002)
