@@ -65,58 +65,34 @@
           <div class="tabs-panel is-active" id="panel1v">
             <table class="hover">
               <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+              </tr>
                 <!--For loop for query here, delete everything else-->
-                 <?php
+                  <?php
+                  $classes = file_get_contents("http://127.0.0.1:5002/GetStudentsClasses?student_id=" . $student_id); //getclasses
+                  $classes = json_decode($classes, true);
+                  $classes = $classes["students_classes"];
 
 
 
-
-
-
+                  foreach ($classes as $class){
+                      $professor = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" . $class["professor_id"]); //get professor
+                      $professor = json_decode($professor, true);
+                      $professor = $professor["professor_name"];
                   ?>
-                <th>Course</th>
-                <th>Section</th>
-                <th>Time</th>
-                <th>Instructor</th>
-                <th>Room</th>
-              </tr>
-              
-              <tr>
-                <td><a href="course_view.html">SWEN-344</a></td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              
+                <tr>
+                    <td><a href="course_view.php?course_id=<?php echo $class["course_id"];?>"><?php echo $class["name"];?></a></td>
+                    <td><?php echo $class["section"];?></td>
+                    <td><?php echo $class["time"];?></td>
+                    <td><?php echo $professor;?></td>
+                    <td><?php echo $class["room_number"];?></td>
+                </tr>
+
+                <?php } ?>
             <table>
           </div>
           <div class="tabs-panel" id="panel2v">
