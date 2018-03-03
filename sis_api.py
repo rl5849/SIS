@@ -190,8 +190,12 @@ class GetCourses(Resource):
 
 api.add_resource(GetCourses, '/GetCourses')
 
+
 """
 Gets all information about a course
+
+Note: GetCourses can do the same thing if given a specific ID,
+may be unneccessary
 """
 class GetCourseInfo(Resource):
     config = ConfigParser.ConfigParser()
@@ -230,7 +234,58 @@ class GetCourseInfo(Resource):
 api.add_resource(GetCourseInfo, '/GetCourseInfo')
 
 """
+Gets all classes in a given semester given other conditions
+Specify a course id to get that course only
+"""
+class GetClasses(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+
+    def get(self):
+        # Get class id
+        class_id = None
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('class_id', type=int)
+            class_id = parser.parse_args().get("class_id")
+        except: #didnt specify one, so what
+            pass
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host='129.21.208.253',
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        if class:
+            cur.execute("SELECT * FROM classes "
+                        "WHERE class_id = %s",
+                        [class_id])
+        else:
+            cur.execute("SELECT * FROM classes")
+
+        query = cur.fetchall()
+        # Get variable names
+        cur.execute(
+            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'classes'")
+
+        column_names = cur.fetchall()
+        column_names_clean = [x[0] for x in column_names]
+
+        result = {'classs': [dict(zip(
+            column_names_clean, i)) for i in query]}
+
+        return jsonify(result)
+
+api.add_resource(GetClasses, '/GetClasses')
+
+"""
 Gets all information about a section of a course
+
+Note: GetClasses can do the same thing if given a specific ID,
+may be unneccessary
 """
 class GetClassInfo(Resource):
     config = ConfigParser.ConfigParser()
@@ -266,7 +321,7 @@ class GetClassInfo(Resource):
 
         return jsonify(result)
 
-api.add_resource(GetCourseInfo, '/GetClassInfo')
+api.add_resource(GetClassInfo, '/GetClassInfo')
 
 """
 Enrolls a student in a course

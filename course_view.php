@@ -20,7 +20,7 @@
     <!-- End load Nave Bar -->
     
     <?php
-				$course_id = $_GET["course_id"];
+        $course_id = $_GET["course_id"];
 				$course_info = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=".$course_id);
 				$course_info = json_decode($course_info, true);
       ?>
@@ -33,7 +33,7 @@
         <div class="large-4 medium-4 small-4 cell">
           <ul class="profile-list">
             <li><?php echo ($course_info["course_info"][0]["course_name"])?></li>
-            <li>SWEN-344</li>
+            <li>SWEN-344</li> <!-- course code not in db, use course ID?-->
           </ul>
         </div>
         <div class="large-6 medium-6 small-5 cell">
