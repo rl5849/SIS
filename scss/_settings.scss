@@ -65,16 +65,32 @@
 // 1. Global
 // ---------
 
+// User-defined values
+$rit_orange: #F36E21;
+$rit_orange_light: #FF853C;
+$rit_orange_very_light: #FF9657;
+$rit_brown: #513127;
+
+// Default Values
 $global-font-size: 100%;
 $global-width: rem-calc(1200);
 $global-lineheight: 1.5;
 $foundation-palette: (
-  primary: #1779ba,
-  secondary: #767676,
+  primary: $rit_orange,
+  secondary: $rit_brown,
   success: #3adb76,
   warning: #ffae00,
   alert: #cc4b37,
 );
+
+//$foundation-palette: (
+//  primary: #1779ba,
+//  secondary: #767676,
+//  success: #3adb76,
+//  warning: #ffae00,
+//  alert: #cc4b37,
+//);
+
 $light-gray: #e6e6e6;
 $medium-gray: #cacaca;
 $dark-gray: #8a8a8a;
@@ -97,12 +113,6 @@ $global-flexbox: true;
 $global-prototype-breakpoints: false;
 $global-color-pick-contrast-tolerance: 0;
 $print-transparent-backgrounds: true;
-
-// User-defined values
-$rit_orange: #F36E21;
-$rit_orange_light: #FF853C;
-$rit_orange_very_light: #FF9657;
-$rit_brown: #513127;
 
 @include add-foundation-colors;
 
