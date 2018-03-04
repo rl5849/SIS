@@ -1,7 +1,7 @@
 <div class="top-bar">
 	<?php
 		$user_id = 1;
-		$user_info = file_get_contents("http://127.0.0.1:5002/GetUser?student_id=".$user_id);
+		$user_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$user_id);
 		$user_info = json_decode($user_info, true);
 	?>
   <div class="top-bar-left">
@@ -9,12 +9,20 @@
 	  <li class="menu-text">SIS++</li>
 	  <li><a href="course_list.php">Course List</a></li>
 	  <li>
-		<a href="#">Admin</a>
-		<ul class="menu vertical">
-		  <li><a href="#">Admin Action 1</a></li>
-		  <li><a href="#">Admin Action 2</a></li>
-		  <li><a href="#">Admin Action 3</a></li>
-		</ul>
+          <?php
+          $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
+          $is_admin = json_decode($is_admin, true);
+          $is_admin = $is_admin["is_admin"];
+
+          if ($is_admin == "true"){
+          ?>
+            <a href="#">Admin</a>
+            <ul class="menu vertical">
+              <li><a href="#">Admin Action 1</a></li>
+              <li><a href="#">Admin Action 2</a></li>
+              <li><a href="#">Admin Action 3</a></li>
+            </ul>
+          <?php }?>
 	  </li>
 	</ul>
   </div>

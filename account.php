@@ -20,8 +20,34 @@
     });
     </script>
     <!-- End load Nave Bar -->
-	
+    <?php
+    $student_id = 1;
+    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
+    $student_info = json_decode($student_info, true);
+
+    ?>
 	<div class="grid-container">
+  
+    <div class="grid-x grid-padding-x" style="padding-top:2%;">
+  
+      <div class="large-4 medium-4 small-4 cell">
+        <img src="<?php echo $student_info["student_info"][0]["profile_pic"]; ?>" alt="my_profile_image">
+      </div>
+      <div class="large-4 medium-4 small-4 cell">
+        <ul class="profile-list">
+		  <li><?php echo ($student_info["student_info"][0]["student_name"])?></li>
+		  <li><?php echo "DoB: ".($student_info["student_info"][0]["date_of_birth"])?></li>
+		  <li><?php echo "Expected Grad. Year: ".($student_info["student_info"][0]["graduation_year"])?></li>
+        </ul>
+      </div>
+      <div class="large-2 medium-2 small-3 cell">
+        <ul class="profile-list">
+          <p><input type="submit" href="https://www.linkedin.com"class="button expanded rit-orange" value="LinkedIn"></input></p>
+          <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
+        </ul>
+      </div>
+      
+    </div>
   
     <div class="grid-x grid-padding-x" style="padding-top: 2%;">
       <div class="large-12 medium-12 small-12 columns">
@@ -39,58 +65,34 @@
           <div class="tabs-panel is-active" id="panel1v">
             <table class="hover">
               <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+              </tr>
                 <!--For loop for query here, delete everything else-->
-                 <?php
+                  <?php
+                  $classes = file_get_contents("http://127.0.0.1:5002/GetStudentsClasses?student_id=" . $student_id); //getclasses
+                  $classes = json_decode($classes, true);
+                  $classes = $classes["students_classes"];
 
 
 
-
-
-
+                  foreach ($classes as $class){
+                      $professor = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" . $class["professor_id"]); //get professor
+                      $professor = json_decode($professor, true);
+                      $professor = $professor["professor_name"];
                   ?>
-                <th>Course</th>
-                <th>Section</th>
-                <th>Time</th>
-                <th>Instructor</th>
-                <th>Room</th>
-              </tr>
-              
-              <tr>
-                <td><a href="course_view.php?course_id=2">SWEN-344</a></td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              <tr>
-                <td>SWEN-344</td>
-                <td>01</td>
-                <td>10:10 am - 11:05 am</td>
-                <td>Danny Boye</td>
-                <td>GOL 1520</td>
-              </tr>
-              
+                <tr>
+                    <td><a href="course_view.php?course_id=<?php echo $class["course_id"];?>"><?php echo $class["name"];?></a></td>
+                    <td><?php echo $class["section"];?></td>
+                    <td><?php echo $class["time"];?></td>
+                    <td><?php echo $professor;?></td>
+                    <td><?php echo $class["room_number"];?></td>
+                </tr>
+
+                <?php } ?>
             <table>
           </div>
           <div class="tabs-panel" id="panel2v">

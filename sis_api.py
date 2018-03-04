@@ -12,7 +12,7 @@ api = Api(app)
 
 
 ###Use a student ID to get all their classes currently enrolled
-class student_class(Resource):
+class GetStudentsClasses(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
 
@@ -35,11 +35,18 @@ class student_class(Resource):
                     "WHERE student_to_class.student_id = %s",
                     [student_id])
         query = cur.fetchall()
-        result = {'students_classes': [dict(zip(["class_id", "name", "room_number", "capacity", "num_enrolled", "time", "course_id", "professor_id", "student_id ", "class_id"], i)) for i in query]}
+        # Get variable names
+        cur.execute(
+            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'classes'")
 
+        column_names = cur.fetchall()
+        column_names_clean = [x[0] for x in column_names]
+
+        result = {'students_classes': [dict(zip(
+            column_names_clean, i)) for i in query]}
         return jsonify(result)
         
-api.add_resource(student_class, '/student_class')
+api.add_resource(GetStudentsClasses, '/GetStudentsClasses')
 
 
 ###Add a new student
@@ -107,7 +114,7 @@ api.add_resource(GetFavoritedClasses, '/GetFavoritedClasses')
 Get all information about a user
 """
 #TODO: Determine if this is useful
-class GetUser(Resource):
+class GetStudentInfo(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
 
@@ -140,7 +147,7 @@ class GetUser(Resource):
 
         return jsonify(result)
 
-api.add_resource(GetUser, '/GetUser')
+api.add_resource(GetStudentInfo, '/GetStudentInfo')
 
 """
 Gets all courses in a given semester given other conditions
@@ -259,7 +266,7 @@ class GetClasses(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        if class:
+        if class_id:
             cur.execute("SELECT * FROM classes "
                         "WHERE class_id = %s",
                         [class_id])
@@ -274,7 +281,7 @@ class GetClasses(Resource):
         column_names = cur.fetchall()
         column_names_clean = [x[0] for x in column_names]
 
-        result = {'classs': [dict(zip(
+        result = {'classes': [dict(zip(
             column_names_clean, i)) for i in query]}
 
         return jsonify(result)
@@ -291,11 +298,11 @@ class GetClassInfo(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
 
-    def get(self)
+    def get(self):
         # Get class id
         parser = reqparse.RequestParser()
         parser.add_argument('class_id', type=int)
-        course_id = parser.parse_args().get("class_id")
+        class_id = parser.parse_args().get("class_id")
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
@@ -462,6 +469,80 @@ class RequestProfessorApproval(Resource):
                       )
 
 api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
+
+
+"""
+Check if student/user has admin privilegs
+"""
+class CheckIfAdmin(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+
+    def get(self):
+        # Get student id
+        parser = reqparse.RequestParser()
+        parser.add_argument('id', type=int)
+        id = parser.parse_args().get("id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host='129.21.208.253',
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT is_admin FROM users "
+                    "WHERE user_id = %s",
+                    [id])
+        query = cur.fetchall()
+        if query[0][0] == 1:
+            result = {'is_admin': True}
+        else:
+            result = {'is_admin': False}
+        return jsonify(result)
+api.add_resource(CheckIfAdmin, '/CheckIfAdmin')
+
+
+
+
+
+"""
+Get Professor name by id, use to get professor name from id associated with a class
+"""
+
+
+class GetProfessorByID(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('professor_id', type=int)
+        professor_id = parser.parse_args().get("professor_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host='129.21.208.253',
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT professor_name FROM professors "
+                    "WHERE professor_id = %s",
+                    [professor_id])
+        query = cur.fetchall()
+
+        result = {'professor_name': query[0][0]}
+
+        return jsonify(result)
+
+
+api.add_resource(GetProfessorByID, '/GetProfessorByID')
+
+
 
 if __name__ == '__main__':
      app.run(port=5002)

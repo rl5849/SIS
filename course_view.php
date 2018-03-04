@@ -17,7 +17,7 @@
       $("#nav-placeholder").load("nav.php");
     });
     </script>
-    <!-- End load Nave Bar -->
+    <!-- End load Nav Bar -->
     
     <?php
         $course_id = $_GET["course_id"];
