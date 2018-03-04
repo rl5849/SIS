@@ -44,7 +44,7 @@
         <div class="large-4 medium-4 small-4 cell">
           <ul class="profile-list">
             <li><?php echo ($course_info["course_info"][0]["course_name"])?></li>
-            <li>SWEN-344</li> <!-- course code not in db, use course ID?-->
+            <li><?php echo ($class_info["class_info"][0]["room_number"]) ?> </li> <!-- course code not in db, use course ID?-->
           </ul>
         </div>
         <div class="large-6 medium-6 small-5 cell">
@@ -78,7 +78,7 @@
 
                 <li>Credits: <?php echo ($class_info["class_info"][0]["credits"]) ?> </li>
                 <li>Enrolled: <?php echo ($class_info["class_info"][0]["num_enrolled"]) ?> / <?php echo ($class_info["class_info"][0]["capacity"]) ?>  </li> <!-- needs getPrereqs -->
-                <li>Wait List: <?php echo ($class_info["class_info"][0][""]) ?> 0/0 </li>
+                <li>Wait List: <?php echo ($class_info["class_info"][0][""]) ?> 0 / 0 </li>
                 <li>...</li>
               </ul>
             </div>
