@@ -24,7 +24,7 @@
 				$course_info = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=".$course_id);
 				$course_info = json_decode($course_info, true);
 
-        $class_id = $_GET["class_id"];
+        $class_id = 1;
                 $class_info = file_get_contents("http://127.0.0.1:5002/GetClasses?class_id=" .$class_id);
                 $class_info = json_decode($class_info, true);
 
@@ -47,7 +47,7 @@
         </div>
         <div class="large-6 medium-6 small-5 cell">
           <ul class="profile-list">
-             <li><?php echo "hello world" ?></li>
+             <li><?php echo $class_info ?></li>
             <li><?php echo ($class_info["class_info"][0]["room_number"]) ?></li>
             <li><?php echo ($class_info["class_info"][0]["time"]) ?></li> <!-- needs getclassinfo -->
             <li><?php echo ($prof_info["professor_name"]) ?></li>
