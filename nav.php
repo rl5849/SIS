@@ -6,7 +6,7 @@
 	?>
   <div class="top-bar-left">
 	<ul class="dropdown menu" data-dropdown-menu>
-	  <li class="menu-text">SIS++</li>
+	  <li class="menu-text"><h3>SIS++</h3></li>
 	  <li><a href="course_list.php">Course List</a></li>
 	  <li>
           <?php
@@ -49,8 +49,3 @@
 	</ul>
   </div>
 </div>
-
-<script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/what-input/dist/what-input.js"></script>
-    <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
-    <script src="js/app.js"></script>
