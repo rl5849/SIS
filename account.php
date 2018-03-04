@@ -56,8 +56,7 @@
         <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true">Current Semester</a></li>
         <li class="tabs-title"><a href="#panel2v">Fall 2017</a></li>
         <li class="tabs-title"><a href="#panel3v">Summer 2017</a></li>
-        <li class="tabs-title"><a href="#panel4v">Spring 2017</a></li>
-        <li class="tabs-title"><a href="#panel5v">Fall 2016</a></li>
+        <li class="tabs-title"><a href="#panel4v">Earlier</a></li>
       </ul>
       </div>
       <div class="large-12 medium-12 small-12 cell">
