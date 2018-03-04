@@ -472,6 +472,42 @@ api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
 
 
 """
+Check if student/user has admin privilegs
+"""
+class CheckIfAdmin(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./API/config.ini')
+
+    def get(self):
+        # Get student id
+        parser = reqparse.RequestParser()
+        parser.add_argument('id', type=int)
+        id = parser.parse_args().get("id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host='129.21.208.253',
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT is_admin FROM users "
+                    "WHERE user_id = %s",
+                    [id])
+        query = cur.fetchall()
+        if query[0][0] == 1:
+            result = {'is_admin': True}
+        else:
+            result = {'is_admin': False}
+        return jsonify(result)
+api.add_resource(CheckIfAdmin, '/CheckIfAdmin')
+
+
+
+
+
+"""
 Get Professor name by id, use to get professor name from id associated with a class
 """
 
