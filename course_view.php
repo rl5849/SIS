@@ -30,7 +30,7 @@
                 $course_info = json_decode($course_info, true);
 
 
-    $prof_id =  ($class_info["class_info"][0]["professor_id"]);
+        $prof_id =  ($class_info["class_info"][0]["professor_id"]);
                 $prof_info = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" .$prof_id);
                 $prof_info = json_decode($prof_info, true);
 
