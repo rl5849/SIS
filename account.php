@@ -52,7 +52,7 @@
     <div class="grid-x grid-padding-x" style="padding-top: 2%;">
       <div class="large-12 medium-12 small-12 columns">
       <ul class="horizontal tabs" data-tabs id="course-tabs">
-        <li class="tabs-title favorited-classes-title"><a href="#panel1v">Favorited</a></li>
+        <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
         <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true">Current Semester</a></li>
         <li class="tabs-title"><a href="#panel2v">Fall 2017</a></li>
         <li class="tabs-title"><a href="#panel3v">Summer 2017</a></li>
@@ -61,6 +61,17 @@
       </div>
       <div class="large-12 medium-12 small-12 cell">
         <div class="tabs-content" data-tabs-content="course-tabs">
+          <div class="tabs-panel" id="panel0v">
+            <table class="hover">
+              <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+              </tr>
+            </table>
+          </div>
           <div class="tabs-panel is-active" id="panel1v">
             <table class="hover">
               <tr>
@@ -92,15 +103,43 @@
                 </tr>
 
                 <?php } ?>
-            <table>
+            </table>
           </div>
           <div class="tabs-panel" id="panel2v">
+            <table class="hover">
+              <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+                  <th>Grade</th>
+              </tr>
+            </table>
           </div>
           <div class="tabs-panel" id="panel3v">
+            <table class="hover">
+              <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+                  <th>Grade</th>
+              </tr>
+            </table>
           </div>
           <div class="tabs-panel" id="panel4v">
-          </div>
-          <div class="tabs-panel" id="panel5v">
+            <table class="hover">
+              <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+                  <th>Grade</th>
+              </tr>
+            </table>
           </div>
         </div>
       </div>
