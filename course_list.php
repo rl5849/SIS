@@ -46,14 +46,14 @@
                   $course = json_decode($course, true);
                   $course = $course["course_info"][0];
 
-                  $professor = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?profesor_id=" . $class["professor_id"]);
+                  $professor = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" . $class["professor_id"]);
                   $professor = json_decode($professor, true);
               ?>
               <tr>
                 <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
                 <td><?php echo $class["section"];?></td>
                 <td><?php echo $class["time"];?></td>
-                <td><?php echo $class["professor_id"];?></td>
+                <td><?php echo $professor["professor_name"];?></td>
                 <td><?php echo $class["room_number"];?></td>
               </tr>
 
