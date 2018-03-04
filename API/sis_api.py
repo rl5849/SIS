@@ -128,7 +128,7 @@ api.add_resource(GetFavoritedClasses, '/GetFavoritedClasses')
 Get all information about a user
 """
 #TODO: Determine if this is useful
-class GetStudentInfoINTENTIONAL(Resource):
+class GetStudentInfo(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
