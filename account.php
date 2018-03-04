@@ -56,7 +56,7 @@
               </tr>
               
               <tr>
-                <td><a href="course_view.html">SWEN-344</a></td>
+                <td><a href="course_view.php?course_id=2">SWEN-344</a></td>
                 <td>01</td>
                 <td>10:10 am - 11:05 am</td>
                 <td>Danny Boye</td>
