@@ -30,11 +30,12 @@
 
           <table class="hover" style="margin-top:2%;">
               <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
+                <th>Course</th>
+                <th>Title</th>
+                <th>Section</th>
+                <th>Time</th>
+                <th>Instructor</th>
+                <th>Room</th>
               </tr>
               <?php
                 $courses = file_get_contents("http://127.0.0.1:5002/GetCourses"); //getclasses?
@@ -44,6 +45,7 @@
                 foreach ($courses as $course){
               ?>
               <tr>
+                <td>SWEN-344</td>
                 <td><a href="course_view.php?course_id=<?php echo $course["course_id"];?>"><?php echo $course["course_name"];?></a></td>
                 <td>01</td>
                 <td>Varies</td>
