@@ -53,7 +53,7 @@
                 <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
                 <td><?php echo $class["section"];?></td>
                 <td><?php echo $class["time"];?></td>
-                <td><?php echo $professor["professor_name"];?></td>
+                <td><?php echo $class["professor_id"];?></td>
                 <td><?php echo $class["room_number"];?></td>
               </tr>
 
