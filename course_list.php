@@ -30,27 +30,31 @@
 
           <table class="hover" style="margin-top:2%;">
               <tr>
-                <th>Course</th>
-                <th>Title</th>
-                <th>Section</th>
-                <th>Time</th>
-                <th>Instructor</th>
-                <th>Room</th>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
               </tr>
               <?php
-                $courses = file_get_contents("http://127.0.0.1:5002/GetCourses"); //getclasses?
-                $courses = json_decode($courses, true);
-                $courses = $courses["courses"];
+                $classes = file_get_contents("http://127.0.0.1:5002/GetClasses"); //getclasses?
+                $classes = json_decode($classes, true);
+                $classes = $classes["classes"];
 
-                foreach ($courses as $course){
+                foreach ($classes as $class){
+                  $course = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=" . $class["course_id"]); //getclasses?
+                  $course = json_decode($course, true);
+                  $course = $course["course_info"][0];
+
+                  $professor = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?profesor_id=" . $class["professor_id"]);
+                  $professor = json_decode($course, true);
               ?>
               <tr>
-                <td>SWEN-344</td>
-                <td><a href="course_view.php?course_id=<?php echo $course["course_id"];?>"><?php echo $course["course_name"];?></a></td>
-                <td>01</td>
-                <td>Varies</td>
-                <td>Varies</td>
-                <td>GOL 1520</td>
+                <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
+                <td><?php echo $class["section"];?></td>
+                <td><?php echo $class["time"];?></td>
+                <td><?php echo $professor["professor_name"];?></td>
+                <td><?php echo $class["room_number"];?></td>
               </tr>
 
               <?php } ?>
