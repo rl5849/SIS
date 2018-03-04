@@ -105,6 +105,20 @@ class GetFavoritedClasses(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
     
+    """
+    Expected return from API Docs:
+    ```JSON
+      favorited_classes
+        class1
+        class2
+        .
+        .
+        .
+        classN
+      ```
+    """
+    
+    
     def get(self):
         return jsonify(FAILURE_MESSAGE)
 
