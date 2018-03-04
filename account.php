@@ -95,7 +95,7 @@
                       $professor = $professor["professor_name"];
                   ?>
                 <tr>
-                    <td><a href="course_view.php?course_id=<?php echo $class["course_id"];?>"><?php echo $class["name"];?></a></td>
+                    <td><a href="course_view.php?course_id=<?php echo $class["class_id"];?>"><?php echo $class["name"];?></a></td>
                     <td><?php echo $class["section"];?></td>
                     <td><?php echo $class["time"];?></td>
                     <td><?php echo $professor;?></td>
