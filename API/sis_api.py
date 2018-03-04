@@ -14,7 +14,7 @@ SUCCESS_MESSAGE = "SUCCESS"
 FAILURE_MESSAGE = "FAILURE"
 
 ###Use a student ID to get all their classes currently enrolled
-class GetStudentsClasses(Resource):
+class GetStudentsClassesINTENTIONAL(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
