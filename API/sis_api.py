@@ -138,7 +138,7 @@ class GetStudentInfo(Resource):
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.253',
+                             host='129.21.208.224',
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
