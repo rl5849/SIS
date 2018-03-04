@@ -76,9 +76,9 @@
               <ul class="profile-list">
 
 
-                <li>3 Credit Hours</li>
-                <li>Enrolled: 40/40</li> <!-- needs getPrereqs -->
-                <li>Wait List: 3/10</li>
+                <li>Credits: <?php echo ($class_info["class_info"][0]["credits"]) ?> </li>
+                <li>Enrolled: <?php echo ($class_info["class_info"][0]["num_enrolled"]) ?> / <?php echo ($class_info["class_info"][0]["capacity"]) ?>  </li> <!-- needs getPrereqs -->
+                <li>Wait List: <?php echo ($class_info["class_info"][0]["room_number"]) ?> </li>
                 <li>...</li>
               </ul>
             </div>
