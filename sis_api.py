@@ -114,7 +114,7 @@ api.add_resource(GetFavoritedClasses, '/GetFavoritedClasses')
 Get all information about a user
 """
 #TODO: Determine if this is useful
-class GetUser(Resource):
+class GetStudentInfo(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./API/config.ini')
 
@@ -147,7 +147,7 @@ class GetUser(Resource):
 
         return jsonify(result)
 
-api.add_resource(GetUser, '/GetUser')
+api.add_resource(GetStudentInfo, '/GetStudentInfo')
 
 """
 Gets all courses in a given semester given other conditions
@@ -302,7 +302,7 @@ class GetClassInfo(Resource):
         # Get class id
         parser = reqparse.RequestParser()
         parser.add_argument('class_id', type=int)
-        course_id = parser.parse_args().get("class_id")
+        class_id = parser.parse_args().get("class_id")
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
@@ -499,7 +499,6 @@ class GetProfessorByID(Resource):
                     [professor_id])
         query = cur.fetchall()
 
-        print query
         result = {'professor_name': query[0][0]}
 
         return jsonify(result)
