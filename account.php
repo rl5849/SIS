@@ -35,7 +35,7 @@
       </div>
       <div class="large-4 medium-4 small-4 cell">
         <ul class="profile-list">
-		  <li><?php echo ($student_info["student_info"][0]["student_name"])?></li>
+		  <li><?php echo "<h5>".($student_info["student_info"][0]["student_name"])."</h5>"?></li>
 		  <li><?php echo "DoB: ".($student_info["student_info"][0]["date_of_birth"])?></li>
 		  <li><?php echo "Expected Grad. Year: ".($student_info["student_info"][0]["graduation_year"])?></li>
         </ul>
