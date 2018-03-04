@@ -47,8 +47,9 @@
         </div>
         <div class="large-6 medium-6 small-5 cell">
           <ul class="profile-list">
-            <li><?php echo "hello world again" ?></li>
-            <li><?php echo ($class_info[0]["room_number"]) ?></li>
+            <li><?php echo "hello world 2222" ?></li>
+            <li><?php echo ($class_info["class_info"][0]["room_number"]) ?></li>
+              <li><?php echo ($class_info[0]) ?></li>
             <li><?php echo ($class_info["class_info"][0]["time"]) ?></li> <!-- needs getclassinfo -->
             <li><?php echo ($prof_info["professor_name"]) ?></li>
           </ul>
