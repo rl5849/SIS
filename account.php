@@ -21,6 +21,7 @@
     </script>
     <!-- End load Nave Bar -->
     <?php
+    date_default_timezone_set("America/New_York");
     $student_id = 1;
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
     $student_info = json_decode($student_info, true);
@@ -36,7 +37,13 @@
       <div class="large-4 medium-4 small-4 cell">
         <ul class="profile-list">
 		  <li><?php echo "<h5>".($student_info["student_info"][0]["student_name"])."</h5>"?></li>
-		  <li><?php echo "DoB: ".($student_info["student_info"][0]["date_of_birth"])?></li>
+		  <li><?php
+                $date = strtotime($student_info["student_info"][0]["date_of_birth"]);
+                $date = date("d-m-Y", $date);
+
+
+
+              echo "DoB: ".($date)?></li>
 		  <li><?php echo "Expected Grad. Year: ".($student_info["student_info"][0]["graduation_year"])?></li>
         </ul>
       </div>

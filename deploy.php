@@ -16,6 +16,7 @@
 		'git submodule sync',
 		'git submodule update',
 		'git submodule status',
+        'etc/init.d/SIS reload',
 	);
 
 	// Run the commands for output
