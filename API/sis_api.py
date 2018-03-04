@@ -10,6 +10,8 @@ from flask import jsonify
 app = Flask(__name__)
 api = Api(app)
 
+SUCCESS_MESSAGE = "SUCCESS"
+FAILURE_MESSAGE = "FAILURE"
 
 ###Use a student ID to get all their classes currently enrolled
 class GetStudentsClasses(Resource):
@@ -89,11 +91,11 @@ class add_student(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
-            return jsonify("INSERT FAILED!")
+            return jsonify(FAILURE_MESSAGE)
 
-        return jsonify("SUCCESS")
+        return jsonify(SUCCESS_MESSAGE)
 
-api.add_resource(add_student, '/add_student')
+api.add_resource(add_student, '/AddStudent')
 
 
 """
@@ -338,9 +340,7 @@ class EnrollStudent(Resource):
     config.read('./API/config.ini')
     
     def get(self):
-        return jsonify(
-                        message="success",
-                      )
+        return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(EnrollStudent, '/EnrollStudent')
 
@@ -352,9 +352,7 @@ class DropStudent(Resource):
     config.read('./API/config.ini')
     
     def get(self):
-        return jsonify(
-                        message="success",
-                      )
+        return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(DropStudent, '/DropStudent')
 
@@ -366,9 +364,7 @@ class FavoriteClass(Resource):
     config.read('./API/config.ini')
     
     def get(self):
-        return jsonify(
-                        message="success",
-                      )
+        return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(FavoriteClass, '/FavoriteClass')
 
@@ -380,9 +376,7 @@ class UnfavoriteClass(Resource):
     config.read('./API/config.ini')
     
     def get(self):
-        return jsonify(
-                        message="success",
-                      )
+        return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(UnfavoriteClass, '/UnfavoriteClass')
 
@@ -408,9 +402,7 @@ class ModClass(Resource):
     config.read('./API/config.ini')
     
     def get(self):
-        return jsonify(
-                        message="success",
-                      )
+        return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(ModClass, '/ModClass')
 
@@ -422,9 +414,7 @@ class ModCourse(Resource):
     config.read('./API/config.ini')
     
     def get(self):
-        return jsonify(
-                        message="success",
-                      )
+        return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(ModCourse, '/ModCourse')
 
@@ -436,9 +426,7 @@ class ModProfessor(Resource):
     config.read('./API/config.ini')
     
     def get(self):
-        return jsonify(
-                        message="success",
-                      )
+        return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(ModProfessor, '/ModProfessor')
 
@@ -450,9 +438,7 @@ class ModProfile(Resource):
     config.read('./API/config.ini')
     
     def get(self):
-        return jsonify(
-                        message="success",
-                      )
+        return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(ModProfile, '/ModProfile')
 
@@ -464,9 +450,7 @@ class RequestProfessorApproval(Resource):
     config.read('./API/config.ini')
     
     def get(self):
-        return jsonify(
-                        message="success",
-                      )
+        return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
 
