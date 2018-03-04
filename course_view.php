@@ -81,7 +81,7 @@
 
                 <li>Credits: <?php echo ($class_info["class_info"][0]["credits"]) ?> </li>
                 <li>Enrolled: <?php echo ($class_info["class_info"][0]["num_enrolled"]) ?> / <?php echo ($class_info["class_info"][0]["capacity"]) ?>  </li> <!-- needs getPrereqs -->
-                <li>Wait List: <?php echo count($wait_list) ?>/ 0 </li>
+                <li>Wait List: <?php echo count($wait_list) ?> / 0 </li>
                 <!-- <li>...</li> -->
               </ul>
             </div>
