@@ -24,6 +24,7 @@
     $student_id = 1;
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
     $student_info = json_decode($student_info, true);
+
     ?>
 	<div class="grid-container">
   
