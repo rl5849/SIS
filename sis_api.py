@@ -309,7 +309,7 @@ class GetClassInfo(Resource):
                              host='129.21.208.253',
                              db=self.config.get('database', 'dbname'))
         
-        cur = db.cursor
+        cur = db.cursor()
 
         # Select data from table using SQL query.
         cur.execute("SELECT * FROM classes "
