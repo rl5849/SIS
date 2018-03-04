@@ -106,9 +106,7 @@ class GetFavoritedClasses(Resource):
     config.read('./API/config.ini')
     
     def get(self):
-        return jsonify(
-                        message="error",
-                      )
+        return jsonify(FAILURE_MESSAGE)
 
 api.add_resource(GetFavoritedClasses, '/GetFavoritedClasses')
 

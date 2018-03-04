@@ -24,13 +24,9 @@ Adds a student to the database
 
 ##### Return
 
-If action succeeded:
-
-`'SUCCESS'`
-
-If action failed:
-
-`'FAILURE'`
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
 
 
 ##### Endpoint
