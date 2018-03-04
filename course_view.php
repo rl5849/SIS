@@ -34,7 +34,10 @@
                 $prof_info = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" .$prof_id);
                 $prof_info = json_decode($prof_info, true);
 
-      ?>
+        $wait_list = file_get_contents("http://127.0.0.1:5002/WaitlistByClass?class_id=" . $class_info["class_info"][0]["class_id"]);
+        $wait_list = json_decode($waitlist, true);
+
+    ?>
 
 	</div>
     <div class="grid-container">
@@ -78,7 +81,7 @@
 
                 <li>Credits: <?php echo ($class_info["class_info"][0]["credits"]) ?> </li>
                 <li>Enrolled: <?php echo ($class_info["class_info"][0]["num_enrolled"]) ?> / <?php echo ($class_info["class_info"][0]["capacity"]) ?>  </li> <!-- needs getPrereqs -->
-                <li>Wait List: <?php echo ($class_info["class_info"][0][""]) ?> 0 / 0 </li>
+                <li>Wait List: <?php echo count($wait_list) ?>/ 0 </li>
                 <!-- <li>...</li> -->
               </ul>
             </div>
