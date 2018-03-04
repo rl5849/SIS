@@ -20,21 +20,20 @@
     });
     </script>
     <!-- End load Nave Bar -->
-	
+    <?php
+    $student_id = 1;
+    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
+    $student_info = json_decode($student_info, true);
+    ?>
 	<div class="grid-container">
   
     <div class="grid-x grid-padding-x" style="padding-top:2%;">
   
       <div class="large-4 medium-4 small-4 cell">
-        <img src="https://i0.wp.com/radaronline.com/wp-content/uploads/2017/05/betty-white-secret-suitor-split-pp.jpg?fit=640%2C420&ssl=1" alt="my_profile_image">
+        <img src="<?php echo $student_info["student_info"][0]["profile_pic"]; ?>" alt="my_profile_image">
       </div>
       <div class="large-4 medium-4 small-4 cell">
         <ul class="profile-list">
-			<?php
-				$student_id = 1;
-				$student_info = file_get_contents("http://127.0.0.1:5002/GetUser?student_id=".$student_id);
-				$student_info = json_decode($student_info, true);
-			?>
 		  <li><?php echo ($student_info["student_info"][0]["student_name"])?></li>
 		  <li><?php echo "DoB: ".($student_info["student_info"][0]["date_of_birth"])?></li>
 		  <li><?php echo "Expected Grad. Year: ".($student_info["student_info"][0]["graduation_year"])?></li>
@@ -43,7 +42,7 @@
       <div class="large-2 medium-2 small-3 cell">
         <ul class="profile-list">
           <p><input type="submit" href="https://www.linkedin.com"class="button expanded rit-orange" value="LinkedIn"></input></p>
-          <li>GPA</li>
+          <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
         </ul>
       </div>
       
