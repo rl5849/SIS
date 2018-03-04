@@ -25,7 +25,7 @@
 				$course_info = json_decode($course_info, true);
 
         $class_id = $_GET["class_id"];
-                $class_info = file_get_contents("http://127.0.0.1:5002/GetClasss?class_id=" .$class_id);
+                $class_info = file_get_contents("http://127.0.0.1:5002/GetClassInfo?class_id=" .$class_id);
                 $class_info = json_decode($class_info, true);
 
         $prof_id =  ($class_info["class_info"][0]["professor_id"]);
