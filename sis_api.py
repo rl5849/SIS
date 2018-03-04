@@ -281,7 +281,7 @@ class GetClasses(Resource):
         column_names = cur.fetchall()
         column_names_clean = [x[0] for x in column_names]
 
-        result = {'classs': [dict(zip(
+        result = {'classes': [dict(zip(
             column_names_clean, i)) for i in query]}
 
         return jsonify(result)
