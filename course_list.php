@@ -39,7 +39,7 @@
               <?php
                 $classes = file_get_contents("http://127.0.0.1:5002/GetClasses"); //getclasses?
                 $classes = json_decode($classes, true);
-                $classes = $classes["classes"];
+                $classes = $classes["classs"];
 
                 foreach ($classes as $class){
                   $course = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=" . $class["course_id"]); //getclasses?
