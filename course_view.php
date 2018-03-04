@@ -23,6 +23,15 @@
         $course_id = $_GET["course_id"];
 				$course_info = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=".$course_id);
 				$course_info = json_decode($course_info, true);
+
+        $class_id = $_GET["class_id"];
+                $class_info = file_get_contents("http://127.0.0.1:5002/GetClasses?class_id=" .$class_id);
+                $class_info = json_decode($class_info, true);
+
+        $prof_id =  ($class_info["class_info"][0]["professor_id"]);
+                $prof_info = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" .$prof_id);
+                $prof_info = json_decode($prof_info, true);
+
       ?>
 
 	</div>
@@ -38,9 +47,9 @@
         </div>
         <div class="large-6 medium-6 small-5 cell">
           <ul class="profile-list">
-            <li>GOL-1520</li>
-            <li>10:10 am - 11:05am</li> <!-- needs getclassinfo -->
-            <li>Krutzy Boyy</li>
+            <li><?php echo ($class_info["class_info"][0]["room_number"]) ?></li>
+            <li><?php echo ($class_info["class_info"][0]["time"]) ?></li> <!-- needs getclassinfo -->
+            <li><?php echo ($prof_info["professor_name"]) ?></li>
           </ul>
         </div>
         <div class="large-2 medium-2 small-3 cell">
@@ -63,6 +72,8 @@
             </div>
             <div class="card-section">
               <ul class="profile-list">
+
+
                 <li>3 Credit Hours</li>
                 <li>Enrolled: 40/40</li> <!-- needs getPrereqs -->
                 <li>Wait List: 3/10</li>
