@@ -6,7 +6,7 @@
 	?>
   <div class="top-bar-left">
 	<ul class="dropdown menu" data-dropdown-menu>
-	  <li class="site-title"><a href="account.php">SIS++</a></li>
+	  <li><a href="account.php"  class="site-title">SIS++</a></li>
 	  <li><a href="course_list.php">Course List</a></li>
 	  <li>
           <?php
