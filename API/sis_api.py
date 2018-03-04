@@ -24,7 +24,7 @@ class GetStudentsClasses(Resource):
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.253',
+                             host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
@@ -75,7 +75,7 @@ class add_student(Resource):
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.253',
+                             host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
@@ -181,7 +181,7 @@ class GetCourses(Resource):
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.253',
+                             host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
@@ -228,7 +228,7 @@ class GetCourseInfo(Resource):
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.253',
+                             host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
@@ -272,7 +272,7 @@ class GetClasses(Resource):
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.253',
+                             host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
@@ -318,7 +318,7 @@ class GetClassInfo(Resource):
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.253',
+                             host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
         
         cur = db.cursor()
@@ -480,7 +480,7 @@ class CheckIfAdmin(Resource):
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.253',
+                             host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
@@ -518,7 +518,7 @@ class GetProfessorByID(Resource):
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.253',
+                             host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
@@ -552,7 +552,7 @@ class WaitlistByClass(Resource):
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.253',
+                             host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
