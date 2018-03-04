@@ -37,12 +37,12 @@
                   <th>Room</th>
               </tr>
               <?php
-                $classes = file_get_contents("http://127.0.0.1:5002/GetClasses"); //getclasses?
+                $classes = file_get_contents("http://127.0.0.1:5002/GetClasses");
                 $classes = json_decode($classes, true);
                 $classes = $classes["classs"];
 
                 foreach ($classes as $class){
-                  $course = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=" . $class["course_id"]); //getclasses?
+                  $course = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=" . $class["course_id"]);
                   $course = json_decode($course, true);
                   $course = $course["course_info"][0];
 
@@ -53,7 +53,7 @@
                 <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
                 <td><?php echo $class["section"];?></td>
                 <td><?php echo $class["time"];?></td>
-                <td><?php echo $professor["professor_name"];?></td>
+                <td><?php echo $professor?></td>
                 <td><?php echo $class["room_number"];?></td>
               </tr>
 
