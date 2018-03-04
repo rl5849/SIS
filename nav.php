@@ -6,7 +6,7 @@
 	?>
   <div class="top-bar-left">
 	<ul class="dropdown menu" data-dropdown-menu>
-	  <li class="menu-text">SIS++</li>
+	  <li class="menu-text"><h3>SIS++</h3></li>
 	  <li><a href="course_list.php">Course List</a></li>
 	  <li>
           <?php
@@ -38,7 +38,7 @@
 			<a href="account.php">Welcome, <?php echo ($user_info["student_info"][0]["student_name"])?></a> <!-- Name here -->
 		</li>
 		<li>
-			<a href="#"></a>
+			<a href="#"><i class="fi-list"></i></a>
 			<ul class="menu vertical">
 			  <li><a href="account.php">Profile</a></li>
 			  <li><a href="account.php">Classes</a></li>
@@ -49,3 +49,8 @@
 	</ul>
   </div>
 </div>
+
+<script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/what-input/dist/what-input.js"></script>
+    <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
+    <script src="js/app.js"></script>
