@@ -14,7 +14,7 @@ FAILURE_MESSAGE = "FAILURE"
 ###Use a student ID to get all their classes currently enrolled
 class GetStudentsClasses(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
 
     def get(self):
         # Get student id
@@ -54,7 +54,7 @@ api.add_resource(GetStudentsClasses, '/GetStudentsClasses')
 #TODO: CRITCAL: URL ENCODE THESE ITEMS BEFORE MAKING THE REQUEST
 class add_student(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
 
     def get(self):
         # Get student info
@@ -101,7 +101,7 @@ Gets all favorited classes for the student
 """
 class GetFavoritedClasses(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
     
     """
     Expected return from API Docs:
@@ -128,7 +128,7 @@ Get all information about a user
 #TODO: Determine if this is useful
 class GetStudentInfo(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
 
     def get(self):
         # Get student id
@@ -167,7 +167,7 @@ Specify a course id to get that course only
 """
 class GetCourses(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
 
     def get(self):
         # Get student id
@@ -218,7 +218,7 @@ may be unneccessary
 """
 class GetCourseInfo(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
 
     def get(self):
         # Get student id
@@ -258,7 +258,7 @@ Specify a course id to get that course only
 """
 class GetClasses(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
 
     def get(self):
         # Get class id
@@ -308,7 +308,7 @@ may be unneccessary
 """
 class GetClassInfo(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
 
     def get(self):
         # Get class id
@@ -347,7 +347,7 @@ Enrolls a student in a course
 """
 class EnrollStudent(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
     
     def get(self):
         return jsonify(SUCCESS_MESSAGE)
@@ -359,7 +359,7 @@ Removes a student from a course
 """
 class DropStudent(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
     
     def get(self):
         return jsonify(SUCCESS_MESSAGE)
@@ -371,7 +371,7 @@ Adds a class to a student's list of favorite classes
 """
 class FavoriteClass(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
     
     def get(self):
         return jsonify(SUCCESS_MESSAGE)
@@ -383,7 +383,7 @@ Removes a class to a student's list of favorite classes
 """
 class UnfavoriteClass(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
     
     def get(self):
         return jsonify(SUCCESS_MESSAGE)
@@ -395,7 +395,7 @@ Gets a grade for a class and a student
 """
 class GetGrade(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
     
     def get(self):
         return jsonify(
@@ -409,7 +409,7 @@ Modifies the attributes of a class
 """
 class ModClass(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
     
     def get(self):
         return jsonify(SUCCESS_MESSAGE)
@@ -421,7 +421,7 @@ Modifies the attributes of a course
 """
 class ModCourse(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
     
     def get(self):
         return jsonify(SUCCESS_MESSAGE)
@@ -433,7 +433,7 @@ Modifies the attributes of a professor
 """
 class ModProfessor(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
     
     def get(self):
         return jsonify(SUCCESS_MESSAGE)
@@ -445,7 +445,7 @@ Modifies the attributes of a profile
 """
 class ModProfile(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
     
     def get(self):
         return jsonify(SUCCESS_MESSAGE)
@@ -457,7 +457,7 @@ Requests approval of an admin for a new user, which has requested to be flagged 
 """
 class RequestProfessorApproval(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
     
     def get(self):
         return jsonify(SUCCESS_MESSAGE)
@@ -470,7 +470,7 @@ Check if student/user has admin privilegs
 """
 class CheckIfAdmin(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
 
     def get(self):
         # Get student id
@@ -508,7 +508,7 @@ Get Professor name by id, use to get professor name from id associated with a cl
 
 class GetProfessorByID(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
 
     def get(self):
         # Get class id
@@ -542,7 +542,7 @@ Get the waitlist for a class given a class ID
 """
 class WaitlistByClass(Resource):
     config = ConfigParser.ConfigParser()
-    config.read('/var/www/html/SIS/API/config.ini')
+    config.read('./config.ini')
 
     def get(self):
         # Get class id
@@ -563,7 +563,7 @@ class WaitlistByClass(Resource):
                     "ON students.student_id = waitlist.student_id "
                     "WHERE class_id = %s"
                     "ORDER BY position ASC",
-                    [professor_id])
+                    [class_id])
 
         query = cur.fetchall()
         # Get variable names
@@ -580,6 +580,35 @@ class WaitlistByClass(Resource):
 
 api.add_resource(WaitlistByClass, '/WaitlistByClass')
 
+
+class GetCurrentSemester(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('class_id', type=int)
+        class_id = parser.parse_args().get("class_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT MAX(id) FROM semesters ")
+        query = cur.fetchall()
+
+        result = {'current_semester': query[0][0]}
+
+        db.close()
+
+        return jsonify(result)
+
+api.add_resource(GetCurrentSemester, '/GetCurrentSemester')
 
 
 
