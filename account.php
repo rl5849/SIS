@@ -7,18 +7,19 @@
     <title>SIS - My Account</title>
     <link rel="stylesheet" href="css/app.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="js/app.js"></script>
   </head>
   <body>
-	<div w3-include-html="nav.php"></div>
   
   <!-- Load Nav Bar -->
     <div id="nav-placeholder"></div>
+    <div id="callouts-placeholder"></div>
 
     <script>
-    $(function(){
-      $("#nav-placeholder").load("nav.php");
-    });
+    makeNav();
+    makeCallouts();
     </script>
+    
     <!-- End load Nave Bar -->
     <?php
     date_default_timezone_set("America/New_York");
@@ -158,6 +159,5 @@
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/what-input/dist/what-input.js"></script>
   <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
-  <script src="js/app.js"></script>
   </body>
 </html>
