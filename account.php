@@ -23,6 +23,8 @@
     <?php
     date_default_timezone_set("America/New_York");
     $student_id = 1;
+    $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
+    $current_semester = json_decode($current_semester, true)["current_semester"];
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
     $student_info = json_decode($student_info, true);
 
