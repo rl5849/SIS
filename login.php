@@ -25,6 +25,7 @@
           
           
           <p style="padding-top:15%;"><input type="submit" class="button expanded rit-orange" value="Register through LinkedIn"></input></p>
+            <p>Hello testing</p>
         </div>
         
       </div>
