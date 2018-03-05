@@ -7,18 +7,12 @@
     <title>SIS - My Account</title>
     <link rel="stylesheet" href="css/app.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="js/app.js"></script>
   </head>
   <body>
   
-  <!-- Load Nav Bar -->
+    <!-- Load Nav Bar and Callouts -->
     <div id="nav-placeholder"></div>
     <div id="callouts-placeholder"></div>
-
-    <script>
-    makeNav();
-    makeCallouts();
-    </script>
     
     <!-- End load Nave Bar -->
     <?php
@@ -159,8 +153,11 @@
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/what-input/dist/what-input.js"></script>
   <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
+  <script src="js/app.js"></script>
+  
   <script>
-  $(document).foundation();
-  </script>
+    makeNav();
+    makeCallouts();
+   </script>
   </body>
 </html>
