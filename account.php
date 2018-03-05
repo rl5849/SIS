@@ -13,8 +13,8 @@
     <!-- Load Nav Bar and Callouts -->
     <div id="nav-placeholder"></div>
     <div id="callouts-placeholder"></div>
+    <!-- End load Nave Bar and Callouts -->
     
-    <!-- End load Nave Bar -->
     <?php
     date_default_timezone_set("America/New_York");
     $student_id = 1;
