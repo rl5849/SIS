@@ -15,7 +15,7 @@
           <!-- Intentionally Blank -->
         </div>
       
-        <a class="large-4 medium-6 small-8 cell">
+        <mpo class="large-4 medium-6 small-8 cell">
         
           <h2> RIT SIS++ </h2>
           <h4 class="text-center">Sign in with LinkedIn</h4>
@@ -24,7 +24,7 @@
           <p class="text-center"><a href="#">Forgot your password?</a></p>
           
           
-            <a href="https://www.linkedin.com/start/join?trk=uno-reg-guest-home-join"<p style="padding-top:15%;"><input type="submit" class="button expanded rit-orange" value="Register through LinkedIn"></input></p></a>
+          <p style="padding-top:15%;"><input type="submit" class="button expanded rit-orange" value="Register through LinkedIn" href="https://www.linkedin.com/start/join?trk=uno-reg-guest-home-join"></input></p>
         </div>
         
       </div>
