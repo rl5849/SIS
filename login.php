@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="css/app.css">
   </head>
   <body>
+  
+    <!-- Load Callouts -->
+    <div id="callouts-placeholder"></div>
+    <!-- End Callouts -->
+    
+  
     <div class="grid-container">
       <div class="grid-x grid-padding-x" style="padding-top:10%;">
       
@@ -35,5 +41,9 @@
     <script src="bower_components/what-input/dist/what-input.js"></script>
     <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
     <script src="js/app.js"></script>
+    
+    <script>
+      makeCallouts();
+     </script>
   </body>
 </html>

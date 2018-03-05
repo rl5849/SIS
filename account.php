@@ -9,17 +9,12 @@
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
   <body>
-	<div w3-include-html="nav.php"></div>
   
-  <!-- Load Nav Bar -->
+    <!-- Load Nav Bar and Callouts -->
     <div id="nav-placeholder"></div>
-
-    <script>
-    $(function(){
-      $("#nav-placeholder").load("nav.php");
-    });
-    </script>
-    <!-- End load Nave Bar -->
+    <div id="callouts-placeholder"></div>
+    <!-- End load Nave Bar and Callouts -->
+    
     <?php
     date_default_timezone_set("America/New_York");
     $student_id = 1;
@@ -159,5 +154,10 @@
   <script src="bower_components/what-input/dist/what-input.js"></script>
   <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
   <script src="js/app.js"></script>
+  
+  <script>
+    makeNav();
+    makeCallouts();
+   </script>
   </body>
 </html>
