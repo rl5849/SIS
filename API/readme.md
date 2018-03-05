@@ -22,6 +22,7 @@
 10. [Unfavorite Class](#UnfavoriteClass)
 11. [Get Grade](#GetGrade)
 12. [Get Waitlist By Class](#WaitlistByClass)
+13. [Get Current Semester](#GetCurrentSemester)
 
 <a name="UserStudent"/>
 ## User/Student
@@ -435,3 +436,23 @@ Gets a waitlist for a given class
 TODO
 
 <!-- End Waitlist By Class -->
+<!-- Start Get Current Semester -->
+
+<a name="GetCurrentSemester"/>
+### Get Current Semester
+
+Gets the current semester of the system
+
+##### Endpoint
+
+`/GetCurrentSemester`
+
+##### Parameters
+
+None
+
+##### Return
+
+`current_semester`
+
+<!-- End Get Current Semester -->
