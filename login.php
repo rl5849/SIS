@@ -24,8 +24,8 @@
           <p class="text-center"><a href="#">Forgot your password?</a></p>
           
           
-          <p style="padding-top:15%;"><input type="submit" class="button expanded rit-orange" value="Register through LinkedIn"></input></p>
-            <p>Hello testing</p>
+          <p style="padding-top:15%;"><input type="submit" class="button expanded rit-orange" value="Register through LinkedIn" href="https://www.linkedin.com/start/join?trk=uno-reg-guest-home-join"></input></p>
+
         </div>
         
       </div>
