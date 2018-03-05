@@ -24,7 +24,7 @@
           <p class="text-center"><a href="#">Forgot your password?</a></p>
           
           
-            <p style="padding-top:15%;"><input type="submit" class="button expanded rit-orange" value="Register through LinkedIn"><a href="https://www.linkedin.com/start/join?trk=uno-reg-guest-home-join"></a></p> </input></p>
+            <a href="https://www.linkedin.com/start/join?trk=uno-reg-guest-home-join"><p style="padding-top:15%;"><input type="submit" class="button expanded rit-orange" value="Register through LinkedIn"><a href="https://www.linkedin.com/start/join?trk=uno-reg-guest-home-join"></a></p> </input></p></a>
 
         </div>
         
