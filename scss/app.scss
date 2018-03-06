@@ -90,6 +90,17 @@
   font-weight: bold;
 }
 
+#linkedin-login-button {
+  content: url('../LinkedIn/Sign-In-Large---Default.png');
+  
+  &:hover {
+    content: url('../LinkedIn/Sign-In-Large---Hover.png');
+  }
+  
+  &:active {
+    content: url('../LinkedIn/Sign-In-Large---Active.png');
+  }
+}
 
 
 

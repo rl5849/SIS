@@ -21,12 +21,24 @@
           <!-- Intentionally Blank -->
         </div>
       
-        <mpo class="large-4 medium-6 small-8 cell">
+        <div class="large-4 medium-6 small-8 cell">
         
           <h2> RIT SIS++ </h2>
           <h4 class="text-center">Sign in with LinkedIn</h4>
-          <p><input type="submit" class="button expanded rit-orange" value="LinkedIn"></input></p>
-          <a href="account.php"><p><input type="submit" class="button expanded rit-brown" value="Or just bypass this cause we bad"></input></p></a>
+          
+          <!-- LinkedIn Button -->
+          <a><img id="linkedin-login-button" src="#" alt="Sign in with LinkedIn"</a>
+          
+          <!-- Load the images of hover and active so that they aren't loaded first when the user interacts with the button -->
+          <img style="display:none;" src="LinkedIn/Sign-In-Large---Hover.png">
+          <img style="display:none;" src="LinkedIn/Sign-In-Large---Active.png">
+          
+          <a href="account.php">
+            <p>
+              <input type="submit" class="button expanded rit-brown" value="Or just bypass this cause we bad"></input>
+            </p>
+          </a>
+          
           <p class="text-center"><a href="#">Forgot your password?</a></p>
           
           
