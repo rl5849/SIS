@@ -16,22 +16,85 @@
     
     
     <?php
+        //TODO set via cookie
+        $user_id = 1;
 
-        $class_id = $_GET["class_id"];
-                $class_info = file_get_contents("http://127.0.0.1:5002/GetClassInfo?class_id=" .$class_id);
-                $class_info = json_decode($class_info, true);
+        if (isset($_GET["class_id"])){
+            $class_id = $_GET["class_id"];
+        }
+        else if (isset($_POST["class_id"])){
+            $class_id = $_POST["class_id"];
+        }
+        else{
+            $class_id = 1;
+        }
+
+        //PHP FUNCTIONS FOR ENROLL AND FAVORITE
+        if (isset($_POST["enroll"])){
+
+            if ($_POST["enroll"] == 0){
+                unenroll($_POST["user_id"], $class_id);
+
+            }
+            else{
+                enroll($_POST["user_id"], $class_id);
+            }
+            unset($_POST["enroll"]);
+
+        }
+
+        function enroll($user_id, $local_class_id) {
+            $enroll = file_get_contents("http://127.0.0.1:5002/EnrollStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
+            $enroll = json_decode($enroll, true);
+            if ($enroll == "SUCCESS"){
+                echo "<script>alert(\"Successfully Enrolled in class\");</script>";
+            }
+            else{
+                echo "<script>alert(\"Error\");</script>";
+            }
+        }
+
+        if (isset($_POST["enroll"])){
+            enroll($_POST["user_id"], $_POST["class"]);
+        }
+        function unenroll($user_id, $local_class_id) {
+            $unenroll = file_get_contents("http://127.0.0.1:5002/DropStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
+            $unenroll = json_decode($unenroll, true);
+            if ($unenroll == "SUCCESS"){
+                echo "<script>alert(\"Successfully dropped class\");</script>";
+            }
+            else{
+                echo "<script>alert(\"Error\");</script>";
+            }
+        }
+
+        $enrollment_status = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" .$class_id . "&user_id=" . $user_id);
+        $enrollment_status = json_decode($enrollment_status, true);
+        $enrollment_status = $enrollment_status["enrollment_status"];
+        $enrollment_status = $enrollment_status === 'True'? true: false;
+
+
+        if ($enrollment_status == "True"){
+            $enrollment_status_msg = "Drop";
+        }else{
+            $enrollment_status_msg = "Enroll";
+        }
+
+
+        $class_info = file_get_contents("http://127.0.0.1:5002/GetClassInfo?class_id=" .$class_id);
+        $class_info = json_decode($class_info, true);
 
         $course_id = $class_info["class_info"][0]["course_id"];
-                $course_info = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=".$course_id);
-                $course_info = json_decode($course_info, true);
+        $course_info = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=".$course_id);
+        $course_info = json_decode($course_info, true);
 
 
         $prof_id =  ($class_info["class_info"][0]["professor_id"]);
-                $prof_info = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" .$prof_id);
-                $prof_info = json_decode($prof_info, true);
+        $prof_info = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" .$prof_id);
+        $prof_info = json_decode($prof_info, true);
 
         $wait_list = file_get_contents("http://127.0.0.1:5002/WaitlistByClass?class_id=" . $class_info["class_info"][0]["class_id"]);
-        $wait_list = json_decode($waitlist, true);
+        $wait_list = json_decode($wait_list, true);
 
     ?>
 
@@ -55,9 +118,16 @@
         </div>
         <div class="large-2 medium-2 small-3 cell">
           <ul class="profile-list">
-            <li>          
+
               <p><input type="submit" class="button expanded rit-orange" value="Favorite"></input></p> <!-- make this a post? just gonna leave it blank for now-->
-              <p><input type="submit" class="button expanded rit-orange" value="Enroll"></input></p>
+              <p>
+                  <form method ="post" >
+                        <input type="hidden" name="enroll" value="<?php echo !($enrollment_status)?>">
+                        <input type="hidden" name="class_id" value="<?php echo $class_id;?>">
+                        <input type="hidden" name="user_id" value="<?php echo $user_id;?>">
+                        <input type="submit" class="button expanded rit-orange" value="<?php echo $enrollment_status_msg;?>">
+                  </form>
+              </p>
             </li>
           </ul>
         </div>
@@ -112,6 +182,8 @@
       </div>
       
     </div>
+
+
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/what-input/dist/what-input.js"></script>
