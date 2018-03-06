@@ -348,8 +348,37 @@ Enrolls a student in a course
 class EnrollStudent(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
-    
+
     def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('class_id', type=int)
+        parser.add_argument('user_id', type=int)
+        class_id = parser.parse_args().get("class_id")
+        user_id = parser.parse_args().get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("INSERT IGNORE INTO student_to_class (student_id, class_id)"
+                    "VALUES (%s, %s)",
+                    [user_id, class_id])
+
+        cur.execute("UPDATE classes "
+                    "SET num_enrolled=num_enrolled+1 "
+                    "WHERE class_id = %s",
+                    [class_id])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(EnrollStudent, '/EnrollStudent')
@@ -360,11 +389,79 @@ Removes a student from a course
 class DropStudent(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
-    
+
     def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('class_id', type=int)
+        parser.add_argument('user_id', type=int)
+        class_id = parser.parse_args().get("class_id")
+        user_id = parser.parse_args().get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("DELETE FROM student_to_class "
+                    "WHERE student_id = %s "
+                    "AND class_id = %s",
+                    [user_id, class_id])
+
+        cur.execute("UPDATE classes "
+                    "SET num_enrolled=num_enrolled-1 "
+                    "WHERE class_id = %s",
+                    [class_id])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(DropStudent, '/DropStudent')
+
+"""
+Check users enrollment status in a course
+"""
+class CheckEnrollmentStatus(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get student id
+        parser = reqparse.RequestParser()
+        parser.add_argument('class_id', type=int)
+        parser.add_argument('user_id', type=int)
+        class_id = parser.parse_args().get("class_id")
+        user_id = parser.parse_args().get("user_id")
+
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT count(*) FROM student_to_class "
+                    "WHERE student_id = %s "
+                    "AND class_id = %s",
+                    [user_id, class_id])
+
+        query = cur.fetchall()
+
+        result = {'enrollment_status': str(query[0][0] > 0)}
+
+        return jsonify(result)
+
+api.add_resource(CheckEnrollmentStatus, '/CheckEnrollmentStatus')
+
 
 """
 Adds a class to a student's list of favorite classes
