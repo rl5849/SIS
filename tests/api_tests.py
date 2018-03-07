@@ -18,9 +18,10 @@ class TestGetStudentsClasses(SetupGetStudentsClasses):
 
 	"""
 	data = 
-"students_classes": [
+{
+    "students_classes": [
         {
-            "num_enrolled": 0,
+            "num_enrolled": 1,
             "semester_id": 1,
             "capacity": 23,
             "name": "Beers of the World",
@@ -33,7 +34,7 @@ class TestGetStudentsClasses(SetupGetStudentsClasses):
             "course_id": 1
         },
         {
-            "num_enrolled": 4,
+            "num_enrolled": 1,
             "semester_id": 1,
             "capacity": 54,
             "name": "Web Eng.",
@@ -46,7 +47,7 @@ class TestGetStudentsClasses(SetupGetStudentsClasses):
             "course_id": 2
         },
         {
-            "num_enrolled": 4,
+            "num_enrolled": 1,
             "semester_id": 1,
             "capacity": 54,
             "name": "Art",
@@ -77,9 +78,6 @@ class TestGetStudentsClasses(SetupGetStudentsClasses):
 		self.assertEqual(len(self.classes), 3,
 						 "Expected '3', Found '" + str(len(self.classes)) + "'")
 
-	# def test_same_courseId_different_classId(self):
-	# 	self.assertEqual(self.classes[0].get("course_id"), self.classes[1].get("course_id"))
-	# 	self.assertNotEqual(self.classes[0].get("class_id"), self.classes[1].get("class_id"))
 
 	def test_no_same_class_ID(self):
 		class_ids = []
@@ -345,6 +343,11 @@ class TestGetClasses(SetupGetClasses):
 	#def test_print(self):
 	#	print (json.dumps(self.data, indent=4))
 
+	def test_same_courseId_different_classId(self):
+		self.assertEqual(self.classes[0].get("course_id"), self.classes[1].get("course_id"))
+	 	self.assertNotEqual(self.classes[0].get("class_id"), self.classes[1].get("class_id"))
+
+
 	def test_unique_ids(self):
 		ids = []
 		for class_id in self.classes:
@@ -564,8 +567,8 @@ class TestWaitlistByClass(SetupWaitlistByClass):
 	data =?
 
 	"""
-	def test_print(self):
-		print (json.dumps(self.data, indent=4))
+	#def test_print(self):
+		#print (json.dumps(self.data, indent=4))
 
 
 
