@@ -45,7 +45,7 @@
     $access_token_request = file_get_contents("https://www.linkedin.com/oauth/v2/accessToken", false, $context);
     $access_token = json_decode($access_token_request)["access_token"];
 
-    echo substr($access_token, 0, 3);
+    echo "First 3 of token: ".substr($access_token, 0, 3);
 
     $linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
     $linkedin_user_info = json_decode($linkedin_user_info, true);
