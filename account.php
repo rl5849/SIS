@@ -21,6 +21,8 @@
     // Get the Access Token from LinkedIn
     $code = $_GET["code"];
 
+    echo $code;
+
     // Parse config file for codes
     $myfile = fopen("LinkedIn/config.ini", "r") or die("Unable to open file!");
     $readfile = fread($myfile,filesize("LinkedIn/config.ini"));
