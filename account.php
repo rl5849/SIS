@@ -36,15 +36,20 @@
         'http' => array(
             'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
             'method'  => 'POST',
-            'grant_type' => 'authorization_code',
-            'code' => $code,
-            'cliend_id' => $client_id,
-            'client_secret' => $client_secret,
-            'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/account.php'
         )
     );
+
+    $params = array(
+        'grant_type' => 'authorization_code',
+        'code' => $code,
+        'cliend_id' => $client_id,
+        'client_secret' => $client_secret,
+        'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/account.php'
+    );
+
     $context  = stream_context_create($options);
-    $access_token_request = file_get_contents("https://www.linkedin.com/oauth/v2/accessToken", false, $context);
+    $url = "https://www.linkedin.com/oauth/v2/accessToken" . http_build_query($params);
+    $access_token_request = file_get_contents($url, false, $context);
     $access_token = json_decode($access_token_request)["access_token"];
 
     echo "First 3 of token: ".substr($access_token, 0, 3);
