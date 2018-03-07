@@ -33,7 +33,7 @@
       </div>
       <div class="large-4 medium-4 small-4 cell">
         <ul class="profile-list">
-		  <li><?php echo "<h5>".($student_info["student_info"][0]["student_name"])."</h5>"?></li>
+		  <li><?php echo "<h4>".($student_info["student_info"][0]["student_name"])."</h4>"?></li>
 		  <li><?php
                 $date = strtotime($student_info["student_info"][0]["date_of_birth"]);
                 $date = date("d-m-Y", $date);
