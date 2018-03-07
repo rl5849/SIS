@@ -43,7 +43,7 @@ function instantiateFilter() {
         var list_entries = document.getElementsByName('class_listing');
         var filter_text = filter.value;
         for (var x = 0; x < list_entries.length; x++) {
-            if (filter_text === '' || list_entries[x].toLowerCase().innerHTML.indexOf(filter_text.toLowerCase()) > -1) {
+            if (filter_text === '' || list_entries[x].innerHTML.toLowerCase().indexOf(filter_text.toLowerCase()) > -1) {
                 list_entries[x].removeAttribute('hidden');
             }
             else {
