@@ -17,23 +17,34 @@
     <h2>Add new class section</h2>
     <form method ="post" >
         <select name="class" id="class">
-
+            <option>Class</option>
         <?php
         $class_list = file_get_contents("http://127.0.0.1:5002/GetClasses");
         $class_list = json_decode($class_list, true);
 
-        foreach ($class_list["classes"] as $class){
-            ?>
+        foreach ($class_list["classes"] as $class){ ?>
             <option value="<?php echo $class["class_id"]; ?>"><?php echo $class["name"]; ?></option>
-            <?php
-        }
-        ?>
+        <?php } ?>
         </select>
 
-        <input type="" name="enroll" value="<?php ?>">
-        <input type="hidden" name="class_id" value="<?php ?>">
-        <input type="hidden" name="user_id" value="<?php ?>">
-        <input type="submit" class="button expanded rit-orange" value="<?php ?>">
+        
+        <input type="number" name="Capacity" min="1" max="300" placeholder="Capacity">
+        <input type="number" name="Room Number" min="1" max="1000" placeholder="Room Number">
+        <input type="text" name="Time" placeholder="Time">
+        
+        <select name="professor">
+            <option>Professor</option>
+            <?php
+            //Professor list
+            $prof_list = file_get_contents("http://127.0.0.1:5002/GetProfs");
+            $prof_list = json_decode($prof_list, true);
+
+            foreach ($prof_list["profs"] as $prof){ ?>
+                <option value="<?php echo $prof; ?>"><?php echo $prof; ?></option>
+            <?php } ?>
+        </select>
+
+        <input type="submit" class="button expanded rit-orange" value="Create Section">
     </form>
 </div>
 
