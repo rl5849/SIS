@@ -47,10 +47,10 @@
             $enroll = file_get_contents("http://127.0.0.1:5002/EnrollStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
             $enroll = json_decode($enroll, true);
             if ($enroll == "SUCCESS"){
-                echo "<script>alert(\"Successfully Enrolled in class\");</script>";
+                echo "<script>showMessage(\"success\", \"Successfully Enrolled in class\");</script>";
             }
             else{
-                echo "<script>alert(\"Error\");</script>";
+                echo "<script>showMessage(\"failure\", \"Failed to Enroll in class\");</script>";
             }
         }
 
@@ -61,10 +61,10 @@
             $unenroll = file_get_contents("http://127.0.0.1:5002/DropStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
             $unenroll = json_decode($unenroll, true);
             if ($unenroll == "SUCCESS"){
-                echo "<script>alert(\"Successfully dropped class\");</script>";
+                echo "<script>showMessage(\"success\", \"Successfully Dropped class\");</script>";
             }
             else{
-                echo "<script>alert(\"Error\");</script>";
+                echo "<script>showMessage(\"failure\", \"Failed to Drop class\");</script>";
             }
         }
 
