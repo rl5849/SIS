@@ -19,31 +19,6 @@
 
             <div class="small-12 medium-3 large-3 columns">
                 <div>
-                    <!--
-                    <h4>Add new class section</h4>
-                    <form method ="post" >
-                        <select name="class" id="class">
-
-                            <?php
-                            $class_list = file_get_contents("http://127.0.0.1:5002/GetClasses");
-                            $class_list = json_decode($class_list, true);
-
-                            foreach ($class_list["classes"] as $class){
-                                ?>
-                                <option value="<?php echo $class["class_id"]; ?>"><?php echo $class["name"]; ?></option>
-                                <?php
-                            }
-                            ?>
-                        </select>
-
-                        <input type="" name="enroll" value="<?php ?>">
-                        <input type="hidden" name="class_id" value="<?php ?>">
-                        <input type="hidden" name="user_id" value="<?php ?>">
-                        <input type="submit" class="button expanded rit-orange" value="<?php ?>">
-
-                    </form>
-                    -->
-                    <!-- Start new form -->
                     <form class="callout text-center" method="post">
                         <h4>Add a New Class Section</h4>
                         <div class="floated-label-wrapper">
