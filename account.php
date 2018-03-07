@@ -30,7 +30,7 @@
     // PHP for using the LinkedIn API
     $linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
     $linkedin_user_info = json_decode($linkedin_user_info, true);
-    echo $linkedin_user_info;
+    echo "test".$linkedin_user_info;
     ?>
 	<div class="grid-container">
   
