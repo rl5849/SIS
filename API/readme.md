@@ -51,6 +51,7 @@ TODO
 <!-- Start Add Student -->
 
 <a name="AddStudent"/>
+
 ### Add Student
 
 Adds a student to the database
@@ -81,6 +82,7 @@ Adds a student to the database
 <!-- Start Modify Profile -->
 
 <a name="ModifyProfile"/>
+
 ### Modify Profile
 
 Modifies information about the user's profile in the database
@@ -103,6 +105,7 @@ TODO
 <!-- Start Modify Professor -->
 
 <a name="ModifyProfessor"/>
+
 ### Modify Professor
 
 Modifies information about the professor in the database
@@ -125,6 +128,7 @@ TODO
 <!-- Start Request Prof Approval -->
 
 <a name="ReqProfApproval"/>
+
 ### Request Professor Approval
 
 Flags the specified account as awaiting approval for becoming a professor
@@ -147,6 +151,7 @@ TODO
 <!-- Start Get Professor by ID -->
 
 <a name="GetProfByID"/>
+
 ### Get Professor By ID
 
 Gets the professor name associated with the professor ID
@@ -172,6 +177,7 @@ professor_name
 
 <!-- Start Get Courses -->
 <a name="GetCourses"/>
+
 ### Get Course(s)
 
 Get all courses that match a given criteria
@@ -194,6 +200,7 @@ TODO
 <!-- Start Get Classes -->
 
 <a name="GetClasses"/>
+
 ### Get Class(es)
 
 Gets all classes that match a given criteria
@@ -214,6 +221,7 @@ TODO
 <!-- Start Modify Course -->
 
 <a name="ModifyCourse"/>
+
 ### Modify Course
 
 Changes information about the course in the database
@@ -236,6 +244,7 @@ TODO
 <!-- Start Modify Class -->
 
 <a name="ModifyClass"/>
+
 ### Modify Class
 
 Changes information about the class in the database
@@ -258,6 +267,7 @@ TODO
 <!-- Start Get Students Classes -->
 
 <a name="GetStudClasses"/>
+
 ### Get Student's Classes
 
 Gets all classes for a student.
@@ -286,6 +296,7 @@ students_classes
 <!-- Start Enroll Student -->
 
 <a name="EnrollStudent"/>
+
 ### Enroll Student
 
 Adds a student and class pair to the enrollment db
@@ -308,6 +319,7 @@ TODO
 <!-- Start Drop Student -->
 
 <a name="DropStudent"/>
+
 ### Drop Student
 
 Removed a student from the specified course
@@ -330,6 +342,7 @@ TODO
 <!-- Start Get Favorited Classes -->
 
 <a name="GetFavoriteClasses"/>
+
 ### Get Student's Favorited Classes
 
 Gets all favorited classes for a student
@@ -358,6 +371,7 @@ favorited_classes
 <!-- Start Favorite Class -->
 
 <a name="FavoriteClass"/>
+
 ### Favorite Class
 
 Adds a student and class pair to the favorite classes table
@@ -379,6 +393,7 @@ TODO
 <!-- End Favorite Class -->
 <!-- Start Unfavorite Class -->
 <a name="UnfavoriteClass"/>
+
 ### Unfavorite Class
 
 Removed the student class pair from the favorite classes table
@@ -401,6 +416,7 @@ TODO
 <!-- End Unfavorite Class -->
 <!-- Start Get Grade -->
 <a name="GetGrade"/>
+
 ### Get Grade
 
 Gets the grade for a student in a class
@@ -421,6 +437,7 @@ TODO
 <!-- Start Waitlist By Class -->
 
 <a name="WaitlistByClass"/>
+
 ### Get Waitlist By Class
 
 Gets a waitlist for a given class
@@ -441,6 +458,7 @@ TODO
 <!-- Start Get Current Semester -->
 
 <a name="GetCurrentSemester"/>
+
 ### Get Current Semester
 
 Gets the current semester of the system
