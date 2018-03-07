@@ -40,7 +40,7 @@
     $params = array(
         'grant_type' => 'authorization_code',
         'code' => $code,
-        'cliend_id' => $client_id,
+        'client_id' => $client_id,
         'client_secret' => $client_secret,
         'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/account.php'
     );
