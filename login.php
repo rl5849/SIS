@@ -39,13 +39,13 @@
           <!-- LinkedIn Button -->
             <?php
               echo "<a href='https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=".$client_id."&redirect_uri=https://vm344p.se.rit.edu/SIS/account.php'>";
-              echo    "<img id='linkedin-login-button' src='LinkedIn/images/Sign-In-Large---Default.png' alt='Sign in with LinkedIn'>";
+              echo    "<img id='linkedin-login-button' src='images/Sign-In-Large---Default.png' alt='Sign in with LinkedIn'>";
               echo "</a>";
             ?>
           
           <!-- Load the images of hover and active so that they aren't loaded first when the user interacts with the button -->
-          <img style="display:none;" src="LinkedIn/images/Sign-In-Large---Hover.png">
-          <img style="display:none;" src="LinkedIn/images/Sign-In-Large---Active.png">
+          <img style="display:none;" src="images/Sign-In-Large---Hover.png">
+          <img style="display:none;" src="images/Sign-In-Large---Active.png">
           
           <a href="account.php" style="padding-top:5%">
             <p>
