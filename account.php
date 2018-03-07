@@ -21,8 +21,6 @@
     // Get the Access Token from LinkedIn
     $code = $_GET["code"];
 
-    echo $code;
-
     // Parse config file for codes
     $myfile = fopen("LinkedIn/config.ini", "r") or die("Unable to open file!");
     $readfile = fread($myfile,filesize("LinkedIn/config.ini"));
@@ -34,8 +32,8 @@
 
     $options = array(
         'http' => array(
-            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-            'method'  => 'POST',
+            'header'  => "Content-type: application/x-www-form-urlencoded",
+            'method'  => 'POST'
         )
     );
 
@@ -49,6 +47,7 @@
 
     $context  = stream_context_create($options);
     $url = "https://www.linkedin.com/oauth/v2/accessToken?" . http_build_query($params);
+    echo "url:".$url;
     $access_token_request = file_get_contents($url, false, $context);
     $access_token = json_decode($access_token_request)["access_token"];
 
