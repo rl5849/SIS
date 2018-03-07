@@ -16,6 +16,7 @@
     <!-- End load Nave Bar and Callouts -->
     
     <?php
+    // PHP for using the local SIS API
     date_default_timezone_set("America/New_York");
     $student_id = 1;
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
@@ -23,6 +24,13 @@
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
     $student_info = json_decode($student_info, true);
 
+    ?>
+
+    <?php
+    // PHP for using the LinkedIn API
+    $linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
+    $linkedin_user_info = json_decode($linkedin_user_info, true);
+    echo $linkedin_user_info;
     ?>
 	<div class="grid-container">
   
