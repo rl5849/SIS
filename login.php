@@ -47,7 +47,7 @@
           <img style="display:none;" src="LinkedIn/images/Sign-In-Large---Hover.png">
           <img style="display:none;" src="LinkedIn/images/Sign-In-Large---Active.png">
           
-          <a href="account.php">
+          <a href="account.php" style="padding-top:5%">
             <p>
               <input type="submit" class="button expanded rit-brown" value="Or just bypass this cause we bad"></input>
             </p>
