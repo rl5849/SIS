@@ -25,6 +25,16 @@
         
           <h2> RIT SIS++ </h2>
           <h4 class="text-center">Sign in with LinkedIn</h4>
+
+            <?php
+            $myfile = fopen("LinkedIn/config.ini", "r") or die("Unable to open file!");
+            $readfile = fread($myfile,filesize("LinkedIn/config.ini"));
+            $arr = explode("\n", $readfile);
+            $client_id = explode("=", $arr[0])[1];
+            $ciient_secret = explode("=", $arr[0])[1];
+
+            fclose($myfile);
+            ?>
           
           <!-- LinkedIn Button -->
           <a><img id="linkedin-login-button" src="#" alt="Sign in with LinkedIn"</a>
