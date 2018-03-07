@@ -20,7 +20,7 @@
       <div class="grid-x grid-padding-x">
         
         <ul class="menu" style="margin-top:2%;">
-          <li><input type="search" placeholder="Enter a course ID, Instructor, Time, etc. (ex. SWEN-344)" style="width:200%"></li>
+          <li><input id="filter" type="search" placeholder="Enter a course ID, Instructor, Time, etc. (ex. SWEN-344)" style="width:200%"></li>
           <li><button type="button" class="button" style="margin-left:267%;">Search</button></li>
         </ul>
 
@@ -45,7 +45,7 @@
                   $professor = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" . $class["professor_id"]);
                   $professor = json_decode($professor, true);
               ?>
-              <tr>
+              <tr name="class_listing">
                 <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
                 <td><?php echo $class["section"];?></td>
                 <td><?php echo $class["time"];?></td>
@@ -67,6 +67,7 @@
     <script>
       makeNav();
       makeCallouts();
+      instantiateFilter();
      </script>
   </body>
 </html>
