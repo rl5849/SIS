@@ -25,10 +25,12 @@
 13. [Get Current Semester](#GetCurrentSemester)
 
 <a name="UserStudent"/>
+
 ## User/Student
 
 <!-- Start Get Student Info -->
 <a name="GetStudent"/>
+
 ### Get Student
 
 Gets information about a student.
