@@ -31,7 +31,7 @@
             $readfile = fread($myfile,filesize("LinkedIn/config.ini"));
             $arr = explode("\n", $readfile);
             $client_id = explode("=", $arr[0])[1];
-            $ciient_secret = explode("=", $arr[0])[1];
+            $client_secret = explode("=", $arr[0])[1];
 
             fclose($myfile);
             ?>
