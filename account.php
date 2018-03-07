@@ -14,6 +14,43 @@
     <div id="nav-placeholder"></div>
     <div id="callouts-placeholder"></div>
     <!-- End load Nave Bar and Callouts -->
+
+    <?php
+    // PHP for using the LinkedIn API
+
+    // Get the Access Token from LinkedIn
+    $code = $_GET["code"];
+
+    // Parse config file for codes
+    $myfile = fopen("LinkedIn/config.ini", "r") or die("Unable to open file!");
+    $readfile = fread($myfile,filesize("LinkedIn/config.ini"));
+    $arr = explode("\n", $readfile);
+    $client_id = explode("=", $arr[0])[1];
+    $client_secret = explode("=", $arr[0])[1];
+
+    fclose($myfile);
+
+    $options = array(
+        'http' => array(
+            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+            'method'  => 'POST',
+            'grant_type' => 'authorization_code',
+            'code' => $code,
+            'cliend_id' => $client_id,
+            'client_secret' => $client_secret,
+            'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/account.php'
+        )
+    );
+    $context  = stream_context_create($options);
+    $access_token_request = file_get_contents("https://www.linkedin.com/oauth/v2/accessToken", false, $context);
+    $access_token = json_decode($access_token_request)["access_token"];
+
+    echo substr($access_token, 0, 3);
+
+    $linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
+    $linkedin_user_info = json_decode($linkedin_user_info, true);
+    echo "test".$linkedin_user_info;
+    ?>
     
     <?php
     // PHP for using the local SIS API
@@ -26,12 +63,6 @@
 
     ?>
 
-    <?php
-    // PHP for using the LinkedIn API
-    $linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
-    $linkedin_user_info = json_decode($linkedin_user_info, true);
-    echo "test".$linkedin_user_info;
-    ?>
 	<div class="grid-container">
   
     <div class="grid-x grid-padding-x" style="padding-top:2%;">
