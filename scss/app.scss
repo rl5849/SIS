@@ -102,6 +102,81 @@
   }
 }
 
+// Admin page
+.marketing-site-features {
+  text-align: center;
+  padding: 2rem 0;
+
+  .fa {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: $primary-color;
+  }
+
+  .marketing-site-features-title {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+
+  @media screen and (min-width: 40em) {
+    text-align: left;
+  }
+}
+
+.marketing-site-features-headline {
+  text-align: center;
+  font-size: 24px;
+}
+
+.marketing-site-features-subheadline {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+// here
+.floated-label-wrapper {
+  position: relative;
+
+  label {
+    background: $white;
+    color: $primary-color;
+    font-size: 0.75rem;
+    font-weight: 600;
+    left: 0.75rem;
+    opacity: 0;
+    padding: 0 0.25rem;
+    position: absolute;
+    top: 2rem;
+    transition: all 0.15s ease-in;
+    z-index: -1;
+
+    input[type=text],
+    input[type=email],
+    input[type=password] {
+      border-radius: 4px;
+      font-size: 1.75em;
+      padding: 0.5em;
+    }
+
+    &.show {
+      opacity: 1;
+      top: -0.85rem;
+      z-index: 1;
+      transition: all 0.15s ease-in;
+    }
+  }
+}
+
+// Icons
+.favorited {
+  color: red;
+}
+
+.unfavorited {
+  color: lightgray;
+}
+
+
 
 
 
