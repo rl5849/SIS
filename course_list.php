@@ -7,6 +7,7 @@
     <title>SIS - Course List</title>
     <link rel="stylesheet" href="css/app.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+      <link rel="stylesheet" href="css/foundation-icons.css">
   </head>
   <body>
     <!-- Load Nav Bar and Callouts -->
@@ -18,7 +19,7 @@
     <div class="grid-container">
 	  
       <div class="grid-x grid-padding-x">
-        
+
         <ul class="menu" style="margin-top:2%;">
           <li><input id="filter" type="search" placeholder="Enter a course ID, Instructor, Time, etc. (ex. SWEN-344)" style="width:200%"></li>
           <li><button type="button" class="button" style="margin-left:267%;">Search</button></li>
@@ -26,6 +27,7 @@
 
           <table class="hover" style="margin-top:2%;">
               <tr>
+                  <th>Fav.</th>
                   <th>Course</th>
                   <th>Section</th>
                   <th>Time</th>
@@ -46,6 +48,12 @@
                   $professor = json_decode($professor, true);
               ?>
               <tr name="class_listing">
+                  <td>
+                      <!-- Use if favorited -->
+                      <!--<i class="fi-heart style3 favorited"></i>-->
+                      <!-- Use if not favorited -->
+                      <i class="fi-heart unfavorited"></i>
+                  </td>
                 <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
                 <td><?php echo $class["section"];?></td>
                 <td><?php echo $class["time"];?></td>

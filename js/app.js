@@ -50,6 +50,5 @@ function instantiateFilter() {
                 list_entries[x].setAttribute('hidden', 'true');
             }
         }
-        console.log("Filtered");
     }
 }
