@@ -166,30 +166,26 @@ class AddUser(Resource):
         parsed = parser.parse_args()
 
         name = parsed.get("name")
-        linkedin_id = parsed.get("linkdedin_id")
+        linkedin_id = parsed.get("linkedin_id")
         profile_pic = parsed.get("profile_pic")
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.253',
+                             host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
 
         # Select data from table using SQL query.
         cur.execute("INSERT INTO students"
-                   "(name, profile_pic) "
-                   "VALUES (%s, %s, %s);",
-                   [name, id, profile_pic])
-
-        cur.execute("SELECT LAST_INSERT_ID()")
-        uid = cur.fetchall[0][0]
-        print uid
+                   "(student_name, profile_pic) "
+                   "VALUES (%s, %s);",
+                   [name, profile_pic])
 
         cur.execute("INSERT INTO users"
-                    "(user_id, name, linkeded_id, profile_pic) "
-                    "VALUES (%s, %s, %s);",
-                    [uid, name, linkedin_id, profile_pic])
+                    "(user_id, name, linkedin) "
+                    "VALUES (LAST_INSERT_ID(), %s, %s);",
+                    [name, linkedin_id])
 
         try:
             db.commit()
