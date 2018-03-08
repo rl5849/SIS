@@ -26,9 +26,6 @@ else{
     
     
     <?php
-        //TODO set via cookie
-
-
         if (isset($_GET["class_id"])){
             $class_id = $_GET["class_id"];
         }
