@@ -11,16 +11,16 @@ api = Api(app)
 SUCCESS_MESSAGE = "SUCCESS"
 FAILURE_MESSAGE = "FAILURE"
 
-###Use a course ID to get all their classes currently enrolled
+###Use a student ID to get all their classes currently enrolled
 class GetStudentsClasses(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
     def get(self):
-        # Get course id
+        # Get student id
         parser = reqparse.RequestParser()
-        parser.add_argument('course_id', type=int)
-        course_id = parser.parse_args().get("course_id")
+        parser.add_argument('student_id', type=int)
+        student_id = parser.parse_args().get("student_id")
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
@@ -33,7 +33,7 @@ class GetStudentsClasses(Resource):
         cur.execute("SELECT * FROM classes "
                     "LEFT JOIN student_to_class ON (classes.class_id = student_to_class.class_id) "
                     "WHERE student_to_class.student_id = %s",
-                    [course_id])
+                    [student_id])
         query = cur.fetchall()
         # Get variable names
         cur.execute(
