@@ -1,3 +1,8 @@
+<?php
+header('Location: https://vm344p.se.rit.edu/SIS/login.php');
+die();
+?>
+
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
