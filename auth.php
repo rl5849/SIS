@@ -23,13 +23,10 @@ $params = array(
 
 $options = array(
     'http' => array(
-        'header'  => "Host: www.linkedin.com\r\nContent-type: application/x-www-form-urlencoded\r\n",
-        'method'  => 'GET'
+        //'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+        'method'  => 'POST'
     )
 );
-
-echo $client_id."<br/>";
-echo $client_secret."<br/>";
 
 $context  = stream_context_create($options);
 $url = "https://www.linkedin.com/oauth/v2/accessToken?".http_build_query($params);
