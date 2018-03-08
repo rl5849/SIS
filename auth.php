@@ -66,7 +66,7 @@ $params = array(
     'profile_pic' => $profilePic
 );
 
-$url = "127.0.0.1:5002/AddUser?";
+$url = "http://127.0.0.1:5002/AddUser?";
 
 $response = file_get_contents($url.http_build_query($params), true);
 
