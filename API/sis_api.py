@@ -31,8 +31,8 @@ class GetStudentsClasses(Resource):
 
         # Select data from table using SQL query.
         cur.execute("SELECT * FROM classes "
-                    "LEFT JOIN course_to_class ON (classes.class_id = course_to_class.class_id) "
-                    "WHERE course_to_class.course_id = %s",
+                    "LEFT JOIN student_to_class ON (classes.class_id = student_to_class.class_id) "
+                    "WHERE student_to_class.course_id = %s",
                     [course_id])
         query = cur.fetchall()
         # Get variable names
@@ -459,7 +459,7 @@ class DropStudent(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("DELETE FROM course_to_class "
+        cur.execute("DELETE FROM student_to_class "
                     "WHERE course_id = %s "
                     "AND class_id = %s",
                     [user_id, class_id])
@@ -502,7 +502,7 @@ class CheckEnrollmentStatus(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT count(*) FROM course_to_class "
+        cur.execute("SELECT count(*) FROM student_to_class "
                     "WHERE course_id = %s "
                     "AND class_id = %s",
                     [user_id, class_id])
