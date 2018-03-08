@@ -14,57 +14,46 @@ class SetupGetStudentsClasses(unittest.TestCase):
 		self.classes = self.data.get("students_classes")
 
 
+class TestAddCourse(unittest.TestCase):
+
+	def test_add_success(self):
+		pass # Pass for now as this has not been implemented
+		# url = "http://127.0.0.1:5002/AddCourse"
+		# response = urllib2.urlopen(url)
+		# data = json.load(response)
+		# self.assertEqual(data, api.SUCCESS_MESSAGE,
+		# 			"Expected '" + str(api.SUCCESS_MESSAGE) +
+		# 			"', Found '" + str(data) + "'")
+
+
+class TestAddClass(unittest.TestCase):
+
+	def test_add_success(self):
+		pass # Pass for now as this has not been implemented
+		# url = "http://127.0.0.1:5002/AddClass"
+		# response = urllib2.urlopen(url)
+		# data = json.load(response)
+		# self.assertEqual(data, api.SUCCESS_MESSAGE,
+		# 			"Expected '" + str(api.SUCCESS_MESSAGE) +
+		# 			"', Found '" + str(data) + "'")
+
+
+class TestAddUser(unittest.TestCase):
+
+	def test_add_success(self):
+		pass # Pass for now as this has not been implemented
+		# url = "http://127.0.0.1:5002/AddUser"
+		# response = urllib2.urlopen(url)
+		# data = json.load(response)
+		# self.assertEqual(data, api.SUCCESS_MESSAGE,
+		# 			"Expected '" + str(api.SUCCESS_MESSAGE) +
+		# 			"', Found '" + str(data) + "'")
+
+
 class TestGetStudentsClasses(SetupGetStudentsClasses):
 
-	"""
-	data = 
-{
-    "students_classes": [
-        {
-            "num_enrolled": 1,
-            "semester_id": 1,
-            "capacity": 23,
-            "name": "Beers of the World",
-            "class_id": 3,
-            "professor_id": 1,
-            "section": 1,
-            "room_number": 1,
-            "credits": null,
-            "time": "TuTh 10:15-11:10",
-            "course_id": 1
-        },
-        {
-            "num_enrolled": 1,
-            "semester_id": 1,
-            "capacity": 54,
-            "name": "Web Eng.",
-            "class_id": 5,
-            "professor_id": 1,
-            "section": 1,
-            "room_number": 3,
-            "credits": null,
-            "time": "MWF 5:00-7:00",
-            "course_id": 2
-        },
-        {
-            "num_enrolled": 1,
-            "semester_id": 1,
-            "capacity": 54,
-            "name": "Art",
-            "class_id": 6,
-            "professor_id": 1,
-            "section": 1,
-            "room_number": 3,
-            "credits": null,
-            "time": "TuTh 11:10-12:05",
-            "course_id": 3
-        }
-    ]
-}
-	"""
-
-	# def test_print(self):
-	# 	print (json.dumps(self.data, indent=4))
+	#def test_print(self):
+		#print (json.dumps(self.data, indent=4))
 
 	def test_course_id(self):
 		self.assertEqual(self.classes[0].get("course_id"), 1,
@@ -75,9 +64,12 @@ class TestGetStudentsClasses(SetupGetStudentsClasses):
 						 "Expected 'Beers of the World', Found '" + str(self.classes[0].get("name")) + "'")
 
 	def test_number_of_courses(self):
-		self.assertEqual(len(self.classes), 3,
-						 "Expected '3', Found '" + str(len(self.classes)) + "'")
+		self.assertEqual(len(self.classes), 5,
+						 "Expected '5', Found '" + str(len(self.classes)) + "'")
 
+	def test_same_courseId_different_classId(self):
+		self.assertEqual(self.classes[0].get("course_id"), self.classes[1].get("course_id"))
+		self.assertNotEqual(self.classes[0].get("class_id"), self.classes[1].get("class_id"))
 
 	def test_no_same_class_ID(self):
 		class_ids = []
@@ -89,7 +81,7 @@ class TestGetStudentsClasses(SetupGetStudentsClasses):
 class TestAddStudent(unittest.TestCase):
 	
 	def test_adding(self):
-		url = "http://127.0.0.1:5002/AddStudent"
+		url = "http://127.0.0.1:5002/AddUser"
 		name = "?&student_name=Lucas%20Kretvix"
 		dob = "&date_of_birth=07-30-1996"
 		prof_pic = "&profile_pic=https://i0.wp.com/radaronline.com/wp-content/uploads/2017/05/betty-white-secret-suitor-split-pp.jpg?fit=640%2C420&ssl=1"
@@ -108,7 +100,6 @@ class SetupGetFavoritedClasses(unittest.TestCase):  # Not implemented yet
 		self.url = "http://127.0.0.1:5002/GetFavoritedClasses"
 		self.response = urllib2.urlopen(self.url)
 		self.data = json.load(self.response)
-		# self.classes = self.data.get("favorited_classes")
 
 
 class TestGetFavoritedClasses(SetupGetFavoritedClasses):
@@ -120,12 +111,6 @@ class TestGetFavoritedClasses(SetupGetFavoritedClasses):
 		self.assertEqual(self.data, api.FAILURE_MESSAGE,
 					"Expected '" + str(api.FAILURE_MESSAGE) + 
 					"', Found '" + str(self.data) + "'")
-#
-#	def test_course_id(self):
-# 		self.assertEqual(self.classes[0].get("course_id"), 1)
-#
-#	def test_number_of_courses(self):
-# 		self.assertEqual(len(self.classes), 4)
 
 
 class SetupGetStudentInfo(unittest.TestCase):
@@ -343,11 +328,6 @@ class TestGetClasses(SetupGetClasses):
 	#def test_print(self):
 	#	print (json.dumps(self.data, indent=4))
 
-	def test_same_courseId_different_classId(self):
-		self.assertEqual(self.classes[0].get("course_id"), self.classes[1].get("course_id"))
-	 	self.assertNotEqual(self.classes[0].get("class_id"), self.classes[1].get("class_id"))
-
-
 	def test_unique_ids(self):
 		ids = []
 		for class_id in self.classes:
@@ -428,6 +408,17 @@ class TestDropStudent(unittest.TestCase):
 		self.assertEqual(data, api.SUCCESS_MESSAGE,
 					"Expected '" + str(api.SUCCESS_MESSAGE) + 
 					"', Found '" + str(data) + "'")
+
+
+class TestCheckEnrollmentStatus(unittest.TestCase):
+
+	def test_enrollment(self):
+		url = "http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=3&user_id=1"
+		response = urllib2.urlopen(url)
+		data = json.load(response)
+		status = data.get("enrollment_status")
+		self.assertEqual(status, "True",
+						 "Expected 'True', Found '" + str(status) + "'")
 
 
 class TestFavoriteClass(unittest.TestCase):
@@ -529,71 +520,61 @@ class TestCheckIfAdmin(unittest.TestCase):
 					"Expected 'false', Found '" + str(is_admin) + "'")
 
 
-class SetupGetProfessorByID(unittest.TestCase):
-	def setUp(self):
-		self.url = "http://127.0.0.1:5002/GetProfessorByID?professor_id=1"
-		self.response = urllib2.urlopen(self.url)
-		self.data = json.load(self.response)
-		self.professor = self.data.get("professor_name")
-
-
-class TestGetProfessorByID(SetupGetProfessorByID):
-
-	"""
-	data =?
-{
-    "professor_name": "Krutz"
-}
-	"""
-	# def test_print(self):
-	# 	print (json.dumps(self.data, indent=4))
+class TestGetProfessorByID(unittest.TestCase):
 
 	def test_prof_name(self):
-		self.assertEqual(self.professor, "Krutz",
-						 "Expected 'Krutz', Found '" + str(self.professor) + "'")
+		url = "http://127.0.0.1:5002/GetProfessorByID?professor_id=1"
+		response = urllib2.urlopen(url)
+		data = json.load(response)
+		prof_name = data.get("professor_name")
+		self.assertEqual(prof_name, "Krutz",
+						 "Expected 'false', Found '" + str(prof_name) + "'")
 
 
-class SetupWaitlistByClass(unittest.TestCase):
-	def setUp(self):
-		self.url = "http://127.0.0.1:5002/WaitlistByClass?class_id=3"
-		self.response = urllib2.urlopen(self.url)
-		self.data = json.load(self.response)
-		#self.class_info = self.data.get("class_info")[0]
+class TestWaitlistByClass(unittest.TestCase):
+
+	def test_waitlist(self):
+		url = "http://127.0.0.1:5002/WaitlistByClass?class_id=3"
+		response = urllib2.urlopen(url)
+		data = json.load(response)
+		self.assertEqual(not data, True,
+						 "Expected 'false', Found '" + str(not data) + "'")
 
 
-class TestWaitlistByClass(SetupWaitlistByClass):
+class TestGetCurrentSemester(unittest.TestCase):
 
-	"""
-	data =?
-
-	"""
-	#def test_print(self):
-		#print (json.dumps(self.data, indent=4))
-
-
-
-class SetupGetCurrentSemester(unittest.TestCase):
-	def setUp(self):
-		self.url = "http://127.0.0.1:5002/GetCurrentSemester?class_id=5"
-		self.response = urllib2.urlopen(self.url)
-		self.data = json.load(self.response)
-		self.semester = self.data.get("current_semester")
+	def test_prof_name(self):
+		url = "http://127.0.0.1:5002/GetCurrentSemester"
+		response = urllib2.urlopen(url)
+		data = json.load(response)
+		current_semester = data.get("current_semester")
+		self.assertEqual(current_semester, 1,
+						 "Expected 'false', Found '" + str(current_semester) + "'")
 
 
-class TestGetCurrentSemester(SetupGetCurrentSemester):
+class TestGetProfs(unittest.TestCase):
 
-	"""
-	data =?
-{
-    "current_semester": 1
-}
-	"""
-	# def test_print(self):
-	# 	print (json.dumps(self.data, indent=4))
+	def test_prof_name(self):
+		url = "http://127.0.0.1:5002/GetProfs"
+		response = urllib2.urlopen(url)
+		data = json.load(response)
+		profs = data.get("profs")
+		self.assertEqual(len(profs), 2,
+						 "Expected '2', Found '" + str(len(profs)) + "'")
 
-	def test_semester(self):
-		self.assertEqual(self.semester, 1,
-						 "Expected '1', Found '" + str(self.semester) + "'")
+
+class TestGetUserIDFromLinkedInID(unittest.TestCase):
+
+	def test_prof_name(self):
+		url = "http://127.0.0.1:5002/GetUserIDFromLinkedInID"
+		pass  # Currently not implemented
+# 		response = urllib2.urlopen(url)
+# 		data = json.load(response)
+# 		print (json.dumps(data, indent=4))
+# 		profs = data.get("profs")
+# 		self.assertEqual(len(profs), 2,
+# 						 "Expected '2', Found '" + str(len(profs)) + "'")
+
 
 
 
