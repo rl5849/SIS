@@ -842,7 +842,7 @@ class GetUserIDFromLinkedInID(Resource):
 
     def get(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('linkedin_id', type=int)
+        parser.add_argument('linkedin_id', type=str)
         linkedin_id = parser.parse_args().get("linkedin_id")
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
