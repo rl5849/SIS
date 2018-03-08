@@ -30,6 +30,9 @@ $options = array(
     )
 );
 
+echo $client_id."<br/>";
+echo $client_secret."<br/>";
+
 $context  = stream_context_create($options);
 $url = "https://www.linkedin.com/oauth/v2/accessToken";
 echo "url:".$url."\n";
