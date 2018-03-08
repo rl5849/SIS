@@ -36,10 +36,16 @@ echo "url:".$url."<br/>";
 $access_token_request = file_get_contents($url, true);
 $access_token = json_decode($access_token_request);
 
-var_dump($access_token_request);
-var_dump($access_token->access_token);
+//var_dump($access_token_request);
+//var_dump($access_token);
 
-//$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
-//$linkedin_user_info = json_decode($linkedin_user_info, true);
-//echo "\ntest".$linkedin_user_info;
+$_SESSION['access_token'] = $access_token->access_token; // guard this!
+$_SESSION['expires_in']   = $access_token->expires_in; // relative time (in seconds)
+$_SESSION['expires_at']   = time() + $_SESSION['expires_in']; // absolute time
+
+echo $_SESSION['access_token']
+
+$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json", false, );
+$linkedin_user_info = json_decode($linkedin_user_info, true);
+echo "\ntest".$linkedin_user_info;
 ?>
