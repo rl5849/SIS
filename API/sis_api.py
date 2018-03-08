@@ -418,7 +418,7 @@ class EnrollStudent(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("INSERT IGNORE INTO course_to_class (course_id, class_id)"
+        cur.execute("INSERT IGNORE INTO student_to_class (course_id, class_id)"
                     "VALUES (%s, %s)",
                     [user_id, class_id])
 
