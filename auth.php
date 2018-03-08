@@ -34,7 +34,7 @@ $options = array(
 $context  = stream_context_create($options);
 $url = "https://www.linkedin.com/oauth/v2/accessToken?".http_build_query($params);
 
-echo "url:".$url."<br/>";
+//echo "url:".$url."<br/>";
 $access_token_request = file_get_contents($url, true);
 $access_token = json_decode($access_token_request);
 
@@ -42,9 +42,14 @@ $_SESSION['access_token'] = $access_token->access_token; // guard this!
 $_SESSION['expires_in']   = $access_token->expires_in; // relative time (in seconds)
 $_SESSION['expires_at']   = time() + $_SESSION['expires_in']; // absolute time
 
-echo $_SESSION['access_token'];
+//echo $_SESSION['access_token'];
 
-//$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json", false, );
-//$linkedin_user_info = json_decode($linkedin_user_info, true);
-//echo "\ntest".$linkedin_user_info;
+$params = array(
+    'oauth2_access_token' => $_SESSION['access_token'],
+    'format' => 'json'
+);
+
+$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?".http_build_query($params));
+$linkedin_user_info = json_decode($linkedin_user_info);
+var_dump($linkedin_user_info)
 ?>
