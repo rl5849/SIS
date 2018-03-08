@@ -34,11 +34,9 @@ $url = "https://www.linkedin.com/oauth/v2/accessToken?".http_build_query($params
 
 echo "url:".$url."<br/>";
 $access_token_request = file_get_contents($url, false, $context);
-
-var_dump($access_token_request);
-
 $access_token = json_decode($access_token_request);
 
+var_dump($access_token_request);
 var_dump($access_token->access_token);
 
 //$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
