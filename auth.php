@@ -49,7 +49,7 @@ $params = array(
     'format' => 'json'
 );
 
-$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~:(fName,lName,id,picture-url)?".http_build_query($params));
+$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~:(first-name,last-name,id,picture-url)?".http_build_query($params));
 $linkedin_user_info = json_decode($linkedin_user_info);
 
 var_dump($linkedin_user_info);
