@@ -24,12 +24,13 @@ $params = array(
 $options = array(
     'http' => array(
         'header'  => "Content-type: application/x-www-form-urlencoded",
-        'method'  => "POST"
+        'method'  => "POST",
+        'body' => http_build_query($params)
     )
 );
 
 $context  = stream_context_create($options);
-$url = "https://www.linkedin.com/oauth/v2/accessToken?".http_build_query($params);
+$url = "https://www.linkedin.com/oauth/v2/accessToken";
 //$url = "https://www.linkedin.com/uas/oauth2/accessToken?".http_build_query($params);
 
 echo "url:".$url."<br/>";
