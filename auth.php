@@ -39,8 +39,8 @@ $access_token_request = file_get_contents($url, false, $context);
 $access_token = json_decode($access_token_request);
 
 var_dump("<br/>Request: ".$access_token_request);
-echo $access_token_request;
-var_dump("<br/>json_decode: ".$access_token);
+echo "<br>/>".$access_token_request;
+var_dump("<br/>json_decode: ".$access_token->access_token);
 
 $garbage = file_get_contents($url);
 
