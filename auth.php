@@ -1,6 +1,6 @@
 <?php
 // PHP for using the LinkedIn API
-echo "9<br/>";
+echo "10<br/>";
 // Get the Access Token from LinkedIn
 $code = $_GET["code"];
 
@@ -24,13 +24,12 @@ $params = array(
 $options = array(
     'http' => array(
         'header'  => "Content-type: application/x-www-form-urlencoded",
-        'method'  => "POST",
-        'body' => http_build_query($params)
+        'method'  => "POST"
     )
 );
 
 $context  = stream_context_create($options);
-$url = "https://www.linkedin.com/oauth/v2/accessToken";
+$url = "https://www.linkedin.com/oauth/v2/accessToken?".http_build_query($params);
 //$url = "https://www.linkedin.com/uas/oauth2/accessToken?".http_build_query($params);
 
 echo "url:".$url."<br/>";
@@ -39,6 +38,8 @@ $access_token = json_decode($access_token_request);
 
 var_dump($access_token_request);
 var_dump($access_token->access_token);
+
+var_dump(file_get_contents($url), true)
 
 //$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
 //$linkedin_user_info = json_decode($linkedin_user_info, true);
