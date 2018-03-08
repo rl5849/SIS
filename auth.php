@@ -66,25 +66,49 @@ $params = array(
 
 $url = "http://127.0.0.1:5002/GetUserIDFromLinkedInID?".http_build_query($params);
 
-echo $url."<br/>";
-
 $response = file_get_contents($url, true);
 $user_id = json_decode($response) -> user_id;
 
-var_dump($user_id);
+if ($user_id == 'null') {
+    // Add user to system
+    $params = array(
+        'name' => $fName." ".$lName,
+        'linkedin_id' => $id,
+        'profile_pic' => $profilePic
+    );
 
-// TODO Add user to system
+    $url = "http://127.0.0.1:5002/AddUser?".http_build_query($params);
+
+    $response = file_get_contents($url, true);
+
+    // Get user id in the system if the user has already signed in with linkedin
+    $params = array(
+        'linkedin_id' => $id
+    );
+
+    $url = "http://127.0.0.1:5002/GetUserIDFromLinkedInID?".http_build_query($params);
+
+    $response = file_get_contents($url, true);
+    $user_id = json_decode($response) -> user_id;
+}
+
 $params = array(
-    'name' => $fName." ".$lName,
-    'linkedin_id' => $id,
-    'profile_pic' => $profilePic
+    'user_id' => $user_id
 );
 
-$url = "http://127.0.0.1:5002/AddUser?".http_build_query($params);
+$options = array(
+    'http' => array(
+        'header'  => "Content-type: application/x-www-form-urlencoded",
+        'method'  => "POST",
+        'content' => http_build_query($params)
+    )
+);
 
-//echo $url."<br/>";
+$context  = stream_context_create($options);
+$url = "account.php";
+    
+$response = file_get_contents($url, false, $context)
 
-$response = file_get_contents($url, true);
 
 //var_dump($response);
 
