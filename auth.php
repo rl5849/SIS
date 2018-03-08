@@ -68,6 +68,10 @@ $url = "http://127.0.0.1:5002/GetUserIDFromLinkedInID?".http_build_query($params
 $response = file_get_contents($url, true);
 $user_id = json_decode($response) -> user_id;
 
+echo $user_id['user_id']."<br/>";
+echo $user_id->user_id."<br/>";
+var_dump($user_id);
+
 if ($user_id['user_id'] == 'null') {
     // Add user to system
     $params = array(
@@ -102,6 +106,6 @@ echo $id."<br/>";
 echo "<img src='".$profilePic."'>";
 */
 // Reroute user to account page TODO get working
-$accountPage = "account.php";
-header('Location: '.$accountPage);
+//$accountPage = "account.php";
+//header('Location: '.$accountPage);
 ?>
