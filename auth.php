@@ -69,8 +69,9 @@ $url = "http://127.0.0.1:5002/GetUserIDFromLinkedInID?".http_build_query($params
 echo $url."<br/>";
 
 $response = file_get_contents($url, true);
+$user_id = json_decode($response) -> user_id;
 
-var_dump($response);
+var_dump($user_id);
 
 // TODO Add user to system
 $params = array(
