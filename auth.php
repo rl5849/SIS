@@ -68,7 +68,7 @@ $params = array(
 
 $url = "127.0.0.1:5002/AddUser?";
 
-$response = file_get_contents($url.http_build_query($params));
+$response = file_get_contents($url.http_build_query($params), true);
 
 var_dump($response);
 
