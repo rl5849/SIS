@@ -55,11 +55,17 @@
           <img style="display:none;" src="images/Sign-In-Large---Hover.png">
           <img style="display:none;" src="images/Sign-In-Large---Active.png">
           
-          <a href="account.php" style="padding-top:5%">
+          <form method="post" action="account.php" style="padding-top:5%">
             <p>
-              <input type="submit" class="button expanded rit-brown" value="Or just bypass this cause we bad"></input>
+              <input name=login type="submit" class="button expanded rit-brown" value="Login as student"></input>
             </p>
-          </a>
+          </form>
+        <form method="post" action="account.php" style="padding-top:5%">
+            <p>
+                <input name=login type="submit" class="button expanded rit-brown" value="Login as admin"></input>
+            </p>
+        </form>
+
           
           <p class="text-center"><a href="#">Forgot your password?</a></p>
           

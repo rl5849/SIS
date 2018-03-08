@@ -20,7 +20,22 @@
     <?php
     // PHP for using the local SIS API
     date_default_timezone_set("America/New_York");
-    $student_id = 1;
+    session_start();
+    if (isset($_POST['login'])) {
+        if ($_POST['login'] == "Login as student"){
+            $student_id = 1;
+            $_SESSION['user_id'] = 1;
+        }else{
+            $student_id = 67;
+            $_SESSION['user_id'] = 67;
+        }
+    }
+    else{
+        $student_id = $_SESSION['user_id'];
+    }
+
+
+
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
     $current_semester = json_decode($current_semester, true)["current_semester"];
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);

@@ -1,7 +1,8 @@
 <div class="top-bar">
 	<?php
+        session_start();
 		$user_id = 1;
-		$user_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=" . $user_id);
+		$user_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=" . $_SESSION["user_id"]);
 		$user_info = json_decode($user_info, true);
 	?>
   <div class="top-bar-left">
@@ -10,7 +11,7 @@
 	  <li><a href="course_list.php">Course List</a></li>
 	  <li>
           <?php
-          $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
+          $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$_SESSION["user_id"]);
           $is_admin = json_decode($is_admin, true);
           $is_admin = $is_admin["is_admin"];
 
@@ -18,9 +19,7 @@
           ?>
             <a href="#">Admin</a>
             <ul class="menu vertical">
-              <li><a href="#">Admin Action 1</a></li>
-              <li><a href="#">Admin Action 2</a></li>
-              <li><a href="#">Admin Action 3</a></li>
+              <li><a href="admin.php">Modify Classes</a></li>
             </ul>
           <?php }?>
 	  </li>
