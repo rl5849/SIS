@@ -105,7 +105,7 @@ $options = array(
 );
 
 $context  = stream_context_create($options);
-$url = "account.php";
+$url = "account.php?".http_build_query($params);
 
 $response = file_get_contents($url, false, $context);
 
