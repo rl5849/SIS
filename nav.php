@@ -1,7 +1,7 @@
 <div class="top-bar">
 	<?php
 		$user_id = 1;
-		$user_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$user_id);
+		$user_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=" . $user_id);
 		$user_info = json_decode($user_info, true);
 	?>
   <div class="top-bar-left">

@@ -9,6 +9,57 @@
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
+
+<?php
+        //TODO set via cookie
+        $user_id = 1;//$_SESSION["user_id"];
+
+        if (isset($_POST["action"])){
+            switch ($_POST["action"]){
+                case "add_class":
+                    add_class();
+                    
+//                case "add_couse":
+//                    add_course();
+//
+//                case "add_semester":
+//                    add_semeseter();
+//
+
+            }
+        }
+
+        function add_class() {
+
+            $url_params = $_POST['course_id'] . "&time=" . urlencode($_POST['time']) . "&room_number=" . $_POST['room_number'] . "&prof_id=" . $_POST['professor_id']. "&capacity=" . $_POST['capacity'];
+            $result = file_get_contents("http://127.0.0.1:5002/AddClass?course_id=" . $url_params);
+            $result = json_decode($result, true);
+            if ($result == "SUCCESS"){
+                echo "<script>showMessage(\"success\", \"Successfully added Section\");</script>";
+            }
+            else{
+                echo "<script>showMessage(\"failure\", \"Failed to add Section\");</script>";
+            }
+        }
+
+        if (isset($_POST["enroll"])){
+            enroll($_POST["user_id"], $_POST["class"]);
+        }
+        function unenroll($user_id, $local_class_id) {
+            $unenroll = file_get_contents("http://127.0.0.1:5002/DropStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
+            $unenroll = json_decode($unenroll, true);
+            if ($unenroll == "SUCCESS"){
+                echo "<script>showMessage(\"success\", \"Successfully Dropped class\");</script>";
+            }
+            else{
+                echo "<script>showMessage(\"failure\", \"Failed to Drop class\");</script>";
+            }
+        }
+?>
+
+
+
+
     <!-- Load Nav Bar and Callouts -->
     <div id="nav-placeholder"></div>
     <div id="callouts-placeholder"></div>
@@ -23,15 +74,32 @@
                         <h4>Add a New Class Section</h4>
                         <div class="floated-label-wrapper">
                             <label for="class_new_class">Class</label>
-                            <select name="class" id="class_new_class">
+                            <input type="hidden" name="action" value="add_class">
+                            <select name="course_id" id="class_new_class">
 
                                 <?php
-                                $class_list = file_get_contents("http://127.0.0.1:5002/GetClasses");
-                                $class_list = json_decode($class_list, true);
+                                $course_list = file_get_contents("http://127.0.0.1:5002/GetCourses");
+                                $course_list = json_decode($course_list, true);
 
-                                foreach ($class_list["classes"] as $class){
+                                foreach ($course_list["courses"] as $course){
                                     ?>
-                                    <option value="<?php echo $class["class_id"]; ?>"><?php echo $class["name"]; ?></option>
+                                    <option value="<?php echo $course["course_id"]; ?>"><?php echo $course["course_name"]; ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="floated-label-wrapper">
+                            <label for="professor">Professor</label>
+                            <select name="professor_id" id="professor">
+
+                                <?php
+                                $prof_list = file_get_contents("http://127.0.0.1:5002/GetProfs");
+                                $prof_list = json_decode($prof_list, true);
+
+                                foreach ($prof_list["profs"] as $prof){
+                                    ?>
+                                    <option value="<?php echo $prof[1]; ?>"><?php echo $prof[0]; ?></option>
                                     <?php
                                 }
                                 ?>
@@ -39,15 +107,15 @@
                         </div>
                         <div class="floated-label-wrapper">
                             <label for="capacity_new_class">Capacity</label>
-                            <input type="number" name="Capacity" id="capacity_new_class" min="1" max="300" placeholder="Capacity">
+                            <input type="number" name="capacity" id="capacity_new_class" min="1" max="300" placeholder="Capacity">
                         </div>
                         <div class="floated-label-wrapper">
                             <label for="room_number_new_class">Room Number</label>
-                            <input type="number" name="Room Number" id="room_number_new_class" min="1" max="1000" placeholder="Room Number">
+                            <input type="number" name="room_number" id="room_number_new_class" min="1" max="1000" placeholder="Room Number">
                         </div>
                         <div class="floated-label-wrapper">
                             <label for="time_new_class">Time</label>
-                            <input type="text" name="Time" id="time_new_class" placeholder="Time">
+                            <input type="text" name="time" id="time_new_class" placeholder="Time (eg. 'TuTh 10:00-10:55')">
                         </div>
                         <input type="submit" class="button expanded rit-orange" value="Create Section">
                     </form>
@@ -57,62 +125,36 @@
             <div class="small-12 medium-3 large-3 columns">
                 <!-- Start new form -->
                 <form class="callout text-center" method="post">
-                <h4>Add a New Class Section</h4>
+                <h4>Add Course</h4>
                 <div class="floated-label-wrapper">
-                    <label for="full-name">Full name</label>
-                    <input type="text" id="full-name" name="full name input" placeholder="Full name">
+                    <label for="course_name">Course Name</label>
+                    <input type="text" id="course_name" name="full name input" placeholder="Course Name">
                 </div>
                 <div class="floated-label-wrapper">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email input" placeholder="Email">
+                    <label for="course_code">Course Code</label>
+                    <input type="text" id="course_code" name="course_code input" placeholder="Course Code">
                 </div>
                 <div class="floated-label-wrapper">
-                    <label for="pass">Password</label>
-                    <input type="password" id="pass" name="password input" placeholder="Password">
+                    <label for="credits_new_class">Room Number</label>
+                    <input type="number" name="room_number" id="credits" min="1" max="7" placeholder="Course Credits">
                 </div>
-                <input class="button expanded" type="submit" value="Sign up">
+                <div class="floated-label-wrapper">
+                    <label for="course_description">Password</label>
+                    <input type="text" id="course_description" name="description input" placeholder="Course Description">
+                </div>
+                <input class="button expanded" type="submit" value="Create Course">
                 </form>
                 <!-- End new form -->
             </div>
             <div class="small-12 medium-3 large-3 columns">
                 <!-- Start new form -->
                 <form class="callout text-center" method="post">
-                <h4>Add a New Class Section</h4>
+                <h4>Add a New Semester</h4>
                 <div class="floated-label-wrapper">
-                    <label for="full-name">Full name</label>
-                    <input type="text" id="full-name" name="full name input" placeholder="Full name">
+                    <label for="semester_code">Semester Code</label>
+                    <input type="text" id="semester_code" name="semester_code" placeholder="Semester Code">
                 </div>
-                <div class="floated-label-wrapper">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email input" placeholder="Email">
-                </div>
-                <div class="floated-label-wrapper">
-                    <label for="pass">Password</label>
-                    <input type="password" id="pass" name="password input" placeholder="Password">
-                </div>
-                <input class="button expanded" type="submit" value="Sign up">
-                </form>
-                <!-- End new form -->
-            </div>
-
-
-            <div class="small-12 medium-3 large-3">
-                <!-- Start new form -->
-                <form class="callout text-center">
-                    <h4>Add a New Class Section</h4>
-                    <div class="floated-label-wrapper">
-                        <label for="full-name">Full name</label>
-                        <input type="text" id="full-name" name="full name input" placeholder="Full name">
-                    </div>
-                    <div class="floated-label-wrapper">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email input" placeholder="Email">
-                    </div>
-                    <div class="floated-label-wrapper">
-                        <label for="pass">Password</label>
-                        <input type="password" id="pass" name="password input" placeholder="Password">
-                    </div>
-                    <input class="button expanded" type="submit" value="Sign up">
+                <input class="button expanded" type="submit" value="Create Semester">
                 </form>
                 <!-- End new form -->
             </div>
