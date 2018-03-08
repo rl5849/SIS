@@ -1,6 +1,6 @@
 <?php
 // PHP for using the LinkedIn API
-echo "3";
+echo "4<br/>";
 // Get the Access Token from LinkedIn
 $code = $_GET["code"];
 
@@ -37,8 +37,8 @@ echo "url:".$url."\n";
 $access_token_request = file_get_contents($url, false, $context);
 $access_token = json_decode($access_token_request);
 
-var_dump($access_token_request);
-var_dump($access_token);
+var_dump("<br/>Request: ".$access_token_request);
+var_dump("<br/>json_decode: ".$access_token);
 
 $garbage = file_get_contents($url);
 
