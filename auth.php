@@ -92,23 +92,7 @@ if ($user_id == 'null') {
     $user_id = json_decode($response) -> user_id;
 }
 
-$params = array(
-    'user_id' => $user_id
-);
-
-$options = array(
-    'http' => array(
-        'header'  => "Content-type: application/x-www-form-urlencoded",
-        'method'  => "POST",
-        'content' => http_build_query($params)
-    )
-);
-
-$context  = stream_context_create($options);
-$url = "account.php?".http_build_query($params);
-
-$response = file_get_contents($url, false, $context);
-
+$_SESSION["user_id"] = $user_id;
 
 //var_dump($response);
 
