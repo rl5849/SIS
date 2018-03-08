@@ -51,5 +51,15 @@ $params = array(
 
 $linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?".http_build_query($params));
 $linkedin_user_info = json_decode($linkedin_user_info);
-var_dump($linkedin_user_info)
+var_dump($linkedin_user_info);
+
+$fName = $linkedin_user_info->firstName;
+$lName = $linkedin_user_info->lastName;
+$id = $linkedin_user_info->id;
+$profilePic = $linkedin_user_info->siteStandardProfileRequest->url;
+
+echo $fName."<br/>";
+echo $lName."<br/>";
+echo $id."<br/>";
+echo "<img src='".$profilePic."'>";
 ?>
