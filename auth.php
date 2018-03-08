@@ -63,4 +63,9 @@ echo $fName."<br/>";
 echo $lName."<br/>";
 echo $id."<br/>";
 echo "<img src='".$profilePic."'>";
+
+
+// Reroute user to account page
+$accountPage = "account.php";
+header('Location: '.$accountPage);
 ?>
