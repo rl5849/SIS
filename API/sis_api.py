@@ -52,7 +52,7 @@ api.add_resource(GetStudentsClasses, '/GetStudentsClasses')
 ###Add a new course
 ### url path: /add_course?course_name=NAME&date_of_birth=2001-02-01&profile_pic=www.linked.com&gender=F&graduation_year=2018
 #TODO: CRITCAL: URL ENCODE THESE ITEMS BEFORE MAKING THE REQUEST
-class add_course(Resource):
+class AddCourse(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -93,7 +93,7 @@ class add_course(Resource):
 
         return jsonify(SUCCESS_MESSAGE)
 
-api.add_resource(add_course, '/AddCourse')
+api.add_resource(AddCourse, '/AddCourse')
 
 
 ###Add a new class
@@ -148,8 +148,62 @@ class AddClass(Resource):
 
 api.add_resource(AddClass, '/AddClass')
 
+
+###Add a new student
+### url path: /add_student?student_name=NAME&date_of_birth=2001-02-01&profile_pic=www.linked.com&gender=F&graduation_year=2018
+# TODO: CRITCAL: URL ENCODE THESE ITEMS BEFORE MAKING THE REQUEST
+class AddUser(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get student info
+        parser = reqparse.RequestParser()
+        parser.add_argument('name', type=str)
+        parser.add_argument('linkedin_id', type=str)
+        parser.add_argument('profile_pic', type=str)
+
+        parsed = parser.parse_args()
+
+        name = parsed.get("name")
+        linkedin_id = parsed.get("linkdedin_id")
+        profile_pic = parsed.get("profile_pic")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host='129.21.208.253',
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("INSERT INTO students"
+                   "(name, profile_pic) "
+                   "VALUES (%s, %s, %s);",
+                   [name, id, profile_pic])
+
+        cur.execute("SELECT LAST_INSERT_ID()")
+        uid = cur.fetchall[0][0]
+        print uid
+
+        cur.execute("INSERT INTO users"
+                    "(user_id, name, linkeded_id, profile_pic) "
+                    "VALUES (%s, %s, %s);",
+                    [uid, name, linkedin_id, profile_pic])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify("INSERT FAILED!")
+
+        return jsonify("SUCCESS")
+
+
+api.add_resource(AddUser, '/AddUser')
+
+
 """
-Gets all favorited classes for the course
+Gets all favorited classes for the student
 """
 class GetFavoritedClasses(Resource):
     config = ConfigParser.ConfigParser()
@@ -223,7 +277,7 @@ class GetCourses(Resource):
     config.read('./config.ini')
 
     def get(self):
-        # Get course id
+        # Get student id
         course_id = None
         try:
             parser = reqparse.RequestParser()
@@ -396,7 +450,7 @@ class GetClassInfo(Resource):
 api.add_resource(GetClassInfo, '/GetClassInfo')
 
 """
-Enrolls a course in a course
+Enrolls a student in a course
 """
 class EnrollStudent(Resource):
     config = ConfigParser.ConfigParser()
@@ -418,7 +472,7 @@ class EnrollStudent(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("INSERT IGNORE INTO student_to_class (course_id, class_id)"
+        cur.execute("INSERT IGNORE INTO student_to_class (student_id, class_id)"
                     "VALUES (%s, %s)",
                     [user_id, class_id])
 
@@ -437,7 +491,7 @@ class EnrollStudent(Resource):
 api.add_resource(EnrollStudent, '/EnrollStudent')
 
 """
-Removes a course from a course
+Removes a student from a course
 """
 class DropStudent(Resource):
     config = ConfigParser.ConfigParser()
@@ -460,7 +514,7 @@ class DropStudent(Resource):
 
         # Select data from table using SQL query.
         cur.execute("DELETE FROM student_to_class "
-                    "WHERE course_id = %s "
+                    "WHERE student_id = %s "
                     "AND class_id = %s",
                     [user_id, class_id])
 
@@ -486,7 +540,7 @@ class CheckEnrollmentStatus(Resource):
     config.read('./config.ini')
 
     def get(self):
-        # Get course id
+        # Get student id
         parser = reqparse.RequestParser()
         parser.add_argument('class_id', type=int)
         parser.add_argument('user_id', type=int)
@@ -503,7 +557,7 @@ class CheckEnrollmentStatus(Resource):
 
         # Select data from table using SQL query.
         cur.execute("SELECT count(*) FROM student_to_class "
-                    "WHERE course_id = %s "
+                    "WHERE student_id = %s "
                     "AND class_id = %s",
                     [user_id, class_id])
 
@@ -517,7 +571,7 @@ api.add_resource(CheckEnrollmentStatus, '/CheckEnrollmentStatus')
 
 
 """
-Adds a class to a course's list of favorite classes
+Adds a class to a student's list of favorite classes
 """
 class FavoriteClass(Resource):
     config = ConfigParser.ConfigParser()
@@ -529,7 +583,7 @@ class FavoriteClass(Resource):
 api.add_resource(FavoriteClass, '/FavoriteClass')
 
 """
-Removes a class to a course's list of favorite classes
+Removes a class to a student's list of favorite classes
 """
 class UnfavoriteClass(Resource):
     config = ConfigParser.ConfigParser()
@@ -541,7 +595,7 @@ class UnfavoriteClass(Resource):
 api.add_resource(UnfavoriteClass, '/UnfavoriteClass')
 
 """
-Gets a grade for a class and a course
+Gets a grade for a class and a student
 """
 class GetGrade(Resource):
     config = ConfigParser.ConfigParser()
@@ -616,14 +670,14 @@ api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
 
 
 """
-Check if course/user has admin privilegs
+Check if student/user has admin privilegs
 """
 class CheckIfAdmin(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
     def get(self):
-        # Get course id
+        # Get student id
         parser = reqparse.RequestParser()
         parser.add_argument('id', type=int)
         id = parser.parse_args().get("id")
@@ -706,9 +760,9 @@ class WaitlistByClass(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT course_name FROM waitlist "
-                    "INNER JOIN courses  "
-                    "ON (courses.course_id = waitlist.course_id) "
+        cur.execute("SELECT student_name FROM waitlist "
+                    "INNER JOIN students  "
+                    "ON (students.student_id = waitlist.student_id) "
                     "WHERE waitlist.class_id = %s "
                     "ORDER BY waitlist.position ASC",
                     [class_id])
