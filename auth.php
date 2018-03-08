@@ -18,8 +18,7 @@ $params = array(
     'client_secret' => $client_secret,
     'grant_type' => 'authorization_code',
     'code' => $code,
-    'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/account.php',
-    'state' => 'nk537n234vn12'
+    'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/account.php'
 );
 
 $options = array(
