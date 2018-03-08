@@ -106,8 +106,10 @@ $options = array(
 
 $context  = stream_context_create($options);
 $url = "account.php";
-    
-$response = file_get_contents($url, false, $context)
+
+$response = file_get_contents($url, false, $context);
+
+var_dump($response);
 
 
 //var_dump($response);
