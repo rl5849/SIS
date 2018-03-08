@@ -176,6 +176,7 @@ else if(isset($_SESSION['user_id'])){
       </div>
     </div>
   </div>
+    <center><img src="images/LOGO.png" style="width:75px;height:75px;"></center>
 
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/what-input/dist/what-input.js"></script>
