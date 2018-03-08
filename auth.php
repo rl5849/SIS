@@ -38,7 +38,9 @@ $access_token = json_decode($access_token_request);
 var_dump($access_token_request);
 var_dump($access_token);
 
-$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
-$linkedin_user_info = json_decode($linkedin_user_info, true);
-echo "\ntest".$linkedin_user_info;
+$garbage = file_get_contents($url);
+
+//$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
+//$linkedin_user_info = json_decode($linkedin_user_info, true);
+//echo "\ntest".$linkedin_user_info;
 ?>
