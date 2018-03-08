@@ -859,7 +859,7 @@ class GetUserIDFromLinkedInID(Resource):
 
         query = cur.fetchall()
 
-        result = {'user_id': query[0][0] if query else None }
+        result = {'user_id': (query[0][0] if query else None) }
 
         return jsonify(result)
 
