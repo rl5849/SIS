@@ -32,7 +32,10 @@ else if(isset($_SESSION['user_id'])){
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
   <body>
-  
+  <script>
+      makeNav();
+      makeCallouts();
+  </script>
     <!-- Load Nav Bar and Callouts -->
     <div id="nav-placeholder"></div>
     <div id="callouts-placeholder"></div>
@@ -183,9 +186,6 @@ else if(isset($_SESSION['user_id'])){
   <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
   <script src="js/app.js"></script>
   
-  <script>
-    makeNav();
-    makeCallouts();
-   </script>
+
   </body>
 </html>
