@@ -45,7 +45,19 @@ Gets information about a student.
 
 ##### Return
 
-TODO
+```
+{ student_info : [
+    {
+        profile_pic : url
+        major : string
+        gender : string
+        graduation_year : string 
+        date_of_birth : string
+        student_id : int
+        student_name : string
+    }]
+}
+```
 
 <!-- End Get Student Info -->
 <!-- Start Add Student -->
@@ -93,7 +105,7 @@ Modifies information about the user's profile in the database
 
 ##### Parameters
 
-TODO
+None at the moment
 
 ##### Return
 
@@ -116,7 +128,7 @@ Modifies information about the professor in the database
 
 ##### Parameters
 
-TODO
+None at the moment
 
 ##### Return
 
@@ -139,7 +151,7 @@ Flags the specified account as awaiting approval for becoming a professor
 
 ##### Parameters
 
-TODO
+None at the moment
 
 ##### Return
 
@@ -167,7 +179,7 @@ Gets the professor name associated with the professor ID
 ##### Return
 
 ```
-professor_name
+{ professor_name : string }
 ```
 
 <!-- End Get Professor by ID -->
@@ -194,7 +206,20 @@ Get all courses that match a given criteria
 ##### Return
 
 ```
-TODO
+{
+    "courses": [
+        {
+            "course_id": int,
+            "course_description": string,
+            "course_name": string
+        },
+        
+        .
+        .
+        .
+        
+    ]
+}
 ```
 
 <!-- End Get Courses -->
@@ -216,7 +241,28 @@ Gets all classes that match a given criteria
 
 ##### Return
 
-TODO
+```
+{
+    "classs": [
+        {
+            "num_enrolled": int,
+            "capacity": int,
+            "name": string,
+            "class_id": int,
+            "professor_id": int,
+            "section": int,
+            "room_number": int,
+            "credits": int,
+            "time": string,
+            "course_id": int
+        },
+        
+        .
+        .
+        .
+    ]
+}
+```
 
 <!-- End Get Classes -->
 <!-- Start Modify Course -->
@@ -233,7 +279,7 @@ Changes information about the course in the database
 
 ##### Parameters
 
-TODO
+None at the moment
 
 ##### Return
 
@@ -256,7 +302,7 @@ Changes information about the class in the database
 
 ##### Parameters
 
-TODO
+None at the moment
 
 ##### Return
 
@@ -310,7 +356,8 @@ Adds a student and class pair to the enrollment db
 
 ##### Parameters
 
-TODO
+`class_id` : The id of the class
+`user_id` : The uid of the student being enrolled
 
 ##### Return
 
@@ -333,7 +380,7 @@ Removed a student from the specified course
 
 ##### Parameters
 
-TODO
+None at the moment
 
 ##### Return
 
@@ -360,14 +407,16 @@ Gets all favorited classes for a student
 
 ##### Return
 
-```JSON
-favorited_classes
-  class1
-  class2
-  .
-  .
-  .
-  classN
+```
+{ favorited_classes : [
+    class1
+    class2
+    .
+    .
+    .
+    classN
+    ]
+}
 ```
 
 <!-- End Get Favorited Classes -->
@@ -385,7 +434,7 @@ Adds a student and class pair to the favorite classes table
 
 ##### Parameters
 
-TODO
+None at the moment
 
 ##### Return
 
@@ -407,7 +456,7 @@ Removed the student class pair from the favorite classes table
 
 ##### Parameters
 
-TODO
+None at the moment
 
 ##### Return
 
@@ -430,11 +479,13 @@ Gets the grade for a student in a class
 
 ##### Parameters
 
-TODO
+None at the moment
 
 ##### Return
 
-TODO
+```
+{ 'grade' : 'A' }
+```
 
 <!-- End Get Grade -->
 <!-- Start Waitlist By Class -->
@@ -455,7 +506,17 @@ Gets a waitlist for a given class
 
 ##### Return
 
-TODO
+```
+{ waitlist : [
+    student_id1,
+    student_id2,
+    .
+    .
+    .
+    student_idN
+    ]
+}
+```
 
 <!-- End Waitlist By Class -->
 <!-- Start Get Current Semester -->
@@ -476,6 +537,8 @@ None
 
 ##### Return
 
-`current_semester`
+```
+{current_semester : string }
+```
 
 <!-- End Get Current Semester -->
