@@ -66,6 +66,8 @@ $params = array(
 
 $url = "http://127.0.0.1:5002/GetUserIDFromLinkedInID?".http_build_query($params);
 
+echo $url."<br/>";
+
 $response = file_get_contents($url, true);
 
 var_dump($response);
