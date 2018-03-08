@@ -23,7 +23,7 @@ $params = array(
 
 $options = array(
     'http' => array(
-        'header'  => "content-type: application/x-www-form-urlencoded\r\n",
+        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
         'method'  => 'POST',
         'content' => http_build_query($params)
     )
@@ -31,7 +31,7 @@ $options = array(
 
 $context  = stream_context_create($options);
 $url = "https://www.linkedin.com/oauth/v2/accessToken";
-echo "url:".$url;
+echo "url:".$url."\n";
 $access_token_request = file_get_contents($url, false, $context);
 $access_token = json_decode($access_token_request);
 
@@ -40,5 +40,5 @@ var_dump($access_token);
 
 $linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
 $linkedin_user_info = json_decode($linkedin_user_info, true);
-echo "test".$linkedin_user_info;
+echo "\ntest".$linkedin_user_info;
 ?>
