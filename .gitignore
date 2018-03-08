@@ -3,5 +3,5 @@ node_modules
 npm-debug.log
 API/config.ini
 tests/*
-.idea/*
+.idea/htmlcov/*
 LinkedIn/config.ini
