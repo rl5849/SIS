@@ -1,6 +1,6 @@
 <?php
 // PHP for using the LinkedIn API
-echo "5<br/>";
+echo "6<br/>";
 // Get the Access Token from LinkedIn
 $code = $_GET["code"];
 
