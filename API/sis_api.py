@@ -32,7 +32,7 @@ class GetStudentsClasses(Resource):
         # Select data from table using SQL query.
         cur.execute("SELECT * FROM classes "
                     "LEFT JOIN student_to_class ON (classes.class_id = student_to_class.class_id) "
-                    "WHERE student_to_class.course_id = %s",
+                    "WHERE student_to_class.student_id = %s",
                     [course_id])
         query = cur.fetchall()
         # Get variable names
