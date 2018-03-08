@@ -8,6 +8,7 @@
 3. [Modify Profile](#ModifyProfile)
 4. [Modify Professor](#ModifyProfessor)
 5. [Request Professor Approval](#ReqProfApproval)
+6. [Get Professors](#GetProfs)
 
 #### [Courses/Classes](#CoursesClasses)
 1. [Get Course(s)](#GetCourses)
@@ -160,7 +161,39 @@ None at the moment
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Request Prof Approval -->
+<!-- Start GetProfs -->
+
+<a name="GetProfs"/>
+
+### Get Professors
+
+Gets a list of all of the professors in the system
+
+##### Endpoint
+
+`/GetProfs`
+
+##### Parameters
+
+None at the moment
+
+##### Return
+
+```
+{ profs : [
+    professor1,
+    professor2,
+    .
+    .
+    .
+    professorN
+    ]
+}
+```
+
+<!-- End Request GetProfs -->
 <!-- Start Get Professor by ID -->
+
 
 <a name="GetProfByID"/>
 
