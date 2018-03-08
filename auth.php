@@ -16,7 +16,7 @@ fclose($myfile);
 $options = array(
     'http' => array(
         'header'  => "content-type: application/x-www-form-urlencoded",
-        'method'  => 'POST'
+        'method'  => 'GET'
     )
 );
 
