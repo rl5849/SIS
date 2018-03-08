@@ -59,6 +59,17 @@ $lName = $linkedin_user_info->lastName;
 $id = $linkedin_user_info->id;
 $profilePic = $linkedin_user_info->pictureUrl;
 
+// Get user id in the system if the user has already signed in with linkedin
+$params = array(
+    'linkedin_id' => $id
+);
+
+$url = "http://127.0.0.1:5002/GetUserIDFromLinkedInID?".http_build_query($params);
+
+$response = file_get_contents($url, true);
+
+var_dump($response);
+
 // TODO Add user to system
 $params = array(
     'name' => $fName." ".$lName,
@@ -68,17 +79,18 @@ $params = array(
 
 $url = "http://127.0.0.1:5002/AddUser?".http_build_query($params);
 
-echo $url."<br/>";
+//echo $url."<br/>";
 
 $response = file_get_contents($url, true);
 
-var_dump($response);
+//var_dump($response);
 
+/*
 echo $fName."<br/>";
 echo $lName."<br/>";
 echo $id."<br/>";
 echo "<img src='".$profilePic."'>";
-
+*/
 // Reroute user to account page TODO get working
 //$accountPage = "account.php";
 //header('Location: '.$accountPage);
