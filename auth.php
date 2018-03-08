@@ -13,13 +13,6 @@ $client_secret = explode("=", $arr[0])[1];
 
 fclose($myfile);
 
-$options = array(
-    'http' => array(
-        'header'  => "content-type: application/x-www-form-urlencoded\r\n",
-        'method'  => 'POST'
-    )
-);
-
 $params = array(
     'client_id' => $client_id,
     'client_secret' => $client_secret,
@@ -28,8 +21,16 @@ $params = array(
     'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/account.php'
 );
 
+$options = array(
+    'http' => array(
+        'header'  => "content-type: application/x-www-form-urlencoded\r\n",
+        'method'  => 'POST',
+        'content' => http_build_query($params)
+    )
+);
+
 $context  = stream_context_create($options);
-$url = "https://www.linkedin.com/oauth/v2/accessToken?" . http_build_query($params);
+$url = "https://www.linkedin.com/oauth/v2/accessToken";
 echo "url:".$url;
 $access_token_request = file_get_contents($url, false, $context);
 $access_token = json_decode($access_token_request);
