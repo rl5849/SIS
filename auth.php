@@ -1,6 +1,6 @@
 <?php
 // PHP for using the LinkedIn API
-echo "4<br/>";
+echo "5<br/>";
 // Get the Access Token from LinkedIn
 $code = $_GET["code"];
 
@@ -24,7 +24,7 @@ $params = array(
 $options = array(
     'http' => array(
         'header'  => "Host: www.linkedin.com\r\nContent-type: application/x-www-form-urlencoded\r\n",
-        'method'  => 'POST'
+        'method'  => 'GET'
     )
 );
 
