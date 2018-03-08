@@ -41,10 +41,6 @@ else if(isset($_SESSION['user_id'])){
 
     
     <?php
-
-
-
-
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
     $current_semester = json_decode($current_semester, true)["current_semester"];
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);

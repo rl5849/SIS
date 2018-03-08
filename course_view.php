@@ -6,7 +6,8 @@ if (!isset($_SESSION['user_id'])){
 }
 else{
     $user_id = $_SESSION['user_id'];
-} ?>
+}
+?>
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
@@ -26,7 +27,7 @@ else{
     
     <?php
         //TODO set via cookie
-        $user_id = 1;
+
 
         if (isset($_GET["class_id"])){
             $class_id = $_GET["class_id"];
