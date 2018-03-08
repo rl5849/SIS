@@ -1,3 +1,23 @@
+<?php
+// PHP for using the local SIS API
+date_default_timezone_set("America/New_York");
+session_start();
+if (isset($_POST['login'])) {
+    if ($_POST['login'] == "Login as student"){
+        $student_id = 1;
+        $_SESSION['user_id'] = 1;
+    }else{
+        $student_id = 67;
+        $_SESSION['user_id'] = 67;
+    }
+}
+else if(isset($_SESSION['user_id'])){
+    $student_id = $_SESSION['user_id'];
+}else{
+    echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
+    exit();
+}
+?>
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
@@ -18,21 +38,7 @@
 
     
     <?php
-    // PHP for using the local SIS API
-    date_default_timezone_set("America/New_York");
-    session_start();
-    if (isset($_POST['login'])) {
-        if ($_POST['login'] == "Login as student"){
-            $student_id = 1;
-            $_SESSION['user_id'] = 1;
-        }else{
-            $student_id = 67;
-            $_SESSION['user_id'] = 67;
-        }
-    }
-    else{
-        $student_id = $_SESSION['user_id'];
-    }
+
 
 
 

@@ -1,3 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])){
+    echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
+    exit();
+}
+else{
+    $user_id = $_SESSION['user_id'];
+} ?>
 <!doctype html>
 <html class="no-js" lang="en">
   <head>

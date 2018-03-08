@@ -1,3 +1,13 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])){
+    echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
+    exit();
+}
+else{
+    $user_id = $_SESSION['user_id'];
+} ?>
+
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
@@ -11,55 +21,44 @@
 <body>
 
 <?php
-        //TODO set via cookie
-        $user_id = 1;//$_SESSION["user_id"];
-
-        if (isset($_POST["action"])){
-            switch ($_POST["action"]){
-                case "add_class":
-                    add_class();
-                    
+    if (isset($_POST["action"])){
+        switch ($_POST["action"]){
+            case "add_class":
+                add_class();
 //                case "add_couse":
 //                    add_course();
-//
 //                case "add_semester":
 //                    add_semeseter();
-//
-
-            }
         }
+    }
 
-        function add_class() {
+    function add_class() {
 
-            $url_params = $_POST['course_id'] . "&time=" . urlencode($_POST['time']) . "&room_number=" . $_POST['room_number'] . "&prof_id=" . $_POST['professor_id']. "&capacity=" . $_POST['capacity'];
-            $result = file_get_contents("http://127.0.0.1:5002/AddClass?course_id=" . $url_params);
-            $result = json_decode($result, true);
-            if ($result == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully added Section\");</script>";
-            }
-            else{
-                echo "<script>showMessage(\"failure\", \"Failed to add Section\");</script>";
-            }
+        $url_params = $_POST['course_id'] . "&time=" . urlencode($_POST['time']) . "&room_number=" . $_POST['room_number'] . "&prof_id=" . $_POST['professor_id']. "&capacity=" . $_POST['capacity'];
+        $result = file_get_contents("http://127.0.0.1:5002/AddClass?course_id=" . $url_params);
+        $result = json_decode($result, true);
+        if ($result == "SUCCESS"){
+            echo "<script>showMessage(\"success\", \"Successfully added Section\");</script>";
         }
+        else{
+            echo "<script>showMessage(\"failure\", \"Failed to add Section\");</script>";
+        }
+    }
 
-        if (isset($_POST["enroll"])){
-            enroll($_POST["user_id"], $_POST["class"]);
+    if (isset($_POST["enroll"])){
+        enroll($_POST["user_id"], $_POST["class"]);
+    }
+    function unenroll($user_id, $local_class_id) {
+        $unenroll = file_get_contents("http://127.0.0.1:5002/DropStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
+        $unenroll = json_decode($unenroll, true);
+        if ($unenroll == "SUCCESS"){
+            echo "<script>showMessage(\"success\", \"Successfully Dropped class\");</script>";
         }
-        function unenroll($user_id, $local_class_id) {
-            $unenroll = file_get_contents("http://127.0.0.1:5002/DropStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
-            $unenroll = json_decode($unenroll, true);
-            if ($unenroll == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully Dropped class\");</script>";
-            }
-            else{
-                echo "<script>showMessage(\"failure\", \"Failed to Drop class\");</script>";
-            }
+        else{
+            echo "<script>showMessage(\"failure\", \"Failed to Drop class\");</script>";
         }
+    }
 ?>
-
-
-
-
     <!-- Load Nav Bar and Callouts -->
     <div id="nav-placeholder"></div>
     <div id="callouts-placeholder"></div>

@@ -1,7 +1,7 @@
 <div class="top-bar">
 	<?php
         session_start();
-		$user_id = 1;
+		$user_id = $_SESSION['user_id'];
 		$user_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=" . $_SESSION["user_id"]);
 		$user_info = json_decode($user_info, true);
 	?>
@@ -42,7 +42,7 @@
 			  <li><a href="account.php">Profile</a></li>
 			  <li><a href="account.php">Classes</a></li>
 			  <li><a href="https://www.linkedin.com/">LinkedIn</a></li>
-			  <li><a href="login.php">Logout</a></li> <!-- we need to make sure this actually logs them out-->
+			  <li><a href="logout.php">Logout</a></li>
 			</ul>
 		</li>
 	</ul>
