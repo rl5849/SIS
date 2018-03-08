@@ -45,7 +45,7 @@ $_SESSION['expires_at']   = time() + $_SESSION['expires_in']; // absolute time
 
 echo $_SESSION['access_token'];
 
-$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json", false, );
-$linkedin_user_info = json_decode($linkedin_user_info, true);
-echo "\ntest".$linkedin_user_info;
+//$linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json", false, );
+//$linkedin_user_info = json_decode($linkedin_user_info, true);
+//echo "\ntest".$linkedin_user_info;
 ?>
