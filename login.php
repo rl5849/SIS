@@ -46,7 +46,7 @@
                   'state' => '12vk41b254kvn1l2'
                   );
 
-              echo "<a href='https://www.linkedin.com/oauth/v2/authorization?".http_build_query($args).">";
+              echo "<a href='https://www.linkedin.com/oauth/v2/authorization?".http_build_query($args)."'>";
               echo    "<img id='linkedin-login-button' src='images/Sign-In-Large---Default.png' alt='Sign in with LinkedIn'>";
               echo "</a>";
             ?>
