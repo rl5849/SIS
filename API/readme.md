@@ -283,15 +283,15 @@ Gets all classes for a student.
 
 ##### Return
 
-```JSON
-{students_classes : [
-  class1
-  class2
-  .
-  .
-  .
-  classN
-  ]
+```
+{ students_classes : [
+    class1,
+    class2,
+    .
+    .
+    .
+    classN
+    ]
 }
 ```
 

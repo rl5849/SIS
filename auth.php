@@ -60,6 +60,17 @@ $id = $linkedin_user_info->id;
 $profilePic = $linkedin_user_info->pictureUrl;
 
 // TODO Add user to system
+$params = array(
+    'name' => $fName." ".$lName,
+    'linkedin_id' => $id,
+    'profile_pic' => $profilePic
+);
+
+$url = "127.0.0.1:5002/AddUser?";
+
+$response = file_get_contents($url.http_build_query($params));
+
+var_dump($response);
 
 echo $fName."<br/>";
 echo $lName."<br/>";
