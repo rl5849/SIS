@@ -1,6 +1,5 @@
 <?php
 // Start the linkedin session
-session_name('linkedin');
 session_start();
 
 // Get the code from the linkedin query
@@ -40,13 +39,13 @@ $access_token_request = file_get_contents($url, true);
 $access_token = json_decode($access_token_request);
 
 // Add auth token to the session
-$_SESSION['access_token'] = $access_token->access_token; // guard this!
-$_SESSION['expires_in']   = $access_token->expires_in; // relative time (in seconds)
-$_SESSION['expires_at']   = time() + $_SESSION['expires_in']; // absolute time
+//$_SESSION['access_token'] = $access_token->access_token; // guard this!
+//$_SESSION['expires_in']   = $access_token->expires_in; // relative time (in seconds)
+//$_SESSION['expires_at']   = time() + $_SESSION['expires_in']; // absolute time
 
 // Prepare parameters to query for user info from linkedin
 $params = array(
-    'oauth2_access_token' => $_SESSION['access_token'],
+    'oauth2_access_token' => $access_token->access_token,
     'format' => 'json'
 );
 
