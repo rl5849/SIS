@@ -67,6 +67,6 @@ echo $id."<br/>";
 echo "<img src='".$profilePic."'>";
 
 // Reroute user to account page TODO get working
-$accountPage = "account.php";
-header('Location: '.$accountPage);
+//$accountPage = "account.php";
+//header('Location: '.$accountPage);
 ?>
