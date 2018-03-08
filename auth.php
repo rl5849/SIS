@@ -32,7 +32,7 @@ $context  = stream_context_create($options);
 $url = "https://www.linkedin.com/oauth/v2/accessToken?" . http_build_query($params);
 echo "url:".$url;
 $access_token_request = file_get_contents($url, false, $context);
-$access_token = json_decode($access_token_request)->access_token;
+$access_token = json_decode($access_token_request);
 
 var_dump($access_token);
 
