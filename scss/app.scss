@@ -91,14 +91,14 @@
 }
 
 #linkedin-login-button {
-  content: url('../LinkedIn/Sign-In-Large---Default.png');
+  content: url('../images/Sign-In-Large---Default.png');
   
   &:hover {
-    content: url('../LinkedIn/Sign-In-Large---Hover.png');
+    content: url('../images/Sign-In-Large---Hover.png');
   }
   
   &:active {
-    content: url('../LinkedIn/Sign-In-Large---Active.png');
+    content: url('../images/Sign-In-Large---Active.png');
   }
 }
 
