@@ -109,8 +109,6 @@ $url = "account.php";
 
 $response = file_get_contents($url, false, $context);
 
-var_dump(json_decode($response));
-
 
 //var_dump($response);
 
@@ -121,6 +119,6 @@ echo $id."<br/>";
 echo "<img src='".$profilePic."'>";
 */
 // Reroute user to account page TODO get working
-//$accountPage = "account.php";
-//header('Location: '.$accountPage);
+$accountPage = "account.php";
+header('Location: '.$accountPage);
 ?>
