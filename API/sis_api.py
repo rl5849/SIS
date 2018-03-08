@@ -42,7 +42,7 @@ class GetStudentsClasses(Resource):
         column_names = cur.fetchall()
         column_names_clean = [x[0] for x in column_names]
 
-        result = {'courses_classes': [dict(zip(
+        result = {'students_classes': [dict(zip(
             column_names_clean, i)) for i in query]}
         return jsonify(result)
         
