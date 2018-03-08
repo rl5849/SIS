@@ -24,7 +24,7 @@ $params = array(
 $options = array(
     'http' => array(
         'header'  => "Content-type: application/x-www-form-urlencoded",
-        'method'  => 'POST'
+        'method'  => "POST"
     )
 );
 
