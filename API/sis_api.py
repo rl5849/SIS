@@ -51,7 +51,6 @@ api.add_resource(GetStudentsClasses, '/GetStudentsClasses')
 
 ###Add a new course
 ### url path: /add_course?course_name=NAME&date_of_birth=2001-02-01&profile_pic=www.linked.com&gender=F&graduation_year=2018
-#TODO: CRITCAL: URL ENCODE THESE ITEMS BEFORE MAKING THE REQUEST
 class AddCourse(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
@@ -60,18 +59,16 @@ class AddCourse(Resource):
         # Get course info
         parser = reqparse.RequestParser()
         parser.add_argument('course_name', type=str)
-        parser.add_argument('date_of_birth', type=str)
-        parser.add_argument('profile_pic', type=str)
-        parser.add_argument('gender', type=str)
-        parser.add_argument('graduation_year', type=int)
+        parser.add_argument('course_code', type=str)
+        parser.add_argument('course_credits', type=int)
+        parser.add_argument('course_description', type=str)
 
         parsed = parser.parse_args()
         
         course_name = parsed.get("course_name")
-        dob = parsed.get("date_of_birth")
-        profile_pic = parsed.get("profile_pic")
-        gender = parsed.get("gender")
-        grad_year = parsed.get("graduation_year")
+        course_code = parsed.get("course_code")
+        course_credits = parsed.get("course_credits")
+        course_description = parsed.get("course_description")
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
@@ -82,9 +79,9 @@ class AddCourse(Resource):
 
         # Select data from table using SQL query.
         cur.execute("INSERT INTO courses"
-                    "(course_name, date_of_birth, profile_pic, gender, graduation_year) "
-                    "VALUES (%s, %s, %s, %s, %s);",
-                    [course_name, dob, profile_pic, gender, grad_year])
+                    "(course_name, course_description, course_code, credits) "
+                    "VALUES (%s, %s, %s, %s);",
+                    [course_name, course_description, course_code, course_credits])
 
         try:
             db.commit()
@@ -95,6 +92,42 @@ class AddCourse(Resource):
 
 api.add_resource(AddCourse, '/AddCourse')
 
+
+class AddSemester(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get course info
+        parser = reqparse.RequestParser()
+        parser.add_argument('semester_code', type=str)
+
+        parsed = parser.parse_args()
+
+        semester_code = parsed.get("semester_code")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("INSERT INTO semesters"
+                    "(description) "
+                    "VALUES (%s);",
+                    [semester_code])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+
+
+api.add_resource(AddSemester, '/AddSemester')
 
 ###Add a new class
 # TODO: CRITCAL: URL ENCODE THESE ITEMS BEFORE MAKING THE REQUEST
