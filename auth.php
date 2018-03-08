@@ -34,6 +34,7 @@ echo "url:".$url;
 $access_token_request = file_get_contents($url, true, $context);
 $access_token = json_decode($access_token_request);
 
+var_dump($access_token_request);
 var_dump($access_token);
 
 $linkedin_user_info = file_get_contents("https://api.linkedin.com/v1/people/~?format=json");
