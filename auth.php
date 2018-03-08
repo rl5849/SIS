@@ -16,7 +16,7 @@ fclose($myfile);
 $options = array(
     'http' => array(
         'header'  => "content-type: application/x-www-form-urlencoded",
-        'method'  => 'GET'
+        'method'  => 'POST'
     )
 );
 
@@ -32,7 +32,7 @@ $context  = stream_context_create($options);
 $url = "https://www.linkedin.com/oauth/v2/accessToken?" . http_build_query($params);
 echo "url:".$url;
 $access_token_request = file_get_contents($url, false, $context);
-$access_token = json_decode($access_token_request)["access_token"];
+$access_token = json_decode($access_token_request)->access_token;
 
 echo "Message from server: ".$access_token["error_description"];
 echo "First 3 of token: ".substr($access_token, 0, 3);
