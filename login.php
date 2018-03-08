@@ -38,7 +38,7 @@
           
           <!-- LinkedIn Button -->
             <?php
-              echo "<a href='https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=".$client_id."&redirect_uri=https://vm344p.se.rit.edu/SIS/auth.php'>";
+              echo "<a href='https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=".$client_id."&redirect_uri=https://vm344p.se.rit.edu/SIS/auth.php&state=12vk41b254kvn1l2'>";
               echo    "<img id='linkedin-login-button' src='images/Sign-In-Large---Default.png' alt='Sign in with LinkedIn'>";
               echo "</a>";
             ?>

@@ -1,6 +1,6 @@
 <?php
 // PHP for using the LinkedIn API
-echo "2";
+echo "3";
 // Get the Access Token from LinkedIn
 $code = $_GET["code"];
 
@@ -18,7 +18,8 @@ $params = array(
     'client_secret' => $client_secret,
     'grant_type' => 'authorization_code',
     'code' => $code,
-    'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/account.php'
+    'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/account.php',
+    'state' => 'nk537n234vn12'
 );
 
 $options = array(
