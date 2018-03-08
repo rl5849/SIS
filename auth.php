@@ -18,7 +18,7 @@ $params = array(
     'client_secret' => $client_secret,
     'grant_type' => 'authorization_code',
     'code' => $code,
-    'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/account.php'
+    'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/auth.php'
 );
 
 $options = array(
@@ -29,8 +29,8 @@ $options = array(
 );
 
 $context  = stream_context_create($options);
-//$url = "https://www.linkedin.com/oauth/v2/accessToken?".http_build_query($params);
-$url = "https://www.linkedin.com/uas/oauth2/accessToken?".http_build_query($params);
+$url = "https://www.linkedin.com/oauth/v2/accessToken?".http_build_query($params);
+//$url = "https://www.linkedin.com/uas/oauth2/accessToken?".http_build_query($params);
 
 echo "url:".$url."<br/>";
 $access_token_request = file_get_contents($url, false, $context);
