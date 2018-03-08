@@ -832,5 +832,39 @@ class GetProfs(Resource):
 
 api.add_resource(GetProfs, '/GetProfs')
 
+
+"""
+GetUserIdFromLinkedinID
+"""
+class GetUserIDFromLinkedInID(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('linkedin_id', type=int)
+        linkedin_id = parser.parse_args().get("linkedin_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT user_id FROM users "
+                    "WHERE linkedin = %s",
+                    [linkedin_id])
+
+        query = cur.fetchall()
+        print query
+
+        result = {'user_id': query[0][0]}
+
+        return jsonify(result)
+
+api.add_resource(GetUserIDFromLinkedInID, '/GetUserIDFromLinkedInID')
+
 if __name__ == '__main__':
      app.run(port=5002)
