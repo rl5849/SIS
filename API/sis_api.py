@@ -11,16 +11,16 @@ api = Api(app)
 SUCCESS_MESSAGE = "SUCCESS"
 FAILURE_MESSAGE = "FAILURE"
 
-###Use a course ID to get all their classes currently enrolled
+###Use a student ID to get all their classes currently enrolled
 class GetStudentsClasses(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
     def get(self):
-        # Get course id
+        # Get student id
         parser = reqparse.RequestParser()
-        parser.add_argument('course_id', type=int)
-        course_id = parser.parse_args().get("course_id")
+        parser.add_argument('student_id', type=int)
+        student_id = parser.parse_args().get("student_id")
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
@@ -31,9 +31,9 @@ class GetStudentsClasses(Resource):
 
         # Select data from table using SQL query.
         cur.execute("SELECT * FROM classes "
-                    "LEFT JOIN course_to_class ON (classes.class_id = course_to_class.class_id) "
-                    "WHERE course_to_class.course_id = %s",
-                    [course_id])
+                    "LEFT JOIN student_to_class ON (classes.class_id = student_to_class.class_id) "
+                    "WHERE student_to_class.student_id = %s",
+                    [student_id])
         query = cur.fetchall()
         # Get variable names
         cur.execute(
@@ -42,7 +42,7 @@ class GetStudentsClasses(Resource):
         column_names = cur.fetchall()
         column_names_clean = [x[0] for x in column_names]
 
-        result = {'courses_classes': [dict(zip(
+        result = {'students_classes': [dict(zip(
             column_names_clean, i)) for i in query]}
         return jsonify(result)
         
@@ -418,7 +418,7 @@ class EnrollStudent(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("INSERT IGNORE INTO course_to_class (course_id, class_id)"
+        cur.execute("INSERT IGNORE INTO student_to_class (course_id, class_id)"
                     "VALUES (%s, %s)",
                     [user_id, class_id])
 
@@ -459,7 +459,7 @@ class DropStudent(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("DELETE FROM course_to_class "
+        cur.execute("DELETE FROM student_to_class "
                     "WHERE course_id = %s "
                     "AND class_id = %s",
                     [user_id, class_id])
@@ -502,7 +502,7 @@ class CheckEnrollmentStatus(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT count(*) FROM course_to_class "
+        cur.execute("SELECT count(*) FROM student_to_class "
                     "WHERE course_id = %s "
                     "AND class_id = %s",
                     [user_id, class_id])

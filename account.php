@@ -41,10 +41,13 @@
 		  <li><?php
                 $date = strtotime($student_info["student_info"][0]["date_of_birth"]);
                 $date = date("d-m-Y", $date);
+                echo "DoB: ".($date);
+              ?>
+          </li>
+          <li>
+              <?php echo "Major: " . $student_info["student_info"][0]["major"]?>
+          </li>
 
-
-
-              echo "DoB: ".($date)?></li>
 		  <li><?php echo "Expected Grad. Year: ".($student_info["student_info"][0]["graduation_year"])?></li>
         </ul>
       </div>
