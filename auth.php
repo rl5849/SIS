@@ -15,16 +15,16 @@ fclose($myfile);
 
 $options = array(
     'http' => array(
-        'header'  => "Content-type: application/x-www-form-urlencoded",
+        'header'  => "content-type: application/x-www-form-urlencoded",
         'method'  => 'POST'
     )
 );
 
 $params = array(
-    'grant_type' => 'authorization_code',
-    'code' => $code,
     'client_id' => $client_id,
     'client_secret' => $client_secret,
+    'grant_type' => 'authorization_code',
+    'code' => $code,
     'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/account.php'
 );
 
