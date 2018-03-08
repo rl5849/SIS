@@ -9,6 +9,8 @@
 4. [Modify Professor](#ModifyProfessor)
 5. [Request Professor Approval](#ReqProfApproval)
 6. [Get Professors](#GetProfs)
+7. [Get Professor By ID](#GetProfByID)
+8. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
 
 #### [Courses/Classes](#CoursesClasses)
 1. [Get Course(s)](#GetCourses)
@@ -217,6 +219,32 @@ Gets the professor name associated with the professor ID
 
 <!-- End Get Professor by ID -->
 
+<!-- Start Get User Id from LinkedIn ID-->
+
+
+<a name="GetUserIDFromLinkedInID"/>
+
+### Get User ID From LinlkedIn ID
+
+Gets a user id based on a provided LinkedIn authenticatiopn ID
+
+##### Endpoint
+
+`/GetUserIDFromLinkedInID`
+
+##### Parameters
+
+`linkedin_id` : The id passed from LinkedIn
+
+##### Return
+
+```
+{ 'user_id' : int }
+```
+
+<!-- End Get Get User ID From LinkedIn ID-->
+
+<!-- Start Courses Classes -->
 <a name="CoursesClasses"/>
 
 ## Courses/Classes
