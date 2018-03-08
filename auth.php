@@ -1,7 +1,10 @@
 <?php
 // PHP for using the LinkedIn API
 echo "10<br/>";
-// Get the Access Token from LinkedIn
+
+session_name('linkedin');
+session_start();
+
 $code = $_GET["code"];
 
 // Parse config file for codes
@@ -30,14 +33,10 @@ $options = array(
 
 $context  = stream_context_create($options);
 $url = "https://www.linkedin.com/oauth/v2/accessToken?".http_build_query($params);
-//$url = "https://www.linkedin.com/uas/oauth2/accessToken?".http_build_query($params);
 
 echo "url:".$url."<br/>";
 $access_token_request = file_get_contents($url, true);
 $access_token = json_decode($access_token_request);
-
-//var_dump($access_token_request);
-//var_dump($access_token);
 
 $_SESSION['access_token'] = $access_token->access_token; // guard this!
 $_SESSION['expires_in']   = $access_token->expires_in; // relative time (in seconds)
