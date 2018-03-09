@@ -73,7 +73,7 @@ else if(isset($_SESSION['user_id'])){
       </div>
       <div class="large-2 medium-2 small-3 cell">
         <ul class="profile-list">
-          <p><input type="submit" href="https://www.linkedin.com"class="button expanded rit-orange" value="LinkedIn"></input></p>
+          <p><input type="button" href="https://www.linkedin.com" class="button expanded rit-orange" value="LinkedIn"></input></p>
           <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
         </ul>
       </div>
