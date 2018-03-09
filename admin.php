@@ -51,10 +51,10 @@ else{
         $result = file_get_contents("http://127.0.0.1:5002/AddClass?course_id=" . $url_params);
         $result = json_decode($result, true);
         if ($result == "SUCCESS"){
-            echo "<script>showMessage(\"success\", \"Successfully added Section\");</script>";
+            echo "<script>window.onload = function() { showMessage(\"success\", \"Successfully added Section\");};</script>";
         }
         else{
-            echo "<script>showMessage(\"failure\", \"Failed to add Section\");</script>";
+            echo "<script>window.onload = function() { showMessage(\"failure\", \"Failed to add Section\");};</script>";
         }
     }
 
@@ -63,10 +63,10 @@ else{
         $result = file_get_contents("http://127.0.0.1:5002/AddCourse?course_name=" . $url_params);
         $result = json_decode($result, true);
         if ($result == "SUCCESS"){
-            echo "<script>showMessage(\"success\", \"Successfully added Course\");</script>";
+            echo "<script>window.onload = function() { showMessage(\"success\", \"Successfully added Course\");};</script>";
         }
         else{
-            echo "<script>showMessage(\"failure\", \"Failed to add Course\");</script>";
+            echo "<script>window.onload = function() { showMessage(\"failure\", \"Failed to add Course\");};</script>";
         }
     }
     function add_semester() {
@@ -74,10 +74,10 @@ else{
         $result = file_get_contents("http://127.0.0.1:5002/AddSemester?semester_code=" . $url_params);
         $result = json_decode($result, true);
         if ($result == "SUCCESS"){
-            echo "<script>showMessage(\"success\", \"Successfully added Course\");</script>";
+            echo "<script>window.onload = function() { showMessage(\"success\", \"Successfully added Course\");};</script>";
         }
         else{
-            echo "<script>showMessage(\"failure\", \"Failed to add Course\");</script>";
+            echo "<script>window.onload = function() { showMessage(\"failure\", \"Failed to add Course\");};</script>";
         }
     }
 ?>
