@@ -126,7 +126,6 @@ class AddSemester(Resource):
 
         return jsonify(SUCCESS_MESSAGE)
 
-
 api.add_resource(AddSemester, '/AddSemester')
 
 ###Add a new class
