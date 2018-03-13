@@ -458,7 +458,6 @@ class GetClassInfo(Resource):
                              passwd=self.config.get('database', 'password'),
                              host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
-        
         cur = db.cursor()
 
         # Select data from table using SQL query.
