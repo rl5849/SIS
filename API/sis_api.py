@@ -32,7 +32,8 @@ class GetStudentsClasses(Resource):
         # Select data from table using SQL query.
         cur.execute("SELECT * FROM classes "
                     "LEFT JOIN student_to_class ON (classes.class_id = student_to_class.class_id) "
-                    "WHERE student_to_class.student_id = %s",
+                    "WHERE student_to_class.student_id = %s "
+                    "ORDER BY classes.name",
                     [student_id])
         query = cur.fetchall()
         # Get variable names
@@ -415,10 +416,12 @@ class GetClasses(Resource):
         # Select data from table using SQL query.
         if class_id:
             cur.execute("SELECT * FROM classes "
-                        "WHERE class_id = %s",
+                        "WHERE class_id = %s "
+                        "ORDER BY name",
                         [class_id])
         else:
-            cur.execute("SELECT * FROM classes")
+            cur.execute("SELECT * FROM classes "
+                        "ORDER BY name")
 
         query = cur.fetchall()
         # Get variable names
@@ -460,7 +463,8 @@ class GetClassInfo(Resource):
 
         # Select data from table using SQL query.
         cur.execute("SELECT * FROM classes "
-                    "WHERE class_id = %s",
+                    "WHERE class_id = %s "
+                    "ORDER BY name",
                     [class_id])
         query = cur.fetchall()
         # Get variable names
