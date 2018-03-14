@@ -1,3 +1,7 @@
+<script>
+    makeNav();
+    makeCallouts();
+</script>
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])){
@@ -54,10 +58,10 @@ else{
             $enroll = file_get_contents("http://127.0.0.1:5002/EnrollStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
             $enroll = json_decode($enroll, true);
             if ($enroll == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully Enrolled in class\");</script>";
+                echo "<script>window.onload = function() { showMessage(\"success\", \"Successfully Enrolled in class\");};</script>";
             }
             else{
-                echo "<script>showMessage(\"failure\", \"Failed to Enroll in class\");</script>";
+                echo "<script>window.onload = function() { showMessage(\"failure\", \"Failed to Enroll in class\");};</script>";
             }
         }
 
@@ -68,10 +72,10 @@ else{
             $unenroll = file_get_contents("http://127.0.0.1:5002/DropStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
             $unenroll = json_decode($unenroll, true);
             if ($unenroll == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully Dropped class\");</script>";
+                echo "<script>window.onload = function() { showMessage(\"success\", \"Successfully Dropped class\");};</script>";
             }
             else{
-                echo "<script>showMessage(\"failure\", \"Failed to Drop class\");</script>";
+                echo "<script>window.onload = function() { showMessage(\"failure\", \"Failed to Drop class\");};</script>";
             }
         }
 

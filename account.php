@@ -32,7 +32,7 @@ else if(isset($_SESSION['user_id'])){
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
   <body>
-  
+
     <!-- Load Nav Bar and Callouts -->
     <div id="nav-placeholder"></div>
     <div id="callouts-placeholder"></div>
@@ -73,7 +73,7 @@ else if(isset($_SESSION['user_id'])){
       </div>
       <div class="large-2 medium-2 small-3 cell">
         <ul class="profile-list">
-          <p><input type="submit" href="https://www.linkedin.com"class="button expanded rit-orange" value="LinkedIn"></input></p>
+          <p><input type="button" href="https://www.linkedin.com" class="button expanded rit-orange" value="LinkedIn"></input></p>
           <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
         </ul>
       </div>
@@ -176,15 +176,16 @@ else if(isset($_SESSION['user_id'])){
       </div>
     </div>
   </div>
+    <center><img src="images/LOGO.png" style="width:75px;height:75px;"></center>
 
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/what-input/dist/what-input.js"></script>
   <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
   <script src="js/app.js"></script>
-  
-  <script>
+<script>
     makeNav();
     makeCallouts();
-   </script>
+</script>
+
   </body>
 </html>
