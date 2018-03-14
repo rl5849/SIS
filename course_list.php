@@ -23,8 +23,7 @@ else{
     <div id="nav-placeholder"></div>
     <div id="callouts-placeholder"></div>
     <!-- End load Nave Bar and Callouts -->
-    
-    
+
     <div class="grid-container">
 	  
       <div class="grid-x grid-padding-x">
