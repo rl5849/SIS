@@ -43,16 +43,21 @@ CREATE TABLE `classes` (
   `name` char(40) DEFAULT NULL,
   `room_number` int(11) DEFAULT NULL,
   `capacity` int(11) DEFAULT NULL,
-  `num_enrolled` int(11) DEFAULT NULL,
+  `num_enrolled` int(11) DEFAULT '0',
   `time` tinyblob,
   `course_id` int(11) DEFAULT NULL,
   `professor_id` int(11) DEFAULT NULL,
+  `section` int(11) DEFAULT NULL,
+  `credits` int(11) DEFAULT NULL,
+  `semester_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`class_id`),
   KEY `course_id` (`course_id`),
   KEY `professor_id` (`professor_id`),
+  KEY `semester_id` (`semester_id`),
   CONSTRAINT `classes_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`),
-  CONSTRAINT `classes_ibfk_2` FOREIGN KEY (`professor_id`) REFERENCES `professors` (`professor_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `classes_ibfk_2` FOREIGN KEY (`professor_id`) REFERENCES `professors` (`professor_id`),
+  CONSTRAINT `semester_id` FOREIGN KEY (`semester_id`) REFERENCES `semesters` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +71,24 @@ CREATE TABLE `courses` (
   `course_id` int(11) NOT NULL AUTO_INCREMENT,
   `course_name` char(40) DEFAULT NULL,
   `course_description` tinyblob,
+  `course_code` char(20) DEFAULT NULL,
+  `credits` int(11) DEFAULT NULL,
   PRIMARY KEY (`course_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `favorites`
+--
+
+DROP TABLE IF EXISTS `favorites`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `favorites` (
+  `student_id` int(11) DEFAULT NULL,
+  `class_id` int(11) DEFAULT NULL,
+  UNIQUE KEY `unique_row` (`student_id`,`class_id`),
+  KEY `class_id` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -138,7 +160,21 @@ CREATE TABLE `professors` (
   `date_of_birth` date DEFAULT NULL,
   `profile_pic` tinyblob,
   PRIMARY KEY (`professor_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `semesters`
+--
+
+DROP TABLE IF EXISTS `semesters`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `semesters` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `description` tinyblob,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,7 +187,7 @@ DROP TABLE IF EXISTS `student_to_class`;
 CREATE TABLE `student_to_class` (
   `student_id` int(11) DEFAULT NULL,
   `class_id` int(11) DEFAULT NULL,
-  KEY `student_id` (`student_id`),
+  UNIQUE KEY `unique_row` (`student_id`,`class_id`),
   KEY `class_id` (`class_id`),
   CONSTRAINT `student_to_class_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`),
   CONSTRAINT `student_to_class_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `classes` (`class_id`)
@@ -190,8 +226,27 @@ CREATE TABLE `students` (
   `profile_pic` tinyblob,
   `gender` char(1) DEFAULT NULL,
   `graduation_year` year(4) DEFAULT NULL,
+  `major` char(40) DEFAULT NULL,
+  `GPA` double DEFAULT NULL,
   PRIMARY KEY (`student_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` char(40) DEFAULT NULL,
+  `is_admin` tinyint(1) DEFAULT '0',
+  `linkedin` char(255) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `linkedin` (`linkedin`)
+) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,7 +260,7 @@ CREATE TABLE `waitlist` (
   `student_id` int(11) DEFAULT NULL,
   `class_id` int(11) DEFAULT NULL,
   `position` int(11) DEFAULT NULL,
-  KEY `student_id` (`student_id`),
+  UNIQUE KEY `unique_row` (`student_id`,`class_id`),
   KEY `class_id` (`class_id`),
   CONSTRAINT `waitlist_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE CASCADE,
   CONSTRAINT `waitlist_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `classes` (`class_id`) ON DELETE CASCADE
@@ -221,4 +276,4 @@ CREATE TABLE `waitlist` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-02-24 18:47:52
+-- Dump completed on 2018-03-15 12:19:47
