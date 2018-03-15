@@ -60,7 +60,7 @@ else{
 
                   $favorite = file_get_contents("http://127.0.0.1:5002/CheckFavoriteStatus?class_id=" . $class["class_id"] . "&user_id=" . $user_id);
                   $favorite = json_decode($favorite, true);
-                  $favorite = ($favorite['favorite_status'] == "True" ? "true": "false");
+                  $favorite = ($favorite['favorite_status'] == "True" ? true: false);
 
                     ?>
               <tr name="class_listing">
