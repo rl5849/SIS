@@ -42,6 +42,7 @@ else{
                   <th>Instructor</th>
                   <th>Room</th>
               </tr>
+
               <?php
                 $classes = file_get_contents("http://127.0.0.1:5002/GetClasses");
                 $classes = json_decode($classes, true);
