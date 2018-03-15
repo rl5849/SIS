@@ -609,29 +609,6 @@ class FavoriteClass(Resource):
     config.read('./config.ini')
     
     def get(self):
-        # Get class id
-        parser = reqparse.RequestParser()
-        parser.add_argument('class_id', type=int)
-        parser.add_argument('user_id', type=int)
-        class_id = parser.parse_args().get("class_id")
-        user_id = parser.parse_args().get("user_id")
-
-        db = MySQLdb.connect(user=self.config.get('database', 'username'),
-                             passwd=self.config.get('database', 'password'),
-                             host=self.config.get('database', 'host'),
-                             db=self.config.get('database', 'dbname'))
-
-        cur = db.cursor()
-
-        # Select data from table using SQL query.
-        cur.execute("INSERT IGNORE INTO favorites (student_id, class_id)"
-                    "VALUES (%s, %s)",
-                    [user_id, class_id])
-        try:
-            db.commit()
-        except MySQLdb.IntegrityError:
-            return jsonify(FAILURE_MESSAGE)
-
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(FavoriteClass, '/FavoriteClass')
@@ -644,71 +621,9 @@ class UnfavoriteClass(Resource):
     config.read('./config.ini')
     
     def get(self):
-        # Get class id
-        parser = reqparse.RequestParser()
-        parser.add_argument('class_id', type=int)
-        parser.add_argument('user_id', type=int)
-        class_id = parser.parse_args().get("class_id")
-        user_id = parser.parse_args().get("user_id")
-
-        db = MySQLdb.connect(user=self.config.get('database', 'username'),
-                             passwd=self.config.get('database', 'password'),
-                             host=self.config.get('database', 'host'),
-                             db=self.config.get('database', 'dbname'))
-
-        cur = db.cursor()
-
-        # Select data from table using SQL query.
-        cur.execute("DELETE FROM favorites "
-                    "WHERE student_id = %s "
-                    "AND class_id = %s",
-                    [user_id, class_id])
-        try:
-            db.commit()
-        except MySQLdb.IntegrityError:
-            return jsonify(FAILURE_MESSAGE)
-
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(UnfavoriteClass, '/UnfavoriteClass')
-
-
-"""
-Check if a user favorited a class
-"""
-class CheckFavoriteStatus(Resource):
-    config = ConfigParser.ConfigParser()
-    config.read('./config.ini')
-
-    def get(self):
-        # Get student id
-        parser = reqparse.RequestParser()
-        parser.add_argument('class_id', type=int)
-        parser.add_argument('user_id', type=int)
-        class_id = parser.parse_args().get("class_id")
-        user_id = parser.parse_args().get("user_id")
-
-
-        db = MySQLdb.connect(user=self.config.get('database', 'username'),
-                             passwd=self.config.get('database', 'password'),
-                             host=self.config.get('database', 'host'),
-                             db=self.config.get('database', 'dbname'))
-
-        cur = db.cursor()
-
-        # Select data from table using SQL query.
-        cur.execute("SELECT count(*) FROM favorites "
-                    "WHERE student_id = %s "
-                    "AND class_id = %s",
-                    [user_id, class_id])
-
-        query = cur.fetchall()
-
-        result = {'favorite_status': str(query[0][0] > 0)}
-
-        return jsonify(result)
-
-api.add_resource(CheckFavoriteStatus, '/CheckFavoriteStatus')
 
 """
 Gets a grade for a class and a student
