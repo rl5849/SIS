@@ -23,8 +23,7 @@ else{
     <div id="nav-placeholder"></div>
     <div id="callouts-placeholder"></div>
     <!-- End load Nave Bar and Callouts -->
-    
-    
+
     <div class="grid-container">
 	  
       <div class="grid-x grid-padding-x">
@@ -43,6 +42,7 @@ else{
                   <th>Instructor</th>
                   <th>Room</th>
               </tr>
+
               <?php
                 $classes = file_get_contents("http://127.0.0.1:5002/GetClasses");
                 $classes = json_decode($classes, true);
