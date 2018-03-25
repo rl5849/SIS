@@ -793,8 +793,6 @@ api.add_resource(ModCourse, '/ModCourse')
 """
 Modifies the attributes of a professor
 """
-
-
 class ModProfessor(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
@@ -808,8 +806,6 @@ api.add_resource(ModProfessor, '/ModProfessor')
 """
 Modifies the attributes of a profile
 """
-
-
 class ModProfile(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
@@ -823,8 +819,6 @@ api.add_resource(ModProfile, '/ModProfile')
 """
 Requests approval of an admin for a new user, which has requested to be flagged as a professor
 """
-
-
 class RequestProfessorApproval(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
@@ -838,8 +832,6 @@ api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
 """
 Check if student/user has admin privilegs
 """
-
-
 class CheckIfAdmin(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
@@ -909,8 +901,6 @@ api.add_resource(GetProfessorByID, '/GetProfessorByID')
 """
 Get the waitlist for a class given a class ID
 """
-
-
 class WaitlistByClass(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
@@ -952,6 +942,76 @@ class WaitlistByClass(Resource):
 
 api.add_resource(WaitlistByClass, '/WaitlistByClass')
 
+
+
+"""
+Add student to waitlist for class
+"""
+class AddStudentToWaitlist(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('class_id', type=int)
+        parser.add_argument('student_id', type=int)
+        student_id = parser.parse_args().get("student_id")
+        class_id = parser.parse_args().get("class_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("",
+                    [class_id])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+api.add_resource(AddStudentToWaitlist, '/AddStudentToWaitlist')
+
+
+"""
+Remove student to waitlist for class
+"""
+class RemoveStudentFromWaitlist(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('class_id', type=int)
+        parser.add_argument('student_id', type=int)
+        student_id = parser.parse_args().get("student_id")
+        class_id = parser.parse_args().get("class_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("",
+                    [class_id])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+api.add_resource(RemoveStudentFromWaitlist, '/RemoveStudentFromWaitlist')
 
 class GetCurrentSemester(Resource):
     config = ConfigParser.ConfigParser()
@@ -1010,8 +1070,6 @@ api.add_resource(GetProfs, '/GetProfs')
 """
 GetUserIdFromLinkedinID
 """
-
-
 class GetUserIDFromLinkedInID(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
