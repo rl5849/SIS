@@ -24,7 +24,9 @@
 
             <div class="large-4 medium-6 small-8 cell translucent-background">
 
-                <h2> SIS++ </h2>
+                <!--<h2> SIS++ </h2>-->
+
+                <img class="login-page-logo" src="images/LOGO.png" alt="SIS"/>
 
                 <?php
                 $myfile = fopen("LinkedIn/config.ini", "r") or die("Unable to open file!");
