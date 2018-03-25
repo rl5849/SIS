@@ -5,3 +5,4 @@ API/config.ini
 tests/htmlcov/*
 .idea/*
 LinkedIn/config.ini
+tests/
