@@ -502,6 +502,41 @@ class EnrollStudent(Resource):
 
         cur = db.cursor()
 
+        # check if the class is full
+        cur.execute("SELECT num_enrolled, capacity FROM classes" 
+                    "WHERE class_id = %s",
+                    [class_id])
+        
+        capacity = cur.fetchall()
+
+        if len(capacity) == 0:
+            return jsonify(FAILURE_MESSAGE)
+        
+        #compare num_enrolled to capacity
+        if capacity[0][0] >= capacity[0][1]:
+
+            #check if the waitlist is full
+            cur.execute("SELECT MAX(position) FROM waitlist" 
+                    "WHERE class_id = %s",
+                    [class_id])
+            
+            waitlist = cur.fetchall()
+
+            if len(waitlist) == 0:
+                position = 0
+            else:
+                position = waitlist[0][0] + 1
+                #TODO add waitlist capacity to database
+                #if position >= waitlist_capacity:
+                #   return jsonify(FAILURE_MESSAGE)
+
+            cur.execute("INSERT IGNORE INTO waitlist (student_id, class_id, position)"
+                    "VALUES (%s, %s, %s)",
+                    [user_id, class_id, position])")
+            
+            # TODO send notification that user was waitlisted and not enrolled
+            return jsonify(SUCCESS_MESSAGE)
+
         # Select data from table using SQL query.
         cur.execute("INSERT IGNORE INTO student_to_class (student_id, class_id)"
                     "VALUES (%s, %s)",
