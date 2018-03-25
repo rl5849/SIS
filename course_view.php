@@ -1,12 +1,12 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])){
-    echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
-    exit();
-}
-else{
+if (isset($_SESSION['user_id'])){
     $user_id = $_SESSION['user_id'];
 }
+else{
+    $user_id = NIL;
+}
+
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -169,23 +169,32 @@ else{
         </div>
         <div class="large-2 medium-2 small-3 cell">
           <ul class="profile-list">
-              <p>
-                  <form method ="post" >
-                      <input type="hidden" name="favorite" value="<?php echo ($favorite_status)?>">
-                      <input type="hidden" name="class_id" value="<?php echo $class_id;?>">
-                      <input type="hidden" name="user_id" value="<?php echo $user_id;?>">
-                      <input type="submit" class="button expanded rit-orange" value="<?php echo $favorite_status_msg;?>">
-                  </form>
-              </p>
 
-              <p>
-                  <form method ="post" >
-                        <input type="hidden" name="enroll" value="<?php echo !($enrollment_status)?>">
-                        <input type="hidden" name="class_id" value="<?php echo $class_id;?>">
-                        <input type="hidden" name="user_id" value="<?php echo $user_id;?>">
-                        <input type="submit" class="button expanded rit-orange" value="<?php echo $enrollment_status_msg;?>">
-                  </form>
-              </p>
+              <?php //Only show buttons if they are logged in
+                if ($user_id) {
+                    ?>
+                    <p>
+                    <form method="post">
+                        <input type="hidden" name="favorite" value="<?php echo($favorite_status) ?>">
+                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
+                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                        <input type="submit" class="button expanded rit-orange"
+                               value="<?php echo $favorite_status_msg; ?>">
+                    </form>
+                    </p>
+
+                    <p>
+                    <form method="post">
+                        <input type="hidden" name="enroll" value="<?php echo !($enrollment_status) ?>">
+                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
+                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                        <input type="submit" class="button expanded rit-orange"
+                               value="<?php echo $enrollment_status_msg; ?>">
+                    </form>
+                    </p>
+                    <?php
+                }
+              ?>
             </li>
           </ul>
         </div>
