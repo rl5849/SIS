@@ -553,7 +553,7 @@ class EnrollStudent(Resource):
 
             cur.execute("INSERT IGNORE INTO waitlist (student_id, class_id, position)"
                     "VALUES (%s, %s, %s)",
-                    [user_id, class_id, position])")
+                    [user_id, class_id, position])
             
             # TODO send notification that user was waitlisted and not enrolled
             return jsonify(SUCCESS_MESSAGE)
