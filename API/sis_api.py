@@ -1131,9 +1131,43 @@ class GetUserIDFromLinkedInID(Resource):
         result = {'user_id': (query[0][0] if query else None)}
 
         return jsonify(result)
-
-
 api.add_resource(GetUserIDFromLinkedInID, '/GetUserIDFromLinkedInID')
+
+
+"""
+Delete a class
+"""
+class DeleteClass(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('class_id', type=int)
+        class_id = parser.parse_args().get("class_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+        try:
+            cur.execute("DELETE FROM classes "
+                        "WHERE class_id = %s",
+                        [class_id])
+
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+
+
+api.add_resource(DeleteClass, '/DeleteClass')
+
+
 
 if __name__ == '__main__':
     app.run(port=5002)
