@@ -181,6 +181,65 @@ else{
                 </form>
                 <!-- End new form -->
             </div>
+            <div class="small-12 medium-3 large-3 columns">
+                <!-- Start new form -->
+                <form class="callout text-center" method="post">
+                    <input type="hidden" name="action" value="add_semester">
+                    <h4>Approve Professor Status</h4>
+                    <div class="floated-label-wrapper">
+                        <?php
+                        // Get profs on list
+                        //create list of approve and deny
+
+                        ?>
+                        <table
+                            <td>Profname</td>
+                            <td><input class="button expanded" type="submit" value="Approve"></td>
+                            <td><input class="button expanded" type="submit" value="Deny"></td>
+
+                        </table>
+
+                    </div>
+
+                </form>
+                <!-- End new form -->
+            </div>
+            <div class="small-12 medium-3 large-3 columns">
+                <!-- Start new form -->
+<!--                <form class="callout text-center" method="post">-->
+                    <h4>Delete Class</h4>
+                    <div class="floated-label-wrapper">
+                        <table>
+                        <?php
+                        $classes = file_get_contents("http://127.0.0.1:5002/GetClasses");
+                        $classes = json_decode($classes, true);
+                        $classes = $classes["classes"]; //fix this
+
+                        foreach ($classes as $class){
+                            $course = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=" . $class["course_id"]);
+                            $course = json_decode($course, true);
+                            $course = $course["course_info"][0];
+                        ?>
+                            <tr>
+                                <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
+                                <!-- <td><?php //echo $class["section"];?></td> -->
+                                <td><?php echo $class["time"];?></td>
+                                <td>
+                                    <form name="form_delete" class='form_delete'>
+                                    <input type="hidden" name="class_id" value="<?php echo $class["class_id"];?>">
+                                    <input type="hidden" name="action" value="delete_class">
+                                    <input id="delete-class" class="button expanded rit-orange" type="submit" value="Delete">
+<!--                                        -->
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        </table>
+                    </div>
+
+                </form>
+                <!-- End new form -->
+            </div>
         </div>
     </div>
 
@@ -192,6 +251,55 @@ else{
     <script>
         makeNav();
         makeCallouts();
+
+        $(document).ready(function() {
+            $(".form_delete").on('submit', function (e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        type: 'POST',
+                        data:   $(this).serialize(),
+                        url: 'admin_ajax_funcs.php',
+                        success: function (data) {
+                            if (data.includes("Success")){
+                                showMessage("success", data);
+                                this.parent.remove();
+                            }
+                            else{
+                                showMessage("failure", data);
+
+                            }
+
+                        }
+                    });
+                });
+            });
+
+            $(document).ready(function() {
+                $(".text-center").on('submit', function (e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        type: 'POST',
+                        data:   $(this).serialize(),
+                        url: 'admin_ajax_funcs.php',
+                        success: function (data) {
+                            if (data.includes("Success")){
+                                showMessage("success", data);
+                                this.
+                                reset();
+                            }
+                            else{
+                                showMessage("failure", data);
+
+                            }
+
+                        }
+                    });
+                });
+            });
+
+
     </script>
 </body>
 </html>

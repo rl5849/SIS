@@ -1,12 +1,12 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])){
-    echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
-    exit();
+if (isset($_SESSION['user_id'])){
+    $user_id = $_SESSION['user_id'];
 }
 else{
-    $user_id = $_SESSION['user_id'];
-} ?>
+    $user_id = NIL;
+}
+ ?>
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
@@ -23,7 +23,8 @@ else{
     <div id="nav-placeholder"></div>
     <div id="callouts-placeholder"></div>
     <!-- End load Nave Bar and Callouts -->
-
+    
+    
     <div class="grid-container">
 	  
       <div class="grid-x grid-padding-x">
@@ -55,13 +56,22 @@ else{
 
                   $professor = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" . $class["professor_id"]);
                   $professor = json_decode($professor, true);
-              ?>
+
+
+                  $favorite = file_get_contents("http://127.0.0.1:5002/CheckFavoriteStatus?class_id=" . $class["class_id"] . "&user_id=" . $user_id);
+                  $favorite = json_decode($favorite, true);
+                  $favorite = ($favorite['favorite_status'] == "True" ? true: false);
+
+                    ?>
               <tr name="class_listing">
                   <td>
-                      <!-- Use if favorited -->
-                      <!--<i class="fi-heart style3 favorited"></i>-->
-                      <!-- Use if not favorited -->
-                      <i class="fi-heart unfavorited"></i>
+                      <?php
+                        if ($favorite){
+                            echo ("<i class=\"fi-heart favorited\"></i>");
+                        }else{
+                            echo ("<i class=\"fi-heart unfavorited\"></i>");
+                        }
+                      ?>
                   </td>
                 <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
                 <td><?php echo $class["section"];?></td>

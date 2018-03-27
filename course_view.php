@@ -1,16 +1,12 @@
-<script>
-    makeNav();
-    makeCallouts();
-</script>
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])){
-    echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
-    exit();
-}
-else{
+if (isset($_SESSION['user_id'])){
     $user_id = $_SESSION['user_id'];
 }
+else{
+    $user_id = NIL;
+}
+
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -53,29 +49,61 @@ else{
             unset($_POST["enroll"]);
 
         }
+        if (isset($_POST["favorite"])){
+
+            if ($_POST["favorite"] == 0){
+                favorite($_POST["user_id"], $class_id);
+
+            }
+            else{
+                unfavorite($_POST["user_id"], $class_id);
+            }
+            unset($_POST["favorite"]);
+        }
 
         function enroll($user_id, $local_class_id) {
             $enroll = file_get_contents("http://127.0.0.1:5002/EnrollStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
             $enroll = json_decode($enroll, true);
             if ($enroll == "SUCCESS"){
-                echo "<script>window.onload = function() { showMessage(\"success\", \"Successfully Enrolled in class\");};</script>";
+                echo "<script>showMessage(\"success\", \"Successfully Enrolled in class\");</script>";
             }
             else{
-                echo "<script>window.onload = function() { showMessage(\"failure\", \"Failed to Enroll in class\");};</script>";
+                echo "<script>showMessage(\"failure\", \"Failed to Enroll in class\");</script>";
             }
         }
 
-        if (isset($_POST["enroll"])){
-            enroll($_POST["user_id"], $_POST["class"]);
-        }
+
         function unenroll($user_id, $local_class_id) {
             $unenroll = file_get_contents("http://127.0.0.1:5002/DropStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
             $unenroll = json_decode($unenroll, true);
             if ($unenroll == "SUCCESS"){
-                echo "<script>window.onload = function() { showMessage(\"success\", \"Successfully Dropped class\");};</script>";
+                echo "<script>showMessage(\"success\", \"Successfully Dropped class\");</script>";
             }
             else{
-                echo "<script>window.onload = function() { showMessage(\"failure\", \"Failed to Drop class\");};</script>";
+                echo "<script>showMessage(\"failure\", \"Failed to Drop class\");</script>";
+            }
+        }
+
+        function favorite($user_id, $local_class_id) {
+            $favorite = file_get_contents("http://127.0.0.1:5002/FavoriteClass?class_id=" . $local_class_id . "&user_id=" . $user_id);
+            $favorite = json_decode($favorite, true);
+            if ($favorite == "SUCCESS"){
+                echo "<script>showMessage(\"success\", \"Successfully Favorited class\");</script>";
+            }
+            else{
+                echo "<script>showMessage(\"failure\", \"Failed to Favorite class\");</script>";
+            }
+        }
+
+
+        function unfavorite($user_id, $local_class_id) {
+            $unfavorite = file_get_contents("http://127.0.0.1:5002/UnfavoriteClass?class_id=" . $local_class_id . "&user_id=" . $user_id);
+            $unfavorite = json_decode($unfavorite, true);
+            if ($unfavorite == "SUCCESS"){
+                echo "<script>showMessage(\"success\", \"Successfully Dropped class\");</script>";
+            }
+            else{
+                echo "<script>showMessage(\"failure\", \"Failed to Drop class\");</script>";
             }
         }
 
@@ -84,11 +112,23 @@ else{
         $enrollment_status = $enrollment_status["enrollment_status"];
         $enrollment_status = $enrollment_status === 'True'? true: false;
 
+        $favorite_status = file_get_contents("http://127.0.0.1:5002/CheckFavoriteStatus?class_id=" .$class_id . "&user_id=" . $user_id);
+        $favorite_status = json_decode($favorite_status, true);
+        $favorite_status = $favorite_status["favorite_status"];
+        $favorite_status = $favorite_status === 'True'? true: false;
+
+
 
         if ($enrollment_status == "True"){
             $enrollment_status_msg = "Drop";
         }else{
             $enrollment_status_msg = "Enroll";
+        }
+
+        if ($favorite_status == "True"){
+            $favorite_status_msg = "Unfavorite";
+        }else{
+            $favorite_status_msg = "Favorite";
         }
 
 
@@ -130,15 +170,31 @@ else{
         <div class="large-2 medium-2 small-3 cell">
           <ul class="profile-list">
 
-              <p><input type="submit" class="button expanded rit-orange" value="Favorite"></input></p> <!-- make this a post? just gonna leave it blank for now-->
-              <p>
-                  <form method ="post" >
-                        <input type="hidden" name="enroll" value="<?php echo !($enrollment_status)?>">
-                        <input type="hidden" name="class_id" value="<?php echo $class_id;?>">
-                        <input type="hidden" name="user_id" value="<?php echo $user_id;?>">
-                        <input type="submit" class="button expanded rit-orange" value="<?php echo $enrollment_status_msg;?>">
-                  </form>
-              </p>
+              <?php //Only show buttons if they are logged in
+                if ($user_id) {
+                    ?>
+                    <p>
+                    <form method="post">
+                        <input type="hidden" name="favorite" value="<?php echo($favorite_status) ?>">
+                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
+                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                        <input type="submit" class="button expanded rit-orange"
+                               value="<?php echo $favorite_status_msg; ?>">
+                    </form>
+                    </p>
+
+                    <p>
+                    <form method="post">
+                        <input type="hidden" name="enroll" value="<?php echo !($enrollment_status) ?>">
+                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
+                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                        <input type="submit" class="button expanded rit-orange"
+                               value="<?php echo $enrollment_status_msg; ?>">
+                    </form>
+                    </p>
+                    <?php
+                }
+              ?>
             </li>
           </ul>
         </div>
