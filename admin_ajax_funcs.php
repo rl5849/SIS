@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: robertliedka
  * Date: 3/27/18
  * Time: 10:14 AM
  */
-
 
 if (isset($_POST["action"])){
     switch ($_POST["action"]){
@@ -15,14 +15,37 @@ if (isset($_POST["action"])){
         case "add_course":
             add_course();
             break;
-        //case "add_semester":
-        //    add_semester();
+        case "add_semester":
+            add_semester();
+            break;
         case "delete_class":
             delete_class();
+            break;
+        case "get_classes":
+            get_classes();
+            break;
     }
 }
 
+if (isset($_GET["action"])){
+    switch ($_GET["action"]){
+        case "get_classes":
+            get_classes();
+            break;
+    }
+}
 
+function add_semester() {
+    $url_params = urlencode($_POST['semester_code']);
+    $result = file_get_contents("http://127.0.0.1:5002/AddSemester?semester_code=" . $url_params);
+    $result = json_decode($result, true);
+    if ($result == "SUCCESS"){
+        echo "Successfully added Course";
+    }
+    else{
+        echo "Failed to add Course";
+    }
+}
 
 function add_class() {
 
@@ -60,6 +83,11 @@ function delete_class() {
     else{
         echo "Could not delete class: " . $_POST['class_id'];
     }
+}
+
+function get_classes() {
+    $course_list = file_get_contents("http://127.0.0.1:5002/GetClasses");
+    echo $course_list;
 }
 
 
