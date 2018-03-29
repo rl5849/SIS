@@ -181,11 +181,12 @@ else if(isset($_SESSION['user_id'])){
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/what-input/dist/what-input.js"></script>
   <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
+  <script src="bower_components/motion-ui/dist/motion-ui.js"></script>
   <script src="js/app.js"></script>
-<script>
+  <script>
     makeNav();
     makeCallouts();
-</script>
+  </script>
 
   </body>
 </html>
