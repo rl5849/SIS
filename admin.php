@@ -189,7 +189,7 @@ else{
                         for(var i=0; i < val.length; i++){
                             var item = val[i];
                             buffer+="<tr>\
-                                        <td><a href=\"course_view.php?class_id=item.class_id\">" + item.name + "</a></td>\
+                                        <td><a href=\"course_view.php?class_id=" + item.course_id + "\">" + item.name + "</a></td>\
                                         <td>" + item.time + "</td>\
                                         <td> \
                                              <form class=\"form_delete\">\
@@ -199,9 +199,7 @@ else{
                                              </form>\
                                          </td>\
                                      </tr>";
-
                         }
-
                     });
                     $("#classes").append(buffer);
                 },
@@ -213,6 +211,8 @@ else{
             });
         }
         $(load_class_table());
+
+
 
         $(document).ready(function() {
             $(".form_delete").on('submit', function (e) {
@@ -242,7 +242,8 @@ else{
                     }
                 });
             });
-
+        });
+        $(document).ready(function() {
             $(".text-center").on('submit', function (e) {
                 console.log("Making ajax generic");
                 e.preventDefault();
@@ -251,7 +252,7 @@ else{
                     data: $(this).serialize(),
                     // dataType : 'json',
                     // contentType: "application/x-www-form-urlencoded",
-                    url: 'admin_ajax_funcs.php',\
+                    url: 'admin_ajax_funcs.php',
                     success: function (data) {
                         if (data.includes("Success")) {
                             showMessage("success", data);

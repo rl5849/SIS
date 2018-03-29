@@ -59,12 +59,9 @@
 
                 <form method="post" action="account.php" style="padding-top:5%">
                     <p>
-                        <input name=login type="submit" class="button expanded rit-brown" value="Login as student"/>
-                    </p>
-                </form>
-                <form method="post" action="account.php">
-                    <p>
-                        <input name=login type="submit" class="button expanded rit-brown" value="Login as admin"/>
+                        <input name=username type="text" class="" value="Username"/>
+                        <input name=password type="password" class="" value="Password"/>
+                        <input name=login type="submit" class="button expanded rit-brown" value=""/>
                     </p>
                 </form>
 
