@@ -1135,6 +1135,42 @@ api.add_resource(GetUserIDFromLinkedInID, '/GetUserIDFromLinkedInID')
 
 
 """
+GetUserIdFromLogin
+"""
+class GetUserIDFromLogin(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('username', type=str)
+        parser.add_argument('password', type=str)
+        username = parser.parse_args().get("username")
+        password = parser.parse_args().get("password")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT user_id FROM logins "
+                    "WHERE username = %s "
+                    "AND password = %s",
+                    [username, password])
+
+        query = cur.fetchall()
+
+        result = {'user_id': (query[0][0] if query else None)}
+
+        return jsonify(result)
+api.add_resource(GetUserIDFromLogin, '/GetUserIDFromLogin')
+
+
+
+"""
 Delete a class
 """
 class DeleteClass(Resource):
