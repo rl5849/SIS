@@ -1,5 +1,6 @@
 <div class="top-bar">
 	<?php
+    error_reporting(0);
         session_start();
 		$user_id = $_SESSION['user_id'];
 		$user_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=" . $_SESSION["user_id"]);
@@ -27,12 +28,12 @@
   </div>
   <div class="top-bar-right">
 	<ul class="dropdown menu" data-dropdown-menu>
-  <!--<form action="course_search.php" method="get">-->
+  <form action="course_search.php" method="get">
 	<ul class="menu">
-	  <li><input type="search" placeholder="Class Search"></li>
-	  <li><button type="submit" class="button" formaction="course_search.php">Search</button></li> <!-- Search functionality here-->
+	  <li><input type="search" name="search_parameters" placeholder="Class Search"></li>
+	  <li><button type="submit" class="button" formaction="course_list.php">Search</button></li> <!-- Search functionality here-->
 	</ul>
-  <!--<form>-->
+  </form>
 		<li>
 			<a href="account.php">Welcome, <?php echo ($user_info["student_info"][0]["student_name"])?></a> <!-- Name here -->
 		</li>

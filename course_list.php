@@ -30,7 +30,7 @@ else{
       <div class="grid-x grid-padding-x">
 
         <ul class="menu" style="margin-top:2%;">
-          <li><input id="filter" type="search" placeholder="Enter a course ID, Instructor, Time, etc. (ex. SWEN-344)" style="width:200%"></li>
+          <li><input id="filter" type="search" placeholder="Enter a course ID, Instructor, Time, etc. (ex. SWEN-344)" style="width:200%" value="<?php echo $_GET['search_parameters'];?>"></li>
           <li><button type="button" class="button" style="margin-left:267%;">Search</button></li>
         </ul>
 
@@ -89,6 +89,7 @@ else{
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/what-input/dist/what-input.js"></script>
     <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
+    <script src="bower_components/motion-ui/dist/motion-ui.js"></script>
     <script src="js/app.js"></script>
     
     <script>

@@ -1,15 +1,15 @@
 <div id="success-message" class="callout success" data-closable="fade-out" style="display: none;">
-  <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+  <button class="close-button" aria-label="Dismiss alert" type="button" onclick="emptyCallout('success');" data-close>
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div id="warning-message" class="callout warning small" data-closable="fade-out" style="display: none;">
-  <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+  <button class="close-button" aria-label="Dismiss alert" type="button" onclick="emptyCallout('warning');" data-close>
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div id="failure-message" class="callout alert small" data-closable="fade-out" style="display: none;">
-  <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+  <button class="close-button" aria-label="Dismiss alert" type="button" onclick="emptyCallout('failure');" data-close>
     <span aria-hidden="true">&times;</span>
   </button>
 </div>

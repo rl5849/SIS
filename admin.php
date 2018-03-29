@@ -1,7 +1,3 @@
-<script>
-    makeNav();
-    makeCallouts();
-</script>
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])){
@@ -30,57 +26,6 @@ else{
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
-
-<?php
-    if (isset($_POST["action"])){
-        switch ($_POST["action"]){
-            case "add_class":
-                add_class();
-                break;
-            case "add_course":
-                add_course();
-                break;
-            case "add_semester":
-                add_semester();
-        }
-    }
-
-    function add_class() {
-
-        $url_params = $_POST['course_id'] . "&time=" . urlencode($_POST['time']) . "&room_number=" . $_POST['room_number'] . "&prof_id=" . $_POST['professor_id']. "&capacity=" . $_POST['capacity'];
-        $result = file_get_contents("http://127.0.0.1:5002/AddClass?course_id=" . $url_params);
-        $result = json_decode($result, true);
-        if ($result == "SUCCESS"){
-            echo "<script>window.onload = function() { showMessage(\"success\", \"Successfully added Section\");};</script>";
-        }
-        else{
-            echo "<script>window.onload = function() { showMessage(\"failure\", \"Failed to add Section\");};</script>";
-        }
-    }
-
-    function add_course() {
-        $url_params = urlencode($_POST['course_name']) . "&course_code=" . urlencode($_POST['course_code']) . "&course_credits=" . $_POST['course_credits'] . "&course_description=" . urlencode($_POST['course_description']);
-        $result = file_get_contents("http://127.0.0.1:5002/AddCourse?course_name=" . $url_params);
-        $result = json_decode($result, true);
-        if ($result == "SUCCESS"){
-            echo "<script>window.onload = function() { showMessage(\"success\", \"Successfully added Course\");};</script>";
-        }
-        else{
-            echo "<script>window.onload = function() { showMessage(\"failure\", \"Failed to add Course\");};</script>";
-        }
-    }
-    function add_semester() {
-        $url_params = urlencode($_POST['semester_code']);
-        $result = file_get_contents("http://127.0.0.1:5002/AddSemester?semester_code=" . $url_params);
-        $result = json_decode($result, true);
-        if ($result == "SUCCESS"){
-            echo "<script>window.onload = function() { showMessage(\"success\", \"Successfully added Course\");};</script>";
-        }
-        else{
-            echo "<script>window.onload = function() { showMessage(\"failure\", \"Failed to add Course\");};</script>";
-        }
-    }
-?>
     <!-- Load Nav Bar and Callouts -->
     <div id="nav-placeholder"></div>
     <div id="callouts-placeholder"></div>
@@ -181,17 +126,159 @@ else{
                 </form>
                 <!-- End new form -->
             </div>
+            <div class="small-12 medium-3 large-3 columns">
+                <!-- Start new form -->
+                <form class="callout text-center" method="post">
+                    <input type="hidden" name="action" value="add_semester">
+                    <h4>Approve Professor Status</h4>
+                    <div class="floated-label-wrapper">
+                        <?php
+                        // Get profs on list
+                        //create list of approve and deny
+
+                        ?>
+                        <table
+                            <td>Profname</td>
+                            <td><input class="button expanded" type="submit" value="Approve"></td>
+                            <td><input class="button expanded" type="submit" value="Deny"></td>
+
+                        </table>
+
+                    </div>
+
+                </form>
+                <!-- End new form -->
+            </div>
+            <div class="small-12 medium-6 large-6 columns">
+<!--                <div class="callout text-center" >-->
+                    <h4>Delete Class</h4>
+                    <div class="floated-label-wrapper">
+                        <table class="hover">
+                            <tbody id="classes">
+<!--                              Javascript builds table here-->
+                            </tbody>
+                        </table>
+                    </div>
+<!--            </div>-->
         </div>
     </div>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/what-input/dist/what-input.js"></script>
     <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
+    <script src="bower_components/motion-ui/dist/motion-ui.js"></script>
     <script src="js/app.js"></script>
 
     <script>
         makeNav();
         makeCallouts();
+
+        function load_class_table(){
+            $.ajax({
+                type : 'POST',
+                url : 'admin_ajax_funcs.php',
+                dataType : 'json',
+                data: {'action':'get_classes'},
+                contentType: "application/x-www-form-urlencoded",
+                async : true,
+                beforeSend : function(){/*loading*/},
+
+                success : function(result){
+                    var buffer="";
+                    $.each(result, function(index, val){
+
+                        for(var i=0; i < val.length; i++){
+                            var item = val[i];
+                            buffer+="<tr>\
+                                        <td><a href=\"course_view.php?class_id=" + item.course_id + "\">" + item.name + "</a></td>\
+                                        <td>" + item.time + "</td>\
+                                        <td> \
+                                             <form class=\"form_delete\">\
+                                                 <input type=\"hidden\" name=\"action\" value=\"delete_class\"> \
+                                                 <input type=\"hidden\" name=\"class_id\" value=\""+item.class_id+"\"> \
+                                                 <input id=\"delete-class\" class=\"button expanded rit-orange\" type=\"submit\" value=\"Delete\">\
+                                             </form>\
+                                         </td>\
+                                     </tr>";
+                        }
+                    });
+                    $("#classes").append(buffer);
+                },
+                error: function (msg) {
+
+                    alert(msg.responseText);
+                }
+
+            });
+        }
+        $(load_class_table());
+
+
+
+        $(document).ready(function() {
+            $(".form_delete").on('submit', function (e) {
+                console.log("Making ajax delete");
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    // dataType: 'json',
+                    // contentType: "application/x-www-form-urlencoded",
+                    url: 'admin_ajax_funcs.php',
+                    success: function (data) {
+                        if (data.includes("Success")) {
+                            showMessage("success", data);
+                            this.parent.remove();
+                            $(load_class_table())
+                        }
+                        else {
+                            showMessage("failure", data);
+
+                        }
+
+                    },
+                    error: function (msg) {
+
+                        alert(msg.responseText);
+                    }
+                });
+            });
+        });
+        $(document).ready(function() {
+            $(".text-center").on('submit', function (e) {
+                console.log("Making ajax generic");
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    // dataType : 'json',
+                    // contentType: "application/x-www-form-urlencoded",
+                    url: 'admin_ajax_funcs.php',
+                    success: function (data) {
+                        if (data.includes("Success")) {
+                            showMessage("success", data);
+                            $(load_class_table());
+
+                        }
+                        else {
+                            showMessage("failure", data);
+
+                        }
+                    },
+                    error: function (msg) {
+
+                        alert(msg.responseText);
+                    }
+                });
+            });
+        });
+
+
+
+
+
+
+
     </script>
 </body>
 </html>

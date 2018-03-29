@@ -200,7 +200,16 @@ html,body {
   margin-bottom: 5%;
 }
 
+.login-link-text {
+  text-decoration: underline;
+  color: black;
+}
 
+.log-in-form {
+  border: 1px solid $medium-gray;
+  padding: $form-spacing;
+  border-radius: $global-radius;
+}
 
 
 
