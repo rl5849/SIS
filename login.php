@@ -57,10 +57,10 @@
                 <img style="display:none;" src="images/Sign-In-Large---Hover.png">
                 <img style="display:none;" src="images/Sign-In-Large---Active.png">
 
-                <form method="post" action="account.php" style="padding-top:5%">
+                <form method="post" action="auth.php" style="padding-top:5%">
                     <p>
-                        <input name="username" type="text" class="" value="Username"/>
-                        <input name="password" type="password" class="" value="Password"/>
+                        <input name="username" type="text"/>
+                        <input name="password" type="password" />
                         <input name="manual" type="hidden" />
                         <input name="login" type="submit" class="button expanded rit-brown" value=""/>
                     </p>
