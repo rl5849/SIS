@@ -9,12 +9,11 @@
 </head>
 <body>
 
-<!-- Load Callouts -->
-<div id="callouts-placeholder"></div>
-<!-- End Callouts -->
 
 
 <div class="background-image">
+
+
     <div class="grid-container">
         <div class="grid-x grid-padding-x" style="padding-top:15%;">
 
@@ -55,6 +54,10 @@
                     ?>
 
                     <hr/>
+
+                    <!-- Load Callouts -->
+                    <div id="callouts-placeholder"></div>
+                    <!-- End Callouts -->
 
                     <!-- Load the images of hover and active so that they aren't loaded first when the user interacts with the button -->
                     <img style="display:none;" src="images/Sign-In-Large---Hover.png">
