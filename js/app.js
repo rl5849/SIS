@@ -40,6 +40,7 @@ function instantiateFilter() {
     filter.onchange = function() {filter_list();};
 
     function filter_list() {
+        console.log("filtered");
         var list_entries = document.getElementsByName('class_listing');
         var filter_text = filter.value;
         for (var x = 0; x < list_entries.length; x++) {
@@ -51,4 +52,6 @@ function instantiateFilter() {
             }
         }
     }
+    // Filters the list if the page was generated with a search_parameter in the filter box
+    window.onload = function() {filter_list();};
 }
