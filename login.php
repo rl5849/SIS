@@ -59,9 +59,10 @@
 
                 <form method="post" action="account.php" style="padding-top:5%">
                     <p>
-                        <input name=username type="text" class="" value="Username"/>
-                        <input name=password type="password" class="" value="Password"/>
-                        <input name=login type="submit" class="button expanded rit-brown" value=""/>
+                        <input name="username" type="text" class="" value="Username"/>
+                        <input name="password" type="password" class="" value="Password"/>
+                        <input name="manual" type="hidden" />
+                        <input name="login" type="submit" class="button expanded rit-brown" value=""/>
                     </p>
                 </form>
 
