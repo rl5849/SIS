@@ -863,13 +863,31 @@ class RequestProfessorApproval(Resource):
     config.read('./config.ini')
     
     def get(self):
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int)
+        user_id = parser.parse_args().get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        cur.execute("INSERT INTO prof_requests"
+                    "(user_id)"
+                    "VALUES (%s);",
+                    [user_id])
+
+
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
 
 
 """
-Check if student/user has admin privilegs
+Check if student/user has admin privileges
 """
 class CheckIfAdmin(Resource):
     config = ConfigParser.ConfigParser()
