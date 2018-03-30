@@ -226,6 +226,32 @@ session_start();
                         alert(msg.responseText);
                     }
                 });
+            });
+
+
+            $(".prof-decision").on('submit', function (e) {
+                console.log("Making ajax generic");
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    dataType : 'json',
+                    contentType: "application/x-www-form-urlencoded",
+                    url: 'admin_ajax_funcs.php',
+                    success: function (data) {
+                        if (data.includes("Success")) {
+                            showMessage("success", data);
+                        }
+                        else {
+                            showMessage("failure", data);
+
+                        }
+                    },
+                    error: function (msg) {
+
+                        alert(msg.responseText);
+                    }
+                });
 
 
 
@@ -293,17 +319,10 @@ session_start();
                             buffer+="<tr>\
                                         <td>" + item[0] + "</td>\
                                         <td>\
-                                            <form class=confirm_prof>\
-                                                <input type='hidden' name='action' value='approve'>\
-                                                <input type='hidden' name='prof' value=" + item[1] +">\
-                                                <input class=\"button expanded\" type=\"submit\" value=\"Approve\">\
-                                             </form>   \
-                                        </td> \
-                                        <td>\
-                                            <form class=confirm_prof> \
-                                                <input type='hidden' name='action' value='approve'> \
-                                                <input type='hidden' name='prof' value=\"" + item[1] + "\">\
-                                                <input class=\"button expanded\" type=\"submit\" value=\"Deny\">\
+                                            <form class='prof-decision'>\
+                                                <input type='hidden' name='user_id' value=" + item[1] +">\
+                                                <input name='decision' class=\"button expanded\" type=\"submit\" value=\"Approve\">\
+                                                <input name='decision' class=\"button expanded\" type=\"submit\" value=\"Deny\">\
                                             </form>\
                                         </td> \
                                 </tr>";
