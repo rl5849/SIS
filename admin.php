@@ -151,6 +151,7 @@ session_start();
                         <table class="hover">
                             <tbody id="classes">
 <!--                              Javascript builds table here-->
+
                             </tbody>
                         </table>
                     </div>
@@ -168,12 +169,11 @@ session_start();
         makeNav();
         makeCallouts();
 
-
-
-
         $(document).ready(function() {
+            load_class_table();
+            load_prof_requests();
 
-            $(".form_delete").on('submit',function (e) {
+            $(".form-delete").on('submit', function (e){
                 console.log("Making ajax delete");
                 e.preventDefault();
                 $.ajax({
@@ -185,8 +185,8 @@ session_start();
                     success: function (data) {
                         if (data.includes("Success")) {
                             showMessage("success", data);
-                            this.parent.remove();
-                            //$(load_class_table())
+                            //this.parent.remove();
+                            $(load_class_table())
                         }
                         else {
                             showMessage("failure", data);
@@ -200,48 +200,79 @@ session_start();
                 return false;
             });
 
-            function load_class_table(){
-                console.log("Building table");
+
+            $(".text-center").on('submit', function (e) {
+                console.log("Making ajax generic");
+                e.preventDefault();
                 $.ajax({
-                    type : 'POST',
-                    url : 'admin_ajax_funcs.php',
-                    dataType : 'json',
-                    data: {'action':'get_classes'},
-                    contentType: "application/x-www-form-urlencoded",
-                    async : true,
-                    //beforeSend : function(){/*loading*/},
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    // dataType : 'json',
+                    // contentType: "application/x-www-form-urlencoded",
+                    url: 'admin_ajax_funcs.php',
+                    success: function (data) {
+                        if (data.includes("Success")) {
+                            showMessage("success", data);
+                            $(load_class_table());
 
-                    success : function(result){
-                        var buffer="";
-                        $.each(result, function(index, val){
+                        }
+                        else {
+                            showMessage("failure", data);
 
-                            for(var i=0; i < val.length; i++){
-                                var item = val[i];
-                                buffer+="<tr>\
-                                            <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
-                                            <td>" + item.time + "</td> \
-                                            <td> \
-                                                 <form class='form_delete' method='post'>\
-                                                     <input type='hidden' name='action' value='delete_class'> \
-                                                     <input type='hidden' name='class_id' value='" + item.id + "'> \
-                                                     <input id='delete-class' class='button expanded rit-orange' type='submit' value='Delete'>\
-                                                 </form>\
-                                             </td>\
-                                         </tr>";
-                                $("#classes").append(buffer);
-                            }
-                        });
+                        }
                     },
                     error: function (msg) {
 
                         alert(msg.responseText);
                     }
-
                 });
 
-            }
 
 
+        });
+
+        });
+
+        function load_class_table(){
+            $.ajax({
+                type : 'POST',
+                url : 'admin_ajax_funcs.php',
+                dataType : 'json',
+                data: {'action':'get_classes'},
+                contentType: "application/x-www-form-urlencoded",
+                async : false,
+                //beforeSend : function(){/*loading*/},
+
+                success : function(result){
+                    var buffer="";
+                    $.each(result, function(index, val){
+                        console.log("Loop with run" + val.length);
+
+                        for(var i=0; i < val.length; i++){
+                            var item = val[i];
+                            buffer+="<tr>\
+                                            <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
+                                            <td>" + item.time + "</td> \
+                                            <td> \
+                                                 <form class='form-delete' method='post'>\
+                                                     <input type='hidden' name='action' value='delete_class'> \
+                                                     <input type='hidden' name='class_id' value='" + item.class_id + "'> \
+                                                     <input class='button expanded rit-orange' type='submit' value='Delete'>\
+                                                 </form>\
+                                             </td>\
+                                         </tr>";
+
+                        }
+                        $("#classes").empty();
+                        $("#classes").append(buffer);
+                    });
+                },
+                error: function (msg) {
+
+                    alert(msg.responseText);
+                }
+            });
+        }
 
         function load_prof_requests(){
             $.ajax({
@@ -278,6 +309,7 @@ session_start();
                                 </tr>";
 
                         }
+                        $("#profs").empty();
                         $("#profs").append(buffer);
                     });
                 },
@@ -290,39 +322,8 @@ session_start();
 
 
 
-
-
-
-            $(".text-center").on('submit', function (e) {
-                console.log("Making ajax generic");
-                e.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    // dataType : 'json',
-                    // contentType: "application/x-www-form-urlencoded",
-                    url: 'admin_ajax_funcs.php',
-                    success: function (data) {
-                        if (data.includes("Success")) {
-                            showMessage("success", data);
-                            $(load_class_table());
-
-                        }
-                        else {
-                            showMessage("failure", data);
-
-                        }
-                    },
-                    error: function (msg) {
-
-                        alert(msg.responseText);
-                    }
-                });
-            });
-
         $(load_prof_requests());
-        $(load_class_table());
-        });
+
 
 
 
