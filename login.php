@@ -67,7 +67,7 @@
                     <input name="manual" type="hidden" />
                     <p><input type="submit" class="button expanded" value="Log in"></p>
                     <p class="text-center"><a class="login-link-text" href="#">Forgot your password?</a></p>
-                    <p class="text-center"><a class="login-link-text" href="#">Register</a></p>
+                    <p class="text-center"><a class="login-link-text" href="register.php">Register</a></p>
                 </form>
 
             </div>

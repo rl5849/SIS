@@ -807,6 +807,7 @@ All users can modify the following attributes:
 
 Additional user specific attributes may be added later
 """
+"""
 class ModProfile(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
@@ -853,7 +854,7 @@ class ModProfile(Resource):
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(ModProfile, '/ModProfile')
-
+"""
 """
 Requests approval of an admin for a new user, which has requested to be flagged as a professor
 """
@@ -1101,6 +1102,76 @@ class GetUserIDFromLogin(Resource):
         return jsonify(result)
 api.add_resource(GetUserIDFromLogin, '/GetUserIDFromLogin')
 
+
+"""
+GetUserIdFromLogin
+"""
+class UserExists(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('username', type=str)
+        username = parser.parse_args().get("username")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT user_id FROM logins "
+                    "WHERE username = %s",
+                    [username])
+
+        query = cur.fetchall()
+
+        result = {'exists': ('True' if query else 'False')}
+
+        return jsonify(result)
+api.add_resource(UserExists, '/UserExists')
+
+"""
+Enrolls a student in a course
+"""
+
+
+class CreateUser(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('username', type=str)
+        parser.add_argument('password', type=str)
+        username = parser.parse_args().get("username")
+        password = parser.parse_args().get("password")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("INSERT IGNORE INTO logins "
+                    "VALUES (%s, %s)",
+                    [username, password])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+
+
+api.add_resource(CreateUser, '/CreateUser')
 
 
 """
