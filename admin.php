@@ -36,7 +36,7 @@ session_start();
 
         <div class="grid-x grid-padding-x" style="padding-top:2%;">
 
-            <div class="small-12 medium-3 large-3 columns">
+            <div class="small-12 medium-6 large-4 columns">
                 <div>
                     <form class="callout text-center" method="post">
                         <h4>Add a New Class Section</h4>
@@ -90,7 +90,7 @@ session_start();
                     <!-- End new form -->
                 </div>
             </div>
-            <div class="small-12 medium-3 large-3 columns">
+            <div class="small-12 medium-6 large-4 columns">
                 <!-- Start new form -->
                 <form class="callout text-center" method="post">
                     <input type="hidden" name="action" value="add_course">
@@ -115,7 +115,7 @@ session_start();
                 </form>
                 <!-- End new form -->
             </div>
-            <div class="small-12 medium-3 large-3 columns">
+            <div class="small-12 medium-6 large-4 columns">
                 <!-- Start new form -->
                 <form class="callout text-center" method="post">
                     <input type="hidden" name="action" value="add_semester">
@@ -128,7 +128,7 @@ session_start();
                 </form>
                 <!-- End new form -->
             </div>
-            <div class="small-12 medium-3 large-3 columns">
+            <div class="small-12 medium-6 large-4 columns">
                 <!-- Start new form -->
                 <form class="callout text-center" method="post">
                     <input type="hidden" name="action" value="add_semester">
@@ -144,7 +144,7 @@ session_start();
                 </form>
                 <!-- End new form -->
             </div>
-            <div class="small-12 medium-6 large-6 columns">
+            <div class="small-12 medium-12 large-12 columns">
 <!--                <div class="callout text-center" >-->
                     <h4>Delete Class</h4>
                     <div class="floated-label-wrapper">
