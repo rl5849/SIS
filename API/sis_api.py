@@ -1139,7 +1139,7 @@ Enrolls a student in a course
 """
 
 
-class CreateUser(Resource):
+class CreateLogin(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -1159,8 +1159,18 @@ class CreateUser(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
+        cur.execute("INSERT INTO students"
+                    "(student_name)"
+                    "VALUES (NULL)")
+
+        cur.execute("INSERT INTO users"
+                    "(user_id) "
+                    "VALUES (LAST_INSERT_ID());")
+
+        # Select data from table using SQL query.
         cur.execute("INSERT IGNORE INTO logins "
-                    "VALUES (%s, %s)",
+                    "(user_id, username, password)"
+                    "VALUES (LAST_INSERT_ID(), %s, %s)",
                     [username, password])
 
         try:
@@ -1171,7 +1181,7 @@ class CreateUser(Resource):
         return jsonify(SUCCESS_MESSAGE)
 
 
-api.add_resource(CreateUser, '/CreateUser')
+api.add_resource(CreateLogin, '/CreateLogin')
 
 
 """
