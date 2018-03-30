@@ -937,6 +937,36 @@ class GetProfessorByID(Resource):
 
 api.add_resource(GetProfessorByID, '/GetProfessorByID')
 
+"""
+Get Professor status requestsd
+"""
+class GetProfessorRequests(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT users.user_id, users.name FROM users "
+                    "INNER JOIN prof_requests "
+                    "ON (users.user_id = prof_requests.user_id)")
+        query = cur.fetchall()
+
+        print query
+        result = {'requests': [[i[1], i[0]] for i in query]}
+
+        return jsonify(result)
+
+
+api.add_resource(GetProfessorRequests, '/GetProfessorRequests')
+
+
 
 """
 Get the waitlist for a class given a class ID

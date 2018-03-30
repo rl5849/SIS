@@ -24,6 +24,9 @@ if (isset($_POST["action"])){
         case "get_classes":
             get_classes();
             break;
+        case "get_prof_requests":
+            get_prof_requests();
+            break;
     }
 }
 
@@ -88,6 +91,12 @@ function delete_class() {
 function get_classes() {
     $course_list = file_get_contents("http://127.0.0.1:5002/GetClasses");
     echo $course_list;
+}
+
+
+function get_prof_requests() {
+    $list = file_get_contents("http://127.0.0.1:5002/GetProfessorRequests");
+    echo $list;
 }
 
 
