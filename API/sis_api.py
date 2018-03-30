@@ -863,13 +863,31 @@ class RequestProfessorApproval(Resource):
     config.read('./config.ini')
     
     def get(self):
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int)
+        user_id = parser.parse_args().get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        cur.execute("INSERT INTO prof_requests"
+                    "(user_id)"
+                    "VALUES (%s);",
+                    [user_id])
+
+
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
 
 
 """
-Check if student/user has admin privilegs
+Check if student/user has admin privileges
 """
 class CheckIfAdmin(Resource):
     config = ConfigParser.ConfigParser()
@@ -936,6 +954,36 @@ class GetProfessorByID(Resource):
 
 
 api.add_resource(GetProfessorByID, '/GetProfessorByID')
+
+"""
+Get Professor status requestsd
+"""
+class GetProfessorRequests(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT users.user_id, users.name FROM users "
+                    "INNER JOIN prof_requests "
+                    "ON (users.user_id = prof_requests.user_id)")
+        query = cur.fetchall()
+
+        print query
+        result = {'requests': [[i[1], i[0]] for i in query]}
+
+        return jsonify(result)
+
+
+api.add_resource(GetProfessorRequests, '/GetProfessorRequests')
+
 
 
 """
@@ -1139,7 +1187,7 @@ Enrolls a student in a course
 """
 
 
-class CreateUser(Resource):
+class CreateLogin(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -1159,8 +1207,18 @@ class CreateUser(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
+        cur.execute("INSERT INTO students"
+                    "(student_name)"
+                    "VALUES (NULL)")
+
+        cur.execute("INSERT INTO users"
+                    "(user_id) "
+                    "VALUES (LAST_INSERT_ID());")
+
+        # Select data from table using SQL query.
         cur.execute("INSERT IGNORE INTO logins "
-                    "VALUES (%s, %s)",
+                    "(user_id, username, password)"
+                    "VALUES (LAST_INSERT_ID(), %s, %s)",
                     [username, password])
 
         try:
@@ -1171,7 +1229,7 @@ class CreateUser(Resource):
         return jsonify(SUCCESS_MESSAGE)
 
 
-api.add_resource(CreateUser, '/CreateUser')
+api.add_resource(CreateLogin, '/CreateLogin')
 
 
 """

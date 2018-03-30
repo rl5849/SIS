@@ -25,7 +25,7 @@
             </div>
 
 
-            <div class="small-12 medium-6 large-4 columns">
+            <div class="small-12 medium-6 large-4 columns"  style="display:none;">
                 <div>
                     <form class="callout translucent-background" method="post">
                         <h4>Register</h4>
@@ -52,6 +52,51 @@
                             <input pattern="^(?=.*[A-Z])(?=.*[0-9]).{5,}$" type="password" name="password_confirm" id="password_confirm" placeholder="Confirm Password" required>
                         </div>
                         <input type="submit" class="button expanded rit-orange" value="Create Account">
+                    </form>
+                    <!-- End new form -->
+                </div>
+            </div>
+
+            <div class="small-12 medium-6 large-4 columns">
+                <div>
+                    <form class="callout translucent-background" method="post" action="account.php">
+                        <h4>Account Information</h4>
+                        <!-- Load Callouts -->
+                        <div id="callouts-placeholder"></div>
+                        <!-- End Callouts -->
+                        <div class="floated-label-wrapper">
+                            <label for="fName">First Name</label>
+                            <input type="text" name="fName" id="fName" placeholder="First Name" required>
+                        </div>
+                        <div class="floated-label-wrapper">
+                            <label for="lName">Last Name</label>
+                            <input type="text" name="lName" id="lName" placeholder="Last Name" required>
+                        </div>
+                        <div class="floated-label-wrapper">
+                            <label class="show" for="user-type">I am a...</label>
+                            <select name="user-type" id="user-type">
+                                <option value="student">Student</option>
+                                <option value="professor">Professor</option>
+                            </select>
+                        </div>
+                        <div class="floated-label-wrapper">
+                            <label class="show" for="gender">Gender</label>
+                            <select name="gender" id="gender">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="self-identify">Self-Identify</option>
+                            </select>
+                        </div>
+                        <div class="floated-label-wrapper">
+                            <label for="dob">Date of Birth</label>
+                            <input type="text" name="dob" id="dob" placeholder="Date of Birth">
+                        </div>
+                        <div class="floated-label-wrapper">
+                            <label for="grad-year">Graduation Year</label>
+                            <input type="text" name="grad-year" id="grad-year" placeholder="Graduation Year">
+                        </div>
+                        <input type="hidden" name="action" value="update-profile">
+                        <input type="submit" class="button expanded rit-orange" value="Continue to Profile">
                     </form>
                     <!-- End new form -->
                 </div>
@@ -102,8 +147,6 @@ else {
     if ($user_exists == "True") {
         echo "<script>window.onload = function() {showMessage('failure', 'A user account with that username already exists. <a href=\"#\">Forgot Password?</a>');};</script>";
     } else {
-        echo "<script>window.onload = function() {showMessage('success', 'Your account has been created.');};</script>";
-
         // Get salt from config file
 
         $myfile = fopen("LinkedIn/config.ini", "r") or die("Unable to open file!");
@@ -116,10 +159,22 @@ else {
         $hashed_password = hash("sha256", $password);
         $hashed_password = $hashed_password.$salt;
         $hashed_password = hash("sha256", $hashed_password);
-        echo "<script>window.onload = function() {showMessage('success', '".$hashed_password."');};</script>";
 
         $results = file_get_contents("http://127.0.0.1:5002/UserExists?username=".$username);
         $user_exists = json_decode($results, true)["user_exists"];
+
+        // Check if user already exists
+        if ($user_exists == "True") {
+            echo "<script>window.onload = function() {showMessage('failure', 'A user account with that name already exists');};</script>";
+        }
+        // Use account can be created
+        else {
+            $results = file_get_contents("http://127.0.0.1:5002/CreateLogin?username=".$username."&password=".$hashed_password);
+            $results = json_decode($results);
+            if ($results == "SUCCESS") {
+                echo "<script>window.onload = function() {showMessage('success', 'Your account has been created.');};</script>";
+            }
+        }
     }
 }
 ?>
