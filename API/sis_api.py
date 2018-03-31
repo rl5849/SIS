@@ -857,15 +857,18 @@ class ModProfile(Resource):
                     [name, id])
 
         #create an update statement that will only update the fields provided
-        statement = "UPDATE %s SET "
-        values = [table]
+        statement = "UPDATE " + table + " SET "
+        values = []
         for key in args.keys():
             if args[key]:
                 statement += key + " = %s, "
-                values += args[key]
+                values += [args[key]]
         statement = statement.rstrip(', ')
         statement += " WHERE %s = %s"
         values += [id_type, id]
+
+        print statement
+        print values
 
         #if nothing was updated, the statement is not executed
         if len(values) > 3:
@@ -1230,6 +1233,10 @@ class CreateLogin(Resource):
                     "(student_name)"
                     "VALUES (NULL)")
 
+        # Store the ID of the newly created user to return later in the query
+        new_user_id = cur.lastrowid
+
+        # Store the ID to return later
         cur.execute("INSERT INTO users"
                     "(user_id) "
                     "VALUES (LAST_INSERT_ID());")
@@ -1245,7 +1252,9 @@ class CreateLogin(Resource):
         except MySQLdb.IntegrityError:
             return jsonify(FAILURE_MESSAGE)
 
-        return jsonify(SUCCESS_MESSAGE)
+        return jsonify({"message": SUCCESS_MESSAGE,
+                        "user_id": new_user_id})
+
 
 
 api.add_resource(CreateLogin, '/CreateLogin')
