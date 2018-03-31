@@ -16,6 +16,7 @@ else{
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIS - Course List</title>
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/foundation-icons.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
   <body>
@@ -245,6 +246,77 @@ else{
             </div>
           </div>
         </div>
+
+          <?php // TODO make this only display for the professor associated with the class ?>
+          <div class="large-12 medium-12 small-12 cell">
+              <div class="card">
+                  <div class="card-divider">
+                      Enrolled Students
+                  </div>
+                  <div class="card-section">
+                      <table class="student-table hover">
+                          <?php
+                            // TODO generate dynamically w/ php
+                            // TODO add functionality for submitting grades using ajax
+                          ?>
+                          <tr>
+                              <th><!-- Intentionally blank for picture --></th>
+                              <th align="left">Name</th>
+                              <th align="left">Major</th>
+                              <th align="left">Status</th>
+                              <th align="left">Grade</th>
+                          </tr>
+
+                          <tr>
+                              <td><img src="https://ia.media-imdb.com/images/M/MV5BOTYxY2Y1NmQtNGY3Yi00OWEzLTgxY2UtZDgxYmM4YWQwODQ4XkEyXkFqcGdeQXVyNTM3MDMyMDQ@._V1_.jpg" alt="Dan Krutz"></td>
+                              <td>Dan Krutz</td>
+                              <td>Software Engineering</td>
+                              <td>
+                                  <i class="fi-check enrolled-check"></i>
+                                  Enrolled
+                              </td>
+                              <td>
+                                  <!-- TODO remove; The only difference between this form and the other one are that this form has no value for the 'grade' field, and the button text-->
+                                  <form action="post">
+                                      <input class="grade-number" type="number" name="grade" min=0 max=100 placeholder="0">
+                                      <p class="grade-total" style="">/100</p>
+                                      <input type="hidden" name="submit" value="submit_grade">
+                                      <input class="button expanded submit-button" type="submit" value="Submit Grade">
+                                  </form>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td><img src="https://ia.media-imdb.com/images/M/MV5BODVjMWI3MDItNGZmYy00YTM4LWFiNjMtYjUzN2NhZWEwZmY5XkEyXkFqcGdeQXVyMTEzNzczMA@@._V1_.jpg" alt="Andy Meneely"></td>
+                              <td>Andy Meneely</td>
+                              <td>Software Engineering</td>
+                              <td>
+                                  <!-- TODO remove; Make sure you use the right icon associated with enrollment status -->
+                                  <i class="fi-check enrolled-check"></i>
+                                  Enrolled
+                              </td>
+                              <td>
+                                  <form action="post">
+                                      <input class="grade-number" type="number" name="grade" min=0 max=100 placeholder="0" value="5">
+                                      <p class="grade-total" style="">/100</p>
+                                      <input type="hidden" name="submit" value="submit_grade">
+                                      <input class="button expanded submit-button" type="submit" value="Re-Grade">
+                                  </form>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td><img src="https://ia.media-imdb.com/images/M/MV5BMjE2MzQ0Mjg5MV5BMl5BanBnXkFtZTgwODkyMjUxMTI@._V1_SY1000_CR0,0,678,1000_AL_.jpg" alt="Larry Kiser"></td>
+                              <td>Larry Kiser</td>
+                              <td>Software Engineering</td>
+                              <td>
+                                  <i class="fi-minus waitlisted-minus"></i>
+                                  Waitlisted (1)
+                              </td>
+                              <td>Not Enrolled</td>
+                          </tr>
+                      </table>
+                  </div>
+              </div>
+          </div>
         
       </div>
       
