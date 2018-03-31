@@ -867,9 +867,6 @@ class ModProfile(Resource):
         statement += " WHERE %s = %s"
         values += [id_type, id]
 
-        print statement
-        print values
-
         #if nothing was updated, the statement is not executed
         if len(values) > 3:
             cur.execute(statement, values)
