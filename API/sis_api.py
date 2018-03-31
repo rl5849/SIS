@@ -799,13 +799,6 @@ api.add_resource(ModProfessor, '/ModProfessor')
 
 """
 Modifies the attributes of a profile
-
-All users can modify the following attributes:
-    name
-    date_of_birth
-    profile_pic
-
-Additional user specific attributes may be added later
 """
 class ModProfile(Resource):
     config = ConfigParser.ConfigParser()
@@ -864,8 +857,7 @@ class ModProfile(Resource):
                     [name, id])
 
         #create an update statement that will only update the fields provided
-        statement = "UPDATE %s"
-                "SET "
+        statement = "UPDATE %s SET "
         values = [table]
         for key in args.keys():
             if args[key]:
