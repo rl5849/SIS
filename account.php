@@ -59,6 +59,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIS - My Account</title>
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/foundation-icons.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
   <body>
