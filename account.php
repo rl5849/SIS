@@ -16,8 +16,8 @@ if (isset($_POST['login'])) {
 else if(isset($_SESSION['user_id'])){
     $student_id = $_SESSION['user_id'];
 }else{
-    echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
-    exit();
+    //echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
+    //exit();
 }
 
 // If an update action was made and sent to this page, then process it.
@@ -27,6 +27,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $gender = $_POST["gender"];
     $dob = $_POST["dob"];
     $gradYear = $_POST["grad-year"];
+    $userType = $_POST["user-type"];
 
     $profile_data = array (
             'user_id' => $_SESSION["user_id"],
@@ -34,14 +35,17 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
             'date_of_birth' => $dob,
             'gender' => $gender,
             'grad_year' => $gradYear,
+            'user_type' => $userType,
     );
+
+
 
     $results = file_get_contents("http://127.0.0.1:5002/ModProfile?".http_build_query($profile_data));
     $results = json_decode($results);
 
     // TODO if results are positive, report
 
-    $userType = $_POST["user-type"];
+
 
     if ($userType == "professor") {
         $results = file_get_contents("http://127.0.0.1:5002/RequestProfessorApproval?user_id=".$_SESSION["user_id"]);
@@ -76,7 +80,6 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $current_semester = json_decode($current_semester, true)["current_semester"];
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
     $student_info = json_decode($student_info, true);
-
     ?>
 
 	<div class="grid-container">

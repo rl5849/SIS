@@ -26,7 +26,7 @@
             </div>
 
 
-            <div class="small-12 medium-6 large-4 columns"  style="display:none;">
+            <div id="register" class="small-12 medium-6 large-4 columns">
                 <div>
                     <form class="callout translucent-background" method="post">
                         <h4>Register</h4>
@@ -58,7 +58,7 @@
                 </div>
             </div>
 
-            <div class="small-12 medium-6 large-4 columns">
+            <div id="account-info" class="small-12 medium-6 large-4 columns" style="display:none;">
                 <div>
                     <form class="callout translucent-background" method="post" action="account.php">
                         <h4>Account Information</h4>
@@ -83,9 +83,9 @@
                         <div class="floated-label-wrapper">
                             <label class="show" for="gender">Gender</label>
                             <select name="gender" id="gender">
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="self-identify">Self-Identify</option>
+                                <option value="m">Male</option>
+                                <option value="f">Female</option>
+                                <option value="o">Self-Identify</option>
                             </select>
                         </div>
                         <div class="floated-label-wrapper">
@@ -97,7 +97,7 @@
                             <input type="text" name="grad-year" id="grad-year" placeholder="Graduation Year">
                         </div>
                         <input type="hidden" name="action" value="update-profile">
-                        <input type="submit" class="button expanded rit-orange" value="Continue to Profile">
+                        <input type="submit" class="button expanded rit-orange" value="Save and continue to profile">
                     </form>
                     <!-- End new form -->
                 </div>
@@ -120,6 +120,7 @@
 </script>
 
 <?php
+
 // If user hasn't entered anything
 if (!isset($_POST["username"]) && !isset($_POST["password"])) {
     // Do nothing
@@ -149,7 +150,6 @@ else {
         echo "<script>window.onload = function() {showMessage('failure', 'A user account with that username already exists. <a href=\"#\">Forgot Password?</a>');};</script>";
     } else {
         // Get salt from config file
-
         $myfile = fopen("LinkedIn/config.ini", "r") or die("Unable to open file!");
         $readfile = fread($myfile,filesize("LinkedIn/config.ini"));
         $arr = explode("\n", $readfile);
@@ -163,17 +163,20 @@ else {
 
         $results = file_get_contents("http://127.0.0.1:5002/UserExists?username=".$username);
         $user_exists = json_decode($results, true)["user_exists"];
-
         // Check if user already exists
         if ($user_exists == "True") {
             echo "<script>window.onload = function() {showMessage('failure', 'A user account with that name already exists');};</script>";
         }
         // Use account can be created
         else {
+
             $results = file_get_contents("http://127.0.0.1:5002/CreateLogin?username=".$username."&password=".$hashed_password);
             $results = json_decode($results);
-            if ($results == "SUCCESS") {
-                echo "<script>window.onload = function() {showMessage('success', 'Your account has been created.');};</script>";
+            echo "<script>window.onload = function() {showMessage('success', '".var_dump($results)."asdasd".$results->message."');};</script>";
+            if ($results->message == "SUCCESS") {
+                session_start();
+                $_SESSION["user_id"] = $results->user_id;
+                echo "<script>window.onload = function() {showMessage('success', 'Your account has been created.');transitionRegisterPages();};</script>";
             }
         }
     }
