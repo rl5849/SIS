@@ -20,6 +20,36 @@ else if(isset($_SESSION['user_id'])){
     exit();
 }
 
+// If an update action was made and sent to this page, then process it.
+if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
+    $fName = $_POST["fName"];
+    $lName = $_POST["lName"];
+    $gender = $_POST["gender"];
+    $dob = $_POST["dob"];
+    $gradYear = $_POST["grad-year"];
+
+    $profile_data = array (
+            'user_id' => $_SESSION["user_id"],
+            'name' => $fName." ".$lName,
+            'date_of_birth' => $dob,
+            'gender' => $gender,
+            'grad_year' => $gradYear,
+    );
+
+    $results = file_get_contents("http://127.0.0.1:5002/ModProfile?".http_build_query($profile_data));
+    $results = json_decode($results);
+
+    // TODO if results are positive, report
+
+    $userType = $_POST["user-type"];
+
+    if ($userType == "professor") {
+        $results = file_get_contents("http://127.0.0.1:5002/RequestProfessorApproval?user_id=".$_SESSION["user_id"]);
+        $results = json_decode($results);
+
+        // TODO if results are positive, report
+    }
+}
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
