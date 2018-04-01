@@ -27,6 +27,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $gender = $_POST["gender"];
     $dob = $_POST["dob"];
     $gradYear = $_POST["grad-year"];
+    $userType = $_POST["user-type"];
 
     $profile_data = array (
             'user_id' => $_SESSION["user_id"],
@@ -34,14 +35,17 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
             'date_of_birth' => $dob,
             'gender' => $gender,
             'grad_year' => $gradYear,
+            'user_type' => $userType,
     );
+
+
 
     $results = file_get_contents("http://127.0.0.1:5002/ModProfile?".http_build_query($profile_data));
     $results = json_decode($results);
 
     // TODO if results are positive, report
 
-    $userType = $_POST["user-type"];
+
 
     if ($userType == "professor") {
         $results = file_get_contents("http://127.0.0.1:5002/RequestProfessorApproval?user_id=".$_SESSION["user_id"]);
@@ -59,6 +63,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIS - My Account</title>
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/foundation-icons.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
   <body>
@@ -75,7 +80,6 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $current_semester = json_decode($current_semester, true)["current_semester"];
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
     $student_info = json_decode($student_info, true);
-
     ?>
 
 	<div class="grid-container">

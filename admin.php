@@ -25,6 +25,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIS - Course List</title>
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/foundation-icons.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
