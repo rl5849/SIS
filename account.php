@@ -16,8 +16,8 @@ if (isset($_POST['login'])) {
 else if(isset($_SESSION['user_id'])){
     $student_id = $_SESSION['user_id'];
 }else{
-    //echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
-    //exit();
+    echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
+    exit();
 }
 
 // If an update action was made and sent to this page, then process it.
