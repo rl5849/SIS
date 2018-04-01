@@ -899,6 +899,10 @@ class RequestProfessorApproval(Resource):
                     "VALUES (%s);",
                     [user_id])
 
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
 
         return jsonify(SUCCESS_MESSAGE)
 
@@ -926,11 +930,11 @@ class CheckIfAdmin(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT is_admin FROM users "
+        cur.execute("SELECT user_status FROM users "
                     "WHERE user_id = %s",
                     [id])
         query = cur.fetchall()
-        if query[0][0] == 1:
+        if query[0][0] == 2:
             result = {'is_admin': True}
         else:
             result = {'is_admin': False}
@@ -995,7 +999,6 @@ class GetProfessorRequests(Resource):
                     "ON (users.user_id = prof_requests.user_id)")
         query = cur.fetchall()
 
-        print query
         result = {'requests': [[i[1], i[0]] for i in query]}
 
         return jsonify(result)
@@ -1289,6 +1292,80 @@ class DeleteClass(Resource):
 
 
 api.add_resource(DeleteClass, '/DeleteClass')
+
+
+"""
+Delete prof request
+"""
+class DeleteProfRequest(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int)
+        user_id = parser.parse_args().get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+        try:
+            cur.execute("DELETE FROM prof_requests "
+                        "WHERE user_id = %s",
+                        [user_id])
+
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+
+
+api.add_resource(DeleteProfRequest, '/DeleteProfRequest')
+
+
+"""
+Approve prof request
+"""
+class ApproveProfStatus(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int)
+        user_id = parser.parse_args().get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+        try:
+            cur.execute("UPDATE users "
+                        "SET user_status=1 "
+                        "WHERE user_id=%s",
+                        [user_id])
+
+            cur.execute("DELETE FROM prof_requests "
+                        "WHERE user_id = %s",
+                        [user_id])
+
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+
+
+api.add_resource(ApproveProfStatus, '/ApproveProfStatus')
+
 
 
 if __name__ == '__main__':
