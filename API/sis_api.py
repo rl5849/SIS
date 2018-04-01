@@ -799,27 +799,48 @@ api.add_resource(ModProfessor, '/ModProfessor')
 
 """
 Modifies the attributes of a profile
-
-All users can modify the following attributes:
-    name
-    date_of_birth
-    profile_pic
-
-Additional user specific attributes may be added later
-"""
 """
 class ModProfile(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
+    
+    def get(self):
 
-    #get arguments
-    parser = reqparse.RequestParser()
+        #get arguments
+        parser = reqparse.RequestParser()
         parser.add_argument('user_id', type=int)
         parser.add_argument('name')
+        parser.add_argument('user_type')
         parser.add_argument('date_of_birth')
         parser.add_argument('profile_pic')
+        user_type = parser.parse_args().get("user_type")
         id = parser.parse_args().get("user_id")
         name = parser.parse_args().get("name")
+
+        args = {}
+        #set the table name and id name, and populate a dictionary of values
+        #to be changed based on user type
+        if user_type.upper() == "STUDENT":
+            table = "students"
+            id_type = "student_id"
+            args["student_name"] = name
+            args["gender"] = parser.parse_args().get("gender")
+            args["graduation_year"] = parser.parse_args().get("graduation_year")
+            args["major"] = parser.parse_args().get("major")
+            args["gpa"] = parser.parse_args().get("gpa")         
+        elif user_type.upper() == "PROFESSOR":
+            table = "professors"
+            id_type = "professor_id"
+            args["professor_name"] = name
+        elif user_type.upper() == "ADMIN":
+            table = "admins"
+            id_type = "admin_id"
+            args["admin_name"] = name
+        else:
+            return jsonify(FAILURE_MESSAGE)
+
+        args["date_of_birth"] = parser.parse_args().get("date_of_birth")
+        args["profile_pic"] = parser.parse_args().get("profile_pic")
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                         passwd=self.config.get('database', 'password'),
@@ -829,32 +850,30 @@ class ModProfile(Resource):
         cur = db.cursor()
 
         # update the name in the users table if it was changed
-        if not (name is None):
+        if name:
             cur.execute("UPDATE users "
                     "SET name= %s "
                     "WHERE user_id = %s ",
                     [name, id])
-        
 
-        result = {'favorite_status': str(query[0][0] > 0)}
+        #create an update statement that will only update the fields provided
+        statement = "UPDATE " + table + " SET "
+        values = []
+        for key in args.keys():
+            if args[key]:
+                statement += key + " = %s, "
+                values += [args[key]]
+        statement = statement.rstrip(', ')
+        statement += " WHERE %s = %s"
+        values += [id_type, id]
 
-    
+        #if nothing was updated, the statement is not executed
+        if len(values) > 3:
+            cur.execute(statement, values)
 
-    if user_type.upper() == "STUDENT":
-        table = "students"
-    elif user_type.upper() == "PROFESSOR":
-        table = "professors"
-    elif user_type.upper() == "ADMIN":
-        table = "admins"
-    else:
-        return jsonify(FAILURE_MESSAGE)
-        
-    
-    def get(self):
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(ModProfile, '/ModProfile')
-"""
 """
 Requests approval of an admin for a new user, which has requested to be flagged as a professor
 """
@@ -1211,6 +1230,10 @@ class CreateLogin(Resource):
                     "(student_name)"
                     "VALUES (NULL)")
 
+        # Store the ID of the newly created user to return later in the query
+        new_user_id = cur.lastrowid
+
+        # Store the ID to return later
         cur.execute("INSERT INTO users"
                     "(user_id) "
                     "VALUES (LAST_INSERT_ID());")
@@ -1226,7 +1249,9 @@ class CreateLogin(Resource):
         except MySQLdb.IntegrityError:
             return jsonify(FAILURE_MESSAGE)
 
-        return jsonify(SUCCESS_MESSAGE)
+        return jsonify({"message": SUCCESS_MESSAGE,
+                        "user_id": new_user_id})
+
 
 
 api.add_resource(CreateLogin, '/CreateLogin')

@@ -215,4 +215,36 @@ html,body {
   border-radius: 3px;
 }
 
+.student-table {
+  tr {
+    height: 100px;
+  }
+  img {
+    max-height: 75px;
+    max-width: 75px;
+  }
+  .grade-number {
+    display:inline;
+    width:25%;
+    margin:0;
+  }
+  .grade-total {
+    display:inline;
+    width:10%;
+    margin-top:0;
+  }
+  .submit-button {
+    display:inline;
+    width:50%;
+    margin-top:12px;
+    margin-left:4%
+  }
+  .enrolled-check {
+    color: green;
+  }
+  .waitlisted-minus {
+    color: GoldenRod;
+  }
+
+}
 
