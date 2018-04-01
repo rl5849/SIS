@@ -27,6 +27,9 @@ if (isset($_POST["action"])){
         case "get_prof_requests":
             get_prof_requests();
             break;
+        case "prof_approval":
+            prof_approval();
+            break;
     }
 }
 
@@ -99,4 +102,27 @@ function get_prof_requests() {
     echo $list;
 }
 
+function prof_approval() {
+    if ($_POST['decision'] == "Approve"){
+        $result = file_get_contents("http://127.0.0.1:5002/ApproveProfStatus?user_id=" . $_POST['user_id']);
+        $result = json_decode($result, true);
+        if($result == "SUCCESS"){
+            echo "Professor status approval successful";
+        }
+        else{
+            echo "Could not approve professor status";
+        }
+
+    }
+    else{
+        $result = file_get_contents("http://127.0.0.1:5002/DeleteProfRequest?user_id=" . $_POST['user_id']);
+        $result = json_decode($result, true);
+        if($result == "SUCCESS"){
+            echo "Professor request deleted successfully";
+        }
+        else{
+            echo "Could not delete request";
+        }
+    }
+}
 

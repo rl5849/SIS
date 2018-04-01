@@ -145,18 +145,19 @@ session_start();
                 </form>
                 <!-- End new form -->
             </div>
-            <div class="small-12 medium-12 large-12 columns">
-<!--                <div class="callout text-center" >-->
+            <div class="small-6 medium-6 large-6 columns">
+                <div class="callout text-center" >
                     <h4>Delete Class</h4>
                     <div class="floated-label-wrapper">
                         <table class="hover">
+                            <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
                             <tbody id="classes">
 <!--                              Javascript builds table here-->
 
                             </tbody>
                         </table>
                     </div>
-<!--            </div>-->
+            </div>
         </div>
     </div>
 
@@ -175,7 +176,6 @@ session_start();
             load_prof_requests();
 
             $(".form-delete").on('submit', function (e){
-                console.log("Making ajax delete");
                 e.preventDefault();
                 $.ajax({
                     type: 'POST',
@@ -195,7 +195,7 @@ session_start();
 
                     },
                     error: function (msg) {
-                        alert(msg.responseText);
+                        console.log(msg.responseText);
                     }
                 });
                 return false;
@@ -203,7 +203,6 @@ session_start();
 
 
             $(".text-center").on('submit', function (e) {
-                console.log("Making ajax generic");
                 e.preventDefault();
                 $.ajax({
                     type: 'POST',
@@ -223,34 +222,31 @@ session_start();
                         }
                     },
                     error: function (msg) {
-
-                        alert(msg.responseText);
+                        console.log(msg.responseText);
                     }
                 });
             });
 
 
             $(".prof-decision").on('submit', function (e) {
-                console.log("Making ajax generic");
                 e.preventDefault();
                 $.ajax({
                     type: 'POST',
                     data: $(this).serialize(),
-                    dataType : 'json',
-                    contentType: "application/x-www-form-urlencoded",
+                    // dataType : 'json',
+                    // contentType: "application/x-www-form-urlencoded",
                     url: 'admin_ajax_funcs.php',
                     success: function (data) {
-                        if (data.includes("Success")) {
+                        if (data.includes("success")) {
                             showMessage("success", data);
+                            load_prof_requests();
                         }
                         else {
                             showMessage("failure", data);
-
                         }
                     },
                     error: function (msg) {
-
-                        alert(msg.responseText);
+                        console.log(msg.responseText);
                     }
                 });
 
@@ -261,6 +257,7 @@ session_start();
         });
 
         function load_class_table(){
+            $('#loading-image').show();
             $.ajax({
                 type : 'POST',
                 url : 'admin_ajax_funcs.php',
@@ -273,8 +270,6 @@ session_start();
                 success : function(result){
                     var buffer="";
                     $.each(result, function(index, val){
-                        console.log("Loop with run" + val.length);
-
                         for(var i=0; i < val.length; i++){
                             var item = val[i];
                             buffer+="<tr>\
@@ -295,8 +290,10 @@ session_start();
                     });
                 },
                 error: function (msg) {
-
-                    alert(msg.responseText);
+                    console.log(msg.responseText);
+                },
+                complete: function(){
+                    $('#loading-image').hide();
                 }
             });
         }
@@ -308,7 +305,7 @@ session_start();
                 dataType : 'json',
                 data: {'action':'get_prof_requests'},
                 contentType: "application/x-www-form-urlencoded",
-                async : true,
+                async : false,
                 beforeSend : function(){/*loading*/},
                 success : function(result){
                     var buffer="";
@@ -321,9 +318,16 @@ session_start();
                                         <td>" + item[0] + "</td>\
                                         <td>\
                                             <form class='prof-decision'>\
+                                                <input type='hidden' name='action' value='prof_approval'>\
                                                 <input type='hidden' name='user_id' value=" + item[1] +">\
-                                                <input name='decision' class=\"button expanded\" type=\"submit\" value=\"Approve\">\
-                                                <input name='decision' class=\"button expanded\" type=\"submit\" value=\"Deny\">\
+                                                <input type='hidden' name='decision' value='Approve'>\
+                                                <input id='Approve-submit' name='decision' class=\"button expanded\" type=\"submit\" value=\"Approve\">\
+                                            </form>\
+                                            <form class='prof-decision'>\
+                                                <input type='hidden' name='action' value='prof_approval'>\
+                                                <input type='hidden' name='user_id' value=" + item[1] +">\
+                                                <input type='hidden' name='decision' value='Deny'>\
+                                                <input id='Approve-submit' name='decision' class=\"button expanded\" type=\"submit\" value=\"Deny\">\
                                             </form>\
                                         </td> \
                                 </tr>";
@@ -334,20 +338,11 @@ session_start();
                     });
                 },
                 error: function (msg) {
-                    alert(msg.responseText);
+                    console.log(msg.responseText);
                 }
 
             });
         }
-
-
-
-        $(load_prof_requests());
-
-
-
-
-
-    </script>
+        </script>
 </body>
 </html>
