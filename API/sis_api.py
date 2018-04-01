@@ -880,6 +880,10 @@ class RequestProfessorApproval(Resource):
                     "VALUES (%s);",
                     [user_id])
 
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
 
         return jsonify(SUCCESS_MESSAGE)
 
