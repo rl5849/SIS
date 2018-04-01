@@ -2,11 +2,6 @@
 // Start the linkedin session
 session_start();
 
-///
-// Getting user info
-// http://127.0.0.1:5002/GetUserIDFromLogin?username=admin&password=fc8252c8dc55839967c58b9ad755a59b61b67c13227ddae4bd3f78a38bf394f7
-//sha256 sum of the password 'admin'
-
 // Get the code from the linkedin query
 $code = $_GET["code"];
 

@@ -23,7 +23,7 @@
             <div class="large-4 medium-10 small-12 columns translucent-background">
 
                 <!--<h2> SIS++ </h2>-->
-                <form class="log-in-form" method="post" action="auth.php">
+                <form id="login" class="log-in-form" method="post">
 
                     <?php
                     $myfile = fopen("LinkedIn/config.ini", "r") or die("Unable to open file!");
@@ -60,13 +60,12 @@
                     <img style="display:none;" src="images/Sign-In-Large---Hover.png">
                     <img style="display:none;" src="images/Sign-In-Large---Active.png">
                     <label>Username
-                        <input type="text" placeholder="username">
+                        <input name="username" type="text" placeholder="Username">
                     </label>
                     <label>Password
-                        <input type="password" placeholder="Password">
+                        <input name="password" type="password" placeholder="Password">
                     </label>
-                    <input name="manual" type="hidden" />
-                    <p><input type="submit" class="button expanded" value="Log in"></p>
+                    <p><button type="submit" class="button expanded" value="Log in">Login</button></p>
                     <p class="text-center"><a class="login-link-text" href="#">Forgot your password?</a></p>
                     <p class="text-center"><a class="login-link-text" href="register.php">Register</a></p>
                 </form>
@@ -87,6 +86,23 @@
 
 <script>
     makeCallouts();
+
+    $("#login").on("submit", function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            data: $(this).serialize(),
+            contentType: "application/x-www-form-urlencoded",
+            url: 'manual_auth.php',
+            success: function (data) {
+                if (data === "INVALID_LOGIN") {
+                    showMessage("failure", "Invalid credentials");
+                } else {
+                    window.location.replace("account.php");
+                }
+            }
+        });
+    })
 </script>
 </body>
 </html>
