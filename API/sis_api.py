@@ -1331,7 +1331,7 @@ api.add_resource(DeleteProfRequest, '/DeleteProfRequest')
 """
 Approve prof request
 """
-class ApproveProfStatus(Resource):
+class ApproveProfRequest(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -1364,7 +1364,58 @@ class ApproveProfStatus(Resource):
         return jsonify(SUCCESS_MESSAGE)
 
 
-api.add_resource(ApproveProfStatus, '/ApproveProfStatus')
+api.add_resource(ApproveProfRequest, '/ApproveProfRequest')
+
+
+
+"""
+Get students in class
+FORMAT:
+{
+    Enrolled : {student_name, student_grade, student_id, },
+    Waitlist : {student_name, student_grade, student_id, }
+}
+
+
+
+Going to add grade, need to refactor database
+"""
+class GetStudentsByClassId(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('class_id', type=int)
+        class_id = parser.parse_args().get("class_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+        try:
+            cur.execute("SELECT user_id, name  "
+                        "FROM users "
+                        "INNER JOIN student_to_class "
+                        "ON (users.user_id = student_to_class.student_id) "
+                        "WHERE student_to_class.class_id=%s",
+                        [class_id])
+
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+
+        query = cur.fetchall()
+
+        result = [(i) for i in query]
+
+        return jsonify(result)
+
+
+api.add_resource(GetStudentsByClassId, '/GetStudentsByClassId')
 
 
 
