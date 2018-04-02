@@ -1372,8 +1372,30 @@ api.add_resource(ApproveProfRequest, '/ApproveProfRequest')
 Get students in class
 FORMAT:
 {
-    Enrolled : {student_name, student_grade, student_id, },
-    Waitlist : {student_name, student_grade, student_id, }
+  "enrolled": [
+    {
+      "grade": 45,
+      "user_id": 88,
+      "user_name": "Robert Liedka"
+    },
+    {
+      "grade": 24,
+      "user_id": 77,
+      "user_name": "Ben Christians"
+    },
+    {
+      "grade": 89,
+      "user_id": 87,
+      "user_name": "Joshua Eng"
+    }
+  ],
+  "waitlisted": [
+    {
+      "position": 1,
+      "user_id": 90,
+      "user_name": "John Murray"
+    }
+  ]
 }
 
 
@@ -1397,20 +1419,32 @@ class GetStudentsByClassId(Resource):
 
         cur = db.cursor()
         try:
-            cur.execute("SELECT user_id, name  "
-                        "FROM users "
-                        "INNER JOIN student_to_class "
-                        "ON (users.user_id = student_to_class.student_id) "
-                        "WHERE student_to_class.class_id=%s",
+            cur.execute("SELECT users.user_id, users.name, student_to_class.grade  "
+                        "FROM student_to_class, users "
+                        # "INNER JOIN users "
+                        # "ON (users.user_id = student_to_class.student_id) "
+                        "WHERE users.user_id = student_to_class.student_id "
+                        "AND student_to_class.class_id=%s",
                         [class_id])
+            enrolled = cur.fetchall()
+
+            cur.execute("SELECT users.user_id, users.name, waitlist.position "
+                        "FROM users, waitlist "
+                        "WHERE waitlist.student_id = users.user_id "
+                        "AND waitlist.class_id=%s",
+                        [class_id])
+            waitlisted = cur.fetchall()
+
+
 
         except MySQLdb.IntegrityError:
             return jsonify(FAILURE_MESSAGE)
 
+        enrolled_schema = ['user_id', 'user_name', 'grade']
+        waitlist_schema = ['user_id', 'user_name', 'position']
 
-        query = cur.fetchall()
 
-        result = [(i) for i in query]
+        result = { 'enrolled' : [dict(zip(enrolled_schema, i)) for i in enrolled], 'waitlisted' : [dict(zip(waitlist_schema, i)) for i in  waitlisted]}
 
         return jsonify(result)
 
