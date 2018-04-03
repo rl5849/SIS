@@ -1397,10 +1397,6 @@ FORMAT:
     }
   ]
 }
-
-
-
-Going to add grade, need to refactor database
 """
 class GetStudentsByClassId(Resource):
     config = ConfigParser.ConfigParser()
@@ -1452,6 +1448,59 @@ class GetStudentsByClassId(Resource):
 api.add_resource(GetStudentsByClassId, '/GetStudentsByClassId')
 
 
+"""
+Get Student class by student_id and semeseter code
+{
+    semester_id : {
+        {   class_id  : id
+            .
+            .
+            .
+        }
+    }
+}
+"""
+class GetStudentsClassesForSemester(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get student id
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int)
+        user_id = parser.parse_args().get("user_id")
+        parser.add_argument('semester_id', type=int)
+        semester_id = parser.parse_args().get("semester_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT * FROM classes "
+                    "INNER JOIN student_to_class "
+                    "ON (student_to_class.class_id = classes.class_id) "
+                    "WHERE classes.semester_id = %s "
+                    "AND student_to_class.student_id=%s "
+                    "ORDER BY classes.name",
+                    [semester_id, user_id])
+        query = cur.fetchall()
+        # Get variable names
+        cur.execute(
+            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'classes'")
+
+        column_names = cur.fetchall()
+        column_names_clean = [x[0] for x in column_names]
+
+        result = {'semester_id': [dict(zip(
+            column_names_clean, i)) for i in query]}
+        return jsonify(result)
+
+
+api.add_resource(GetStudentsClassesForSemester, '/GetStudentsClassesForSemester')
 
 if __name__ == '__main__':
      app.run(port=5002)
