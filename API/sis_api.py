@@ -1451,7 +1451,7 @@ api.add_resource(GetStudentsByClassId, '/GetStudentsByClassId')
 """
 Get Student class by student_id and semeseter code
 {
-    semester_id : {
+    classes : {
         {   class_id  : id
             .
             .
@@ -1480,7 +1480,9 @@ class GetStudentsClassesForSemester(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT * FROM classes "
+        cur.execute("SELECT classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+                    "RIGHT JOIN professors ON "
+                    "(professors.professor_id = classes.professor_id) "
                     "INNER JOIN student_to_class "
                     "ON (student_to_class.class_id = classes.class_id) "
                     "WHERE classes.semester_id = %s "
@@ -1488,19 +1490,42 @@ class GetStudentsClassesForSemester(Resource):
                     "ORDER BY classes.name",
                     [semester_id, user_id])
         query = cur.fetchall()
-        # Get variable names
-        cur.execute(
-            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'classes'")
 
-        column_names = cur.fetchall()
-        column_names_clean = [x[0] for x in column_names]
+        column_names= ["course_id", "name", "section", "time", "room_number", "professor_name"]
 
-        result = {'semester_id': [dict(zip(
-            column_names_clean, i)) for i in query]}
+        result = {'classes': [dict(zip(
+            column_names, i)) for i in query]}
+
         return jsonify(result)
 
 
 api.add_resource(GetStudentsClassesForSemester, '/GetStudentsClassesForSemester')
+
+"""
+GetSemesters
+"""
+class GetSemesters(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT * FROM semesters "
+                    "ORDER BY id DESC")
+
+        query = cur.fetchall()
+
+        result = {'semesters': (query if query else None)}
+
+        return jsonify(result)
+api.add_resource(GetSemesters, '/GetSemesters')
 
 if __name__ == '__main__':
      app.run(port=5002)
