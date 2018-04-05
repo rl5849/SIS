@@ -68,6 +68,9 @@ else{
             if ($enroll == "SUCCESS"){
                 echo "<script>showMessage(\"success\", \"Successfully Enrolled in class\");</script>";
             }
+            else if ($enroll = "WAITLISTED"){
+                echo "<script>showMessage(\"failure\", \"Class is full. Successfully added to waitlist\");</script>";
+            }
             else{
                 echo "<script>showMessage(\"failure\", \"Failed to Enroll in class\");</script>";
             }
@@ -111,7 +114,6 @@ else{
         $enrollment_status = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" .$class_id . "&user_id=" . $user_id);
         $enrollment_status = json_decode($enrollment_status, true);
         $enrollment_status = $enrollment_status["enrollment_status"];
-        $enrollment_status = $enrollment_status === 'True'? true: false;
 
         $favorite_status = file_get_contents("http://127.0.0.1:5002/CheckFavoriteStatus?class_id=" .$class_id . "&user_id=" . $user_id);
         $favorite_status = json_decode($favorite_status, true);
@@ -120,10 +122,15 @@ else{
 
 
 
-        if ($enrollment_status == "True"){
+        if ($enrollment_status == "ENROLLED"){
             $enrollment_status_msg = "Drop";
-        }else{
+            $enrollment_status = True;
+        }else if ($enrollment_status == "NONE"){
             $enrollment_status_msg = "Enroll";
+            $enrollment_status = False;
+        }else{
+            $enrollment_status_msg = "Drop Waitlist";
+            $enrollment_status = True;
         }
 
         if ($favorite_status == "True"){
@@ -215,7 +222,7 @@ else{
 
                 <li>Credits: <?php echo ($class_info["class_info"][0]["credits"]) ?> </li>
                 <li>Enrolled: <?php echo ($class_info["class_info"][0]["num_enrolled"]) ?> / <?php echo ($class_info["class_info"][0]["capacity"]) ?>  </li> <!-- needs getPrereqs -->
-                <li>Wait List: <?php echo count($wait_list) ?> / 0 </li>
+                <li>Wait List: <?php echo count($wait_list) ?> / 0 </li> <!-- needs waitlist capacity -->
                 <!-- <li>...</li> -->
               </ul>
             </div>

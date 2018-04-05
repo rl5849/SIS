@@ -504,8 +504,30 @@ class EnrollStudent(Resource):
 
         #TODO check if student meets prereqs
 
+        #check if student is already enrolled
+        cur.execute("SELECT COUNT(*) FROM student_to_class "
+            "WHERE student_id = %s "
+            "AND class_id = %s",
+            [user_id, class_id])
+
+        query = cur.fetchall()
+        # if student is enrolled return a failure
+        if query[0][0] > 0:
+            return jsonify(FAILURE_MESSAGE)
+
+        #check if student is already waitlisted
+        cur.execute("SELECT COUNT(*) FROM waitlist "
+            "WHERE student_id = %s "
+            "AND class_id = %s",
+            [user_id, class_id])
+
+        query = cur.fetchall()
+        # if student is already waitlisted, return a failure
+        if query[0][0] > 0:
+            return jsonify(FAILURE_MESSAGE)
+
         # check if the class is full
-        cur.execute("SELECT num_enrolled, capacity FROM classes" 
+        cur.execute("SELECT num_enrolled, capacity FROM classes " 
                     "WHERE class_id = %s",
                     [class_id])
         
@@ -517,8 +539,8 @@ class EnrollStudent(Resource):
         #compare num_enrolled to capacity
         if capacity[0][0] >= capacity[0][1]:
 
-            #check if the waitlist is full
-            cur.execute("SELECT MAX(position) FROM waitlist" 
+            #get next spot on waitlist
+            cur.execute("SELECT MAX(position) FROM waitlist " 
                     "WHERE class_id = %s",
                     [class_id])
             
@@ -532,15 +554,15 @@ class EnrollStudent(Resource):
                 #if position >= waitlist_capacity:
                 #   return jsonify(FAILURE_MESSAGE)
 
-            cur.execute("INSERT IGNORE INTO waitlist (student_id, class_id, position)"
+            cur.execute("INSERT IGNORE INTO waitlist (student_id, class_id, position) "
                     "VALUES (%s, %s, %s)",
                     [user_id, class_id, position])
             
             # TODO send notification that user was waitlisted and not enrolled
-            return jsonify(SUCCESS_MESSAGE)
+            return jsonify("WAITLISTED")
 
         # Select data from table using SQL query.
-        cur.execute("INSERT IGNORE INTO student_to_class (student_id, class_id344)"
+        cur.execute("INSERT IGNORE INTO student_to_class (student_id, class_id) "
                     "VALUES (%s, %s)",
                     [user_id, class_id])
 
@@ -580,16 +602,52 @@ class DropStudent(Resource):
 
         cur = db.cursor()
 
-        # Select data from table using SQL query.
-        cur.execute("DELETE FROM student_to_class "
-                    "WHERE student_id = %s "
-                    "AND class_id = %s",
-                    [user_id, class_id])
+        # check if student is enrolled
+        cur.execute("SELECT COUNT(*) FROM student_to_class "
+            "WHERE student_id = %s "
+            "AND class_id = %s",
+            [user_id, class_id])
 
-        cur.execute("UPDATE classes "
-                    "SET num_enrolled=num_enrolled-1 "
-                    "WHERE class_id = %s",
-                    [class_id])
+        query = cur.fetchall()
+        # if student is enrolled, unenroll them
+        if query[0][0] > 0:
+            # drop student from class using SQL Query
+            cur.execute("DELETE FROM student_to_class "
+                        "WHERE student_id = %s "
+                        "AND class_id = %s",
+                        [user_id, class_id])
+
+            cur.execute("UPDATE classes "
+                        "SET num_enrolled=num_enrolled-1 "
+                        "WHERE class_id = %s",
+                        [class_id])
+        else:
+            # check if student is waitlisted
+            cur.execute("SELECT position FROM waitlist "
+                        "WHERE student_id = %s "
+                        "AND class_id = %s",
+                        [user_id, class_id])
+            
+            query = cur.fetchall()
+            # if student is enrolled, unenroll them
+            if len(query) > 0:
+
+                # Drop student from waitlist using sql query
+                cur.execute("DELETE FROM waitlist "
+                            "WHERE student_id = %s "
+                            "AND class_id = %s",
+                            [user_id, class_id])
+                
+                #shift up the remaining members of the waitlist
+                cur.execute("UPDATE waitlist
+                            "SET position=position-1"
+                            "WHERE position > %s"
+                            "AND class_id = %s",
+                            [query[0][0], class_id])
+            
+            else:
+                return jsonify(FAILURE_MESSAGE)
+            
 
         try:
             db.commit()
@@ -630,8 +688,20 @@ class CheckEnrollmentStatus(Resource):
                     [user_id, class_id])
 
         query = cur.fetchall()
+        if query[0][0] > 0:
+            status = "ENROLLED"
+        else:
+            cur.execute("SELECT count(*) FROM waitlist "
+                        "WHERE student_id = %s "
+                        "AND class_id = %s",
+                        [user_id, class_id])
+            query = cur.fetchall
+            if query[0][0] > 0:
+                status = "WAITLISTED"
+            else:
+                status = "NONE"
 
-        result = {'enrollment_status': str(query[0][0] > 0)}
+        result = {'enrollment_status': status}
 
         return jsonify(result)
 
@@ -787,6 +857,8 @@ api.add_resource(ModCourse, '/ModCourse')
 
 """
 Modifies the attributes of a professor
+
+Covered under ModProfile
 """
 class ModProfessor(Resource):
     config = ConfigParser.ConfigParser()
