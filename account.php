@@ -86,10 +86,19 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
   
     <div class="grid-x grid-padding-x" style="padding-top:2%;">
   
-      <div class="large-4 medium-4 small-4 cell">
-        <img src="<?php echo $student_info["student_info"][0]["profile_pic"]; ?>" alt="my_profile_image">
+      <div class="large-1 medium-2 small-3 cell">
+        <img class="profile-picture" src="
+        <?php
+            $profile_picture = $student_info["student_info"][0]["profile_pic"];
+            if ( $profile_picture != null ) {
+                echo $profile_picture;
+            } else {
+                echo "images/user_profile_placeholder.png";
+            }
+        ?>
+        " alt="my_profile_image">
       </div>
-      <div class="large-4 medium-4 small-4 cell">
+      <div class="large-6 medium-6 small-8 cell">
         <ul class="profile-list">
 		  <li><?php echo "<h4>".($student_info["student_info"][0]["student_name"])."</h4>"?></li>
 		  <li><?php
@@ -103,18 +112,16 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
           </li>
 
 		  <li><?php echo "Expected Grad. Year: ".($student_info["student_info"][0]["graduation_year"])?></li>
+          <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
         </ul>
       </div>
       <div class="large-2 medium-2 small-3 cell">
-        <ul class="profile-list">
-          <p><input type="button" href="https://www.linkedin.com" class="button expanded rit-orange" value="LinkedIn"></input></p>
-          <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
-        </ul>
+        <input type="button" href="https://www.linkedin.com" class="button expanded rit-orange" value="LinkedIn">
       </div>
         <?php
         $semesters = file_get_contents("http://127.0.0.1:5002/GetSemesters");
         $semesters = json_decode($semesters, true)["semesters"];
-        var_dump($semesters[0][0])
+        //var_dump($semesters[0][0])
         ?>
     </div>
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">
@@ -122,9 +129,9 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
               <ul class="horizontal tabs" data-tabs id="course-tabs">
                 <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
                 <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
-                <li class="tabs-title" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></li>
-                <li class="tabs-title" onclick="load_class_table(<?php echo $semesters[2][1]?>);"><?php echo $semesters[2][1]?></li>
-                <li class="tabs-title"><a href="#panel4v">Earlier</a></li>
+                <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></a></li>
+                <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[2][1]?>);"><?php echo $semesters[2][1]?></a></li>
+                <li class="tabs-title"><a href="#panel1v">Earlier</a></li>
               </ul>
           </div>
 
