@@ -1,6 +1,6 @@
+from flask import Flask, request
 import MySQLdb
 import ConfigParser, os
-from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask import jsonify
 
@@ -644,7 +644,7 @@ class DropStudent(Resource):
                             [user_id, class_id])
                 
                 #shift up the remaining members of the waitlist
-                cur.execute("UPDATE waitlist
+                cur.execute("UPDATE waitlist "
                             "SET position=position-1"
                             "WHERE position > %s"
                             "AND class_id = %s",
@@ -700,7 +700,7 @@ class CheckEnrollmentStatus(Resource):
                         "WHERE student_id = %s "
                         "AND class_id = %s",
                         [user_id, class_id])
-            query = cur.fetchall
+            query = cur.fetchall()
             if query[0][0] > 0:
                 status = "WAITLISTED"
             else:
