@@ -73,7 +73,7 @@ else{
             }
             else{
                 echo "<script>window.alert($enroll);<script>";
-                echo "<script>showMessage(\"failure\", \"Failed to Enroll in class\");</script>";
+               // echo "<script>showMessage(\"failure\", \"Failed to Enroll in class\");</script>";
             }
         }
 
