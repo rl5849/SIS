@@ -889,6 +889,10 @@ class ModProfile(Resource):
         parser.add_argument('user_type')
         parser.add_argument('date_of_birth')
         parser.add_argument('profile_pic')
+        parser.add_argument('gender')
+        parser.add_argument('graduation_year')
+        parser.add_argument('major')
+        parser.add_argument('gpa')
         user_type = parser.parse_args().get("user_type")
         id = parser.parse_args().get("user_id")
         name = parser.parse_args().get("name")
@@ -940,12 +944,17 @@ class ModProfile(Resource):
                 statement += key + " = %s, "
                 values += [args[key]]
         statement = statement.rstrip(', ')
-        statement += " WHERE %s = %s"
+        statement += " WHERE %s = '%s'"
         values += [id_type, id]
-
+        print(statement % tuple(values))
         #if nothing was updated, the statement is not executed
-        if len(values) > 3:
+        if len(values) >= 3:
             cur.execute(statement, values)
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
 
         return jsonify(SUCCESS_MESSAGE)
 
