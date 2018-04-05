@@ -72,8 +72,7 @@ else{
                 echo "<script>showMessage(\"failure\", \"Class is full. Successfully added to waitlist\");</script>";
             }
             else{
-                echo "<script>window.alert($enroll);<script>";
-               /* echo "<script>showMessage(\"failure\", \"Failed to Enroll in class\");</script>";*/
+                echo "<script>showMessage(\"failure\", \"Failed to Enroll in class\");</script>";
             }
         }
 

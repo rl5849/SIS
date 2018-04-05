@@ -56,6 +56,7 @@ class AddCourse(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
+    #TODO : Make post request
     def get(self):
         # Get course info
         parser = reqparse.RequestParser()
@@ -260,7 +261,6 @@ api.add_resource(GetFavoritedClasses, '/GetFavoritedClasses')
 """
 Get all information about a user
 """
-#TODO: Determine if this is useful
 class GetStudentInfo(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
@@ -443,6 +443,8 @@ Gets all information about a section of a course
 
 Note: GetClasses can do the same thing if given a specific ID,
 may be unneccessary
+
+TODO: LOW : Get rid of this
 """
 class GetClassInfo(Resource):
     config = ConfigParser.ConfigParser()
@@ -820,8 +822,13 @@ class CheckFavoriteStatus(Resource):
 
 api.add_resource(CheckFavoriteStatus, '/CheckFavoriteStatus')
 
+
+#TODO: LOW : Add get favorites for student
+
 """
 Gets a grade for a class and a student
+
+TODO: MEDIUM : Change to number value, implement in PHP
 """
 class GetGrade(Resource):
     config = ConfigParser.ConfigParser()
@@ -834,8 +841,11 @@ class GetGrade(Resource):
 
 api.add_resource(GetGrade, '/GetGrade')
 
+#TODO : MEDIUM : add assign grade
 """
 Modifies the attributes of a class
+
+TODO: HIGH : implement this
 """
 class ModClass(Resource):
     config = ConfigParser.ConfigParser()
@@ -848,6 +858,8 @@ api.add_resource(ModClass, '/ModClass')
 
 """
 Modifies the attributes of a course
+
+TODO: HIGH : Implement this
 """
 class ModCourse(Resource):
     config = ConfigParser.ConfigParser()
@@ -858,22 +870,11 @@ class ModCourse(Resource):
 
 api.add_resource(ModCourse, '/ModCourse')
 
-"""
-Modifies the attributes of a professor
-
-Covered under ModProfile
-"""
-class ModProfessor(Resource):
-    config = ConfigParser.ConfigParser()
-    config.read('./config.ini')
-    
-    def get(self):
-        return jsonify(SUCCESS_MESSAGE)
-
-api.add_resource(ModProfessor, '/ModProfessor')
 
 """
 Modifies the attributes of a profile
+
+TODO: add php call to update account
 """
 class ModProfile(Resource):
     config = ConfigParser.ConfigParser()
@@ -949,6 +950,7 @@ class ModProfile(Resource):
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(ModProfile, '/ModProfile')
+
 """
 Requests approval of an admin for a new user, which has requested to be flagged as a professor
 """
