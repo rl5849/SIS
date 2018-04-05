@@ -24,6 +24,12 @@ if( $results->user_id == null) {
     echo "INVALID_LOGIN";
 } else {
     session_start();
+
+    // Set admin status if needed
+    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$results->user_id);
+    $is_admin = json_decode($is_admin, true);
+    $_SESSION["is_admin"] = $is_admin["is_admin"];
+
     $_SESSION["user_id"] = $results->user_id;
     echo $results->user_id;
 }
