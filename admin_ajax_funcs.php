@@ -30,6 +30,9 @@ if (isset($_POST["action"])){
         case "prof_approval":
             prof_approval();
             break;
+        case "get_student_classes_by_semester":
+            get_student_classes_by_semester();
+            break;
     }
 }
 
@@ -124,5 +127,10 @@ function prof_approval() {
             echo "Could not delete request";
         }
     }
+}
+
+function get_student_classes_by_semester() {
+    $list = file_get_contents("http://127.0.0.1:5002/GetStudentsClassesForSemester?user_id=" . $_POST['user_id'] . "&semester_id=" . $_POST['semester_id']);
+    echo $list;
 }
 

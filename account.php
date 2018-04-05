@@ -111,99 +111,42 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
           <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
         </ul>
       </div>
-      
+        <?php
+        $semesters = file_get_contents("http://127.0.0.1:5002/GetSemesters");
+        $semesters = json_decode($semesters, true)["semesters"];
+        var_dump($semesters[0][0])
+        ?>
     </div>
-  
-    <div class="grid-x grid-padding-x" style="padding-top: 2%;">
+        <div class="grid-x grid-padding-x" style="padding-top: 2%;">
       <div class="large-12 medium-12 small-12 columns">
       <ul class="horizontal tabs" data-tabs id="course-tabs">
         <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
-        <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true">Current Semester</a></li>
-        <li class="tabs-title"><a href="#panel2v">Fall 2017</a></li>
-        <li class="tabs-title"><a href="#panel3v">Summer 2017</a></li>
+        <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
+        <li class="tabs-title" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></li> <!--On click reload with other semester-->
+        <li class="tabs-title" onclick="load_class_table(<?php echo $semesters[2][1]?>);"><?php echo $semesters[2][1]?></li>
         <li class="tabs-title"><a href="#panel4v">Earlier</a></li>
       </ul>
       </div>
+
+
       <div class="large-12 medium-12 small-12 cell">
         <div class="tabs-content" data-tabs-content="course-tabs">
-          <div class="tabs-panel" id="panel0v">
-            <table class="hover">
-              <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
-              </tr>
-            </table>
-          </div>
           <div class="tabs-panel is-active" id="panel1v">
-            <table class="hover">
-              <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
-              </tr>
-                <!--For loop for query here, delete everything else-->
-                  <?php
-                  $classes = file_get_contents("http://127.0.0.1:5002/GetStudentsClasses?student_id=" . $student_id); //getclasses
-                  $classes = json_decode($classes, true);
-                  $classes = $classes["students_classes"];
-
-
-
-                  foreach ($classes as $class){
-                      $professor = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" . $class["professor_id"]); //get professor
-                      $professor = json_decode($professor, true);
-                      $professor = $professor["professor_name"];
-                  ?>
+              <table class="hover">
                 <tr>
-                    <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $class["name"];?></a></td>
-                    <td><?php echo $class["section"];?></td>
-                    <td><?php echo $class["time"];?></td>
-                    <td><?php echo $professor;?></td>
-                    <td><?php echo $class["room_number"];?></td>
+                    <th>Course</th>
+                    <th>Section</th>
+                    <th>Time</th>
+                    <th>Instructor</th>
+                    <th>Room</th>
                 </tr>
+              </table>
+            <table class="hover">
+                <img style="text-align: center" src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
+                  <tbody id="classes">
+                  <!--                              Javascript builds table here-->
 
-                <?php } ?>
-            </table>
-          </div>
-          <div class="tabs-panel" id="panel2v">
-            <table class="hover">
-              <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
-                  <th>Grade</th>
-              </tr>
-            </table>
-          </div>
-          <div class="tabs-panel" id="panel3v">
-            <table class="hover">
-              <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
-                  <th>Grade</th>
-              </tr>
-            </table>
-          </div>
-          <div class="tabs-panel" id="panel4v">
-            <table class="hover">
-              <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
-                  <th>Grade</th>
-              </tr>
+                  </tbody>
             </table>
           </div>
         </div>
@@ -211,6 +154,48 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     </div>
   </div>
     <center><img src="images/LOGO.png" style="width:75px;height:75px;"></center>
+
+  <script>
+      $(document).ready(function() {
+          load_class_table(<?php echo $semesters[0][0]?>);
+      });
+      function load_class_table(semester){
+          $('#loading-image').show();
+          $.ajax({
+              type : 'POST',
+              url : 'admin_ajax_funcs.php',
+              dataType : 'json',
+              data: {'action':'get_student_classes_by_semester', 'user_id' :  <?php echo $student_id?>, "semester_id": semester},
+              contentType: "application/x-www-form-urlencoded",
+              async : false,
+              //beforeSend : function(){/*loading*/},
+
+              success : function(result){
+                  var buffer="";
+                  $.each(result, function(index, val){
+                      for(var i=0; i < val.length; i++){
+                          var item = val[i];
+                          buffer+="<tr>\
+                                    <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
+                                    <td>" + item.section + "</td> \
+                                    <td>" + item.time + "</td> \
+                                    <td>" + item.professor_name + "</td> \
+                                    <td>" + item.room_number + "</td> \
+                                 </tr>";
+                      }
+                      $("#classes").empty();
+                      $("#classes").append(buffer);
+                  });
+              },
+              error: function (msg) {
+                  console.log(msg.responseText);
+              },
+              complete: function(){
+                  $('#loading-image').hide();
+              }
+          });
+      }
+  </script>
 
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/what-input/dist/what-input.js"></script>
