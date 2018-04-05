@@ -54,12 +54,12 @@ else{
         if ($enrollment_status == "ENROLLED"){
             $enrollment_status_msg = "Drop";
             $enrollment_status = True;
-        }else if ($enrollment_status == "NONE"){
+        }else if ($enrollment_status == "WAITLIST"){
+            $enrollment_status_msg = "Enroll";
+            $enrollment_status = True;
+        }else{
             $enrollment_status_msg = "Enroll";
             $enrollment_status = False;
-        }else{
-            $enrollment_status_msg = "Drop Waitlist";
-            $enrollment_status = True;
         }
 
         if ($favorite_status == "True"){
