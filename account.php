@@ -118,40 +118,41 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         ?>
     </div>
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">
-      <div class="large-12 medium-12 small-12 columns">
-      <ul class="horizontal tabs" data-tabs id="course-tabs">
-        <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
-        <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
-        <li class="tabs-title" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></li> <!--On click reload with other semester-->
-        <li class="tabs-title" onclick="load_class_table(<?php echo $semesters[2][1]?>);"><?php echo $semesters[2][1]?></li>
-        <li class="tabs-title"><a href="#panel4v">Earlier</a></li>
-      </ul>
-      </div>
+          <div class="large-12 medium-12 small-12 columns">
+              <ul class="horizontal tabs" data-tabs id="course-tabs">
+                <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
+                <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
+                <li class="tabs-title" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></li>
+                <li class="tabs-title" onclick="load_class_table(<?php echo $semesters[2][1]?>);"><?php echo $semesters[2][1]?></li>
+                <li class="tabs-title"><a href="#panel4v">Earlier</a></li>
+              </ul>
+          </div>
 
 
-      <div class="large-12 medium-12 small-12 cell">
-        <div class="tabs-content" data-tabs-content="course-tabs">
-          <div class="tabs-panel is-active" id="panel1v">
-              <table class="hover">
-                <tr>
-                    <th>Course</th>
-                    <th>Section</th>
-                    <th>Time</th>
-                    <th>Instructor</th>
-                    <th>Room</th>
-                </tr>
-              </table>
-            <table class="hover">
-                <img style="text-align: center" src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
-                  <tbody id="classes">
-                  <!--                              Javascript builds table here-->
+          <div class="large-12 medium-12 small-12 cell">
+            <div class="tabs-content" data-tabs-content="course-tabs">
+              <div class="tabs-panel is-active" id="panel1v">
+                  <table class="hover">
+                    <tr>
+                        <th>Course</th>
+                        <th>Section</th>
+                        <th>Time</th>
+                        <th>Instructor</th>
+                        <th>Room</th>
+                    </tr>
+                  </table>
+                  <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
 
-                  </tbody>
-            </table>
+                  <table class="hover">
+                      <tbody id="classes">
+                      <!--                              Javascript builds table here-->
+
+                      </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
   </div>
     <center><img src="images/LOGO.png" style="width:75px;height:75px;"></center>
 

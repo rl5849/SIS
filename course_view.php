@@ -37,79 +37,8 @@ else{
             $class_id = 1;
         }
 
-        //PHP FUNCTIONS FOR ENROLL AND FAVORITE
-        if (isset($_POST["enroll"])){
-
-            if ($_POST["enroll"] == 0){
-                unenroll($_POST["user_id"], $class_id);
-
-            }
-            else{
-                enroll($_POST["user_id"], $class_id);
-            }
-            unset($_POST["enroll"]);
-
-        }
-        if (isset($_POST["favorite"])){
-
-            if ($_POST["favorite"] == 0){
-                favorite($_POST["user_id"], $class_id);
-
-            }
-            else{
-                unfavorite($_POST["user_id"], $class_id);
-            }
-            unset($_POST["favorite"]);
-        }
-
-        function enroll($user_id, $local_class_id) {
-            $enroll = file_get_contents("http://127.0.0.1:5002/EnrollStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
-            $enroll = json_decode($enroll, true);
-            if ($enroll == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully Enrolled in class\");</script>";
-            }
-            else if ($enroll = "WAITLISTED"){
-                echo "<script>showMessage(\"failure\", \"Class is full. Successfully added to waitlist\");</script>";
-            }
-            else{
-                echo "<script>showMessage(\"failure\", \"Failed to Enroll in class\");</script>";
-            }
-        }
 
 
-        function unenroll($user_id, $local_class_id) {
-            $unenroll = file_get_contents("http://127.0.0.1:5002/DropStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
-            $unenroll = json_decode($unenroll, true);
-            if ($unenroll == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully Dropped class\");</script>";
-            }
-            else{
-                echo "<script>showMessage(\"failure\", \"Failed to Drop class\");</script>";
-            }
-        }
-
-        function favorite($user_id, $local_class_id) {
-            $favorite = file_get_contents("http://127.0.0.1:5002/FavoriteClass?class_id=" . $local_class_id . "&user_id=" . $user_id);
-            $favorite = json_decode($favorite, true);
-            if ($favorite == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully Favorited class\");</script>";
-            }
-            else{
-                echo "<script>showMessage(\"failure\", \"Failed to Favorite class\");</script>";
-            }
-        }
-
-
-        function unfavorite($user_id, $local_class_id) {
-            $unfavorite = file_get_contents("http://127.0.0.1:5002/UnfavoriteClass?class_id=" . $local_class_id . "&user_id=" . $user_id);
-            $unfavorite = json_decode($unfavorite, true);
-            if ($unfavorite == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully Dropped class\");</script>";
-            }
-            else{
-                echo "<script>showMessage(\"failure\", \"Failed to Drop class\");</script>";
-            }
-        }
 
         $enrollment_status = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" .$class_id . "&user_id=" . $user_id);
         $enrollment_status = json_decode($enrollment_status, true);
@@ -182,7 +111,8 @@ else{
                 if ($user_id) {
                     ?>
                     <p>
-                    <form method="post">
+                    <form class="ajax" method="post">
+                        <input type="hidden" name="action" value="favorite">
                         <input type="hidden" name="favorite" value="<?php echo($favorite_status) ?>">
                         <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
                         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
@@ -192,7 +122,7 @@ else{
                     </p>
 
                     <p>
-                    <form method="post">
+                    <form class="ajax" method="post">
                         <input type="hidden" name="enroll" value="<?php echo !($enrollment_status) ?>">
                         <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
                         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
@@ -329,7 +259,32 @@ else{
       
     </div>
 
+<script>
+    $(".ajax").on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            data: $(this).serialize(),
+            // dataType : 'json',
+            // contentType: "application/x-www-form-urlencoded",
+            url: 'user_ajax_funcs.php',
+            success: function (data) {
+                if (data.includes("Success")) {
+                    showMessage("success", data);
+                    $(load_class_table());
 
+                }
+                else {
+                    showMessage("failure", data);
+
+                }
+            },
+            error: function (msg) {
+                console.log(msg.responseText);
+            }
+        });
+    });
+</script>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/what-input/dist/what-input.js"></script>
