@@ -130,7 +130,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                 <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
                 <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></a></li>
-                <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[2][1]?>);"><?php echo $semesters[2][1]?></a></li>
+                <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[2][0]?>);"><?php echo $semesters[2][1]?></a></li>
                 <li class="tabs-title"><a href="#panel1v">Earlier</a></li>
               </ul>
           </div>

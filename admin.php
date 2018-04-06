@@ -214,7 +214,6 @@ session_start();
                         if (data.includes("Success")) {
                             showMessage("success", data);
                             $(load_class_table());
-
                         }
                         else {
                             showMessage("failure", data);
