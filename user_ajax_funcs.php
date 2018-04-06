@@ -29,6 +29,8 @@ if (isset($_POST["action"])){
             }
             unset($_POST["favorite"]);
             break;
+        case "RequestSpecialAccess":
+            RequestSpecialAccess();
     }
 }
 
@@ -81,3 +83,14 @@ function unfavorite() {
         echo "Failed to Drop class";
     }
 }
+function RequestSpecialAccess() {
+    $result = file_get_contents("http://127.0.0.1:5002/RequestSpecialAccess?class_id=" . $_POST['class_id'] . "&user_id=" .  $_POST['user_id']);
+    $result = json_decode($result, true);
+    if ($result == "SUCCESS"){
+        echo "Successfully Requested Special Access";
+    }
+    else{
+        echo "Failed to Request Access";
+    }
+}
+
