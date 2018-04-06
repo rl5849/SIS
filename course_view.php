@@ -37,9 +37,6 @@ else{
             $class_id = 1;
         }
 
-
-
-
         $enrollment_status = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" .$class_id . "&user_id=" . $user_id);
         $enrollment_status = json_decode($enrollment_status, true);
         $enrollment_status = $enrollment_status["enrollment_status"];
@@ -48,24 +45,26 @@ else{
         $favorite_status = json_decode($favorite_status, true);
         $favorite_status = $favorite_status["favorite_status"];
         $favorite_status = $favorite_status === 'True'? true: false;
-
-
-
-        if ($enrollment_status == "ENROLLED"){
-            $enrollment_status_msg = "Drop";
-            $enrollment_status = True;
-        }else if ($enrollment_status == "WAITLIST"){
-            $enrollment_status_msg = "Enroll";
-            $enrollment_status = True;
-        }else{
-            $enrollment_status_msg = "Enroll";
-            $enrollment_status = False;
-        }
-
         if ($favorite_status == "True"){
             $favorite_status_msg = "Unfavorite";
         }else{
             $favorite_status_msg = "Favorite";
+        }
+
+
+        switch ($enrollment_status){
+            case "ENROLLED":
+                $enrollment_status_msg = "Drop";
+                $enrollment_status = True;
+                break;
+            case "WAITLIST":
+                $enrollment_status_msg = "Enroll";
+                $enrollment_status = True;
+                break;
+            default:
+                $enrollment_status_msg = "Enroll";
+                $enrollment_status = False;
+                break;
         }
 
 
@@ -130,6 +129,16 @@ else{
                                value="<?php echo $enrollment_status_msg; ?>">
                     </form>
                     </p>
+
+                    <p>
+                    <form class="ajax" method="post">
+                        <input type="hidden" name="action" value="RequestSpecialAccess">
+                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
+                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                        <input type="submit" class="button expanded rit-orange" value="Request Special Access">
+                    </form>
+                    </p>
+
                     <?php
                 }
               ?>

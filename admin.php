@@ -1,12 +1,11 @@
 <?php
 session_start();
-//if (!isset($_SESSION['user_id'])){
-//
-//    echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
-//    exit();
-//}
-//else{
-    $_SESSION["user_id"] = 67;
+if (!isset($_SESSION['user_id'])){
+
+    echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
+    exit();
+}
+else{
     $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$_SESSION["user_id"]);
     $is_admin = json_decode($is_admin, true);
     $is_admin = $is_admin["is_admin"];
@@ -14,7 +13,7 @@ session_start();
     if ($is_admin != "true") {
         echo "<center><h1 class=\"text-center\">Forbidden</h1></center>";
         exit();
-//    }
+    }
 } ?>
 
 <!doctype html>
