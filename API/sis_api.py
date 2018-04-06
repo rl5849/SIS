@@ -238,23 +238,31 @@ Gets all favorited classes for the student
 class GetFavoritedClasses(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
-    
-    """
-    Expected return from API Docs:
-    ```JSON
-      favorited_classes
-        class1
-        class2
-        .
-        .
-        .
-        classN
-      ```
-    """
-    
-    
+
     def get(self):
-        return jsonify(FAILURE_MESSAGE)
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=str)
+        parsed = parser.parse_args()
+        user_id = parsed.get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT class_id "
+                    "FROM favorites "
+                    "WHERE student_id = %s",
+                    [user_id])
+
+
+        query = cur.fetchall()
+
+        result = {'students_favorites': i for i in query}
+        return jsonify(result)
 
 api.add_resource(GetFavoritedClasses, '/GetFavoritedClasses')
 
@@ -1646,6 +1654,46 @@ class GetSemesters(Resource):
 
         return jsonify(result)
 api.add_resource(GetSemesters, '/GetSemesters')
+
+
+"""
+Get course list, significantly reduce calls for getting the course list
+"""
+class GetCourseList(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get student id
+        parser = reqparse.RequestParser()
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT classes.class_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+                    "RIGHT JOIN professors ON "
+                    "(professors.professor_id = classes.professor_id) "
+                    "WHERE classes.semester_id = (SELECT MAX(id) FROM semesters) "
+                    "ORDER BY classes.name",
+                    )
+        query = cur.fetchall()
+
+        column_names= ["class_id", "name", "section", "time", "room_number", "professor_name"]
+
+        result = {'classes': [dict(zip(
+            column_names, i)) for i in query]}
+
+        return jsonify(result)
+
+
+api.add_resource(GetCourseList, '/GetCourseList')
+
+
 
 if __name__ == '__main__':
      app.run(port=5002)
