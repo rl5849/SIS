@@ -749,6 +749,44 @@ class FavoriteClass(Resource):
 api.add_resource(FavoriteClass, '/FavoriteClass')
 
 """
+Request special access for a class
+"""
+class RequestSpecialAccess(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('class_id', type=int)
+        parser.add_argument('user_id', type=int)
+        class_id = parser.parse_args().get("class_id")
+        user_id = parser.parse_args().get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("UPDATE student_to_class "
+                    "SET special_access = 1 "
+                    "WHERE class_id=%s "
+                    "AND student_id=%s",
+                    [class_id, user_id])
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+
+
+api.add_resource(RequestSpecialAccess, '/RequestSpecialAccess')
+
+"""
 Removes a class to a student's list of favorite classes
 """
 class UnfavoriteClass(Resource):
@@ -1165,7 +1203,7 @@ class GetCurrentSemester(Resource):
 api.add_resource(GetCurrentSemester, '/GetCurrentSemester')
 
 """
-Gets all Profs
+Gets all Profs, for making dropdown of profs when making new classes
 """
 class GetProfs(Resource):
     config = ConfigParser.ConfigParser()
@@ -1289,10 +1327,6 @@ class UserExists(Resource):
 
         return jsonify(result)
 api.add_resource(UserExists, '/UserExists')
-
-"""
-Enrolls a student in a course
-"""
 
 
 class CreateLogin(Resource):
