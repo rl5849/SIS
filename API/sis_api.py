@@ -568,7 +568,7 @@ class EnrollStudent(Resource):
                     "VALUES (%s, %s, %s)",
                     [user_id, class_id, position])
 
-            # TODO send notification that user was waitlisted and not enrolled
+            # TODO send notification in php that user was waitlisted and not enrolled
             return jsonify("WAITLISTED")
 
         # Select data from table using SQL query.
@@ -885,6 +885,46 @@ class GetGrade(Resource):
 api.add_resource(GetGrade, '/GetGrade')
 
 #TODO : MEDIUM : add assign grade
+
+"""
+Calculates and stores students GPA in db
+"""
+class SetGPA(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+
+        # Get student id
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int)
+        user_id = parser.parse_args().get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                     passwd=self.config.get('database', 'password'),
+                     host=self.config.get('database', 'host'),
+                     db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        #gets and sets student GPA
+        #not sure how this responds if a student has no classes
+        cur.execute("UPDATE students "
+                    "SET GPA = AVG((SELECT grade "
+                    "FROM past_student_to_class_grade "
+                    "WHERE past_student_to_class_grade.student_id = "
+                    "      students.student_id))",
+                    [user_id])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+
+api.add_resource(SetGPA, '/SetGPA')
+
 """
 Modifies the attributes of a class
 
@@ -1758,6 +1798,7 @@ class EnrollFromWaitlist(Resource):
 
         return jsonify(SUCCESS_MESSAGE)
 
+api.add_resource(EnrollFromWaitlist, '/EnrollFromWaitlist')
 
 if __name__ == '__main__':
      app.run(port=5002)
