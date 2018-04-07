@@ -514,75 +514,72 @@ class EnrollStudent(Resource):
 
         #TODO check if student meets prereqs
 
-        try:
-            #check if student is already enrolled
-            cur.execute("SELECT COUNT(*) FROM student_to_class "
-                "WHERE student_id = %s "
-                "AND class_id = %s",
-                [user_id, class_id])
+        #check if student is already enrolled
+        cur.execute("SELECT COUNT(*) FROM student_to_class "
+            "WHERE student_id = %s "
+            "AND class_id = %s",
+            [user_id, class_id])
 
-            query = cur.fetchall()
-            # if student is enrolled return a failure
-            if query[0][0] > 0:
-                return jsonify(FAILURE_MESSAGE)
+        query = cur.fetchall()
+        # if student is enrolled return a failure
+        if query[0][0] > 0:
+            return jsonify(FAILURE_MESSAGE)
 
-            #check if student is already waitlisted
-            cur.execute("SELECT COUNT(*) FROM waitlist "
-                "WHERE student_id = %s "
-                "AND class_id = %s",
-                [user_id, class_id])
+        #check if student is already waitlisted
+        cur.execute("SELECT COUNT(*) FROM waitlist "
+            "WHERE student_id = %s "
+            "AND class_id = %s",
+            [user_id, class_id])
 
-            query = cur.fetchall()
-            # if student is already waitlisted, return a failure
-            if query[0][0] > 0:
-                return jsonify(FAILURE_MESSAGE)
+        query = cur.fetchall()
+        # if student is already waitlisted, return a failure
+        if query[0][0] > 0:
+            return jsonify(FAILURE_MESSAGE)
 
-            # check if the class is full
-            cur.execute("SELECT num_enrolled, capacity FROM classes " 
-                        "WHERE class_id = %s",
-                        [class_id])
-            
-            capacity = cur.fetchall()
+        # check if the class is full
+        cur.execute("SELECT num_enrolled, capacity FROM classes "
+                    "WHERE class_id = %s",
+                    [class_id])
 
-            if len(capacity) == 0:
-                return jsonify(FAILURE_MESSAGE)
-            
-            #compare num_enrolled to capacity
-            if capacity[0][0] >= capacity[0][1]:
+        capacity = cur.fetchall()
 
-                #get next spot on waitlist
-                cur.execute("SELECT MAX(position) FROM waitlist " 
-                        "WHERE class_id = %s",
-                        [class_id])
-                
-                waitlist = cur.fetchall()
+        if len(capacity) == 0:
+            return jsonify(FAILURE_MESSAGE)
 
-                if len(waitlist) == 0:
-                    position = 0
-                else:
-                    position = waitlist[0][0] + 1 #waitlist[0][0] == MAX(position) for class
-                    #TODO add waitlist capacity to database
-                    #if position >= waitlist_capacity:
-                    #   return jsonify(FAILURE_MESSAGE)
+        #compare num_enrolled to capacity
+        if capacity[0][0] >= capacity[0][1]:
 
-                cur.execute("INSERT IGNORE INTO waitlist (student_id, class_id, position) "
-                        "VALUES (%s, %s, %s)",
-                        [user_id, class_id, position])
-                
-                # TODO send notification that user was waitlisted and not enrolled
-                return jsonify("WAITLISTED")
+            #get next spot on waitlist
+            cur.execute("SELECT MAX(position) FROM waitlist "
+                    "WHERE class_id = %s",
+                    [class_id])
 
-            # Select data from table using SQL query.
-            cur.execute("INSERT IGNORE INTO student_to_class (student_id, class_id) "
-                        "VALUES (%s, %s)",
-                        [user_id, class_id])
+            waitlist = cur.fetchall()
 
-            cur.execute("UPDATE classes "
-                        "SET num_enrolled=num_enrolled+1 "
-                        "WHERE class_id = %s",
-                        [class_id])
-        except MySQLdb.connector.Error as e:
-            return jsonify(format(e))
+            if len(waitlist) == 0:
+                position = 0
+            else:
+                position = waitlist[0][0] + 1 #waitlist[0][0] == MAX(position) for class
+                #TODO add waitlist capacity to database
+                #if position >= waitlist_capacity:
+                #   return jsonify(FAILURE_MESSAGE)
+
+            cur.execute("INSERT IGNORE INTO waitlist (student_id, class_id, position) "
+                    "VALUES (%s, %s, %s)",
+                    [user_id, class_id, position])
+
+            # TODO send notification that user was waitlisted and not enrolled
+            return jsonify("WAITLISTED")
+
+        # Select data from table using SQL query.
+        cur.execute("INSERT IGNORE INTO student_to_class (student_id, class_id) "
+                    "VALUES (%s, %s)",
+                    [user_id, class_id])
+
+        cur.execute("UPDATE classes "
+                    "SET num_enrolled=num_enrolled+1 "
+                    "WHERE class_id = %s",
+                    [class_id])
 
         try:
             db.commit()
@@ -1693,6 +1690,73 @@ class GetCourseList(Resource):
 
 api.add_resource(GetCourseList, '/GetCourseList')
 
+
+"""
+Enroll students to classes from the waitlist if there is any room in the class
+"""
+class EnrollFromWaitlist(Resource):
+
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        #gets all students who are eligableto be enrolled from the waitlist
+        cur.execute("SELECT waitlist.student_id, waitlist.class_id "
+                    "FROM waitlist "
+                    "INNER JOIN classes ON "
+                    "waitlist.class_id = classes.class_id "
+                    "WHERE classes.num_enrolled < classes.capacity "
+                    "AND waitlist.position <= (classes.capacity - classes.num_enrolled)")
+
+        query = cur.fetchall()
+
+        #if there are no students eligable to be enrolled, return
+        if len(query) == 0:
+            return jsonify("NO STUDENTS TO ENROLL")
+
+
+        #enroll students
+        statement = "INSERT IGNORE INTO student_to_class (student_id, class_id) " \
+                    "VALUES " + ("(%s, %s), " * len(query)-1) + "(%s, %s)"
+
+        values = [] + (row for row in query)
+
+        cur.execute(statement, values)
+
+        #update number enrolled for all classes
+        cur.execute(" UPDATE classes "
+                    " SET num_enrolled=("
+                    "   SELECT COUNT(*) FROM student_to_class"
+                    "   WHERE student_to_class.class_id = classes.class_id)")
+
+        #remove enrolled students from waitlist
+        cur.execute("DELETE FROM waitlist "
+                    " WHERE student_id IN ("
+                    "   SELECT student_id FROM "
+                    "   student_to_class WHERE "
+                    "   student_to_class.class_id = waitlist.class_id)")
+
+        #move remaining students up in waitlist position
+        cur.execute("UPDATE waitlist a"
+                    "SET position = position - ("
+                    "   SELECT MIN(position) "
+                    "   FROM waitlist b "
+                    "   WHERE b.class_id = a.class_id) + 1")
+
+        try:
+                    db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
 
 
 if __name__ == '__main__':
