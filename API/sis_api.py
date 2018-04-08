@@ -56,7 +56,7 @@ class AddCourse(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
-    #TODO : Make post request
+    #TODO : Make POST request
     def get(self):
         # Get course info
         parser = reqparse.RequestParser()
@@ -96,6 +96,8 @@ api.add_resource(AddCourse, '/AddCourse')
 
 
 class AddSemester(Resource):
+
+    #TODO: Make POST request
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -133,6 +135,8 @@ api.add_resource(AddSemester, '/AddSemester')
 ###Add a new class
 # TODO: CRITCAL: URL ENCODE THESE ITEMS BEFORE MAKING THE REQUEST
 class AddClass(Resource):
+
+    #TODO: Make POST request
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -187,6 +191,8 @@ api.add_resource(AddClass, '/AddClass')
 ### url path: /add_student?student_name=NAME&date_of_birth=2001-02-01&profile_pic=www.linked.com&gender=F&graduation_year=2018
 # TODO: CRITCAL: URL ENCODE THESE ITEMS BEFORE MAKING THE REQUEST
 class AddUser(Resource):
+
+    #TODO: Make POST request
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -494,6 +500,8 @@ api.add_resource(GetClassInfo, '/GetClassInfo')
 Enrolls a student in a course
 """
 class EnrollStudent(Resource):
+
+    #TODO: Make POST request
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -597,6 +605,7 @@ class DropStudent(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
+    #TODO: Make POST request
     def get(self):
         # Get class id
         parser = reqparse.RequestParser()
@@ -724,7 +733,8 @@ Adds a class to a student's list of favorite classes
 class FavoriteClass(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
-    
+
+    #TODO: Make POST request
     def get(self):
         # Get class id
         parser = reqparse.RequestParser()
@@ -760,6 +770,7 @@ class RequestSpecialAccess(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
+    #TODO: Make POST request
     def get(self):
         # Get class id
         parser = reqparse.RequestParser()
@@ -797,6 +808,8 @@ Removes a class to a student's list of favorite classes
 class UnfavoriteClass(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
+
+    #TODO: Make POST request
     
     def get(self):
         # Get class id
@@ -893,6 +906,8 @@ class SetGPA(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
+    #TODO: Make POST request
+
     def get(self):
 
         # Get student id
@@ -931,6 +946,8 @@ Modifies the attributes of a class
 TODO: HIGH : implement this
 """
 class ModClass(Resource):
+
+    #TODO: Make POST request
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
     
@@ -945,6 +962,8 @@ Modifies the attributes of a course
 TODO: HIGH : Implement this
 """
 class ModCourse(Resource):
+
+    #TODO: Make POST request
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
     
@@ -960,6 +979,8 @@ Modifies the attributes of a profile
 TODO: add php call to update account
 """
 class ModProfile(Resource):
+
+    #TODO: Make POST request
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
     
@@ -1049,7 +1070,8 @@ Requests approval of an admin for a new user, which has requested to be flagged 
 class RequestProfessorApproval(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
-    
+
+    #TODO: Make POST request
     def get(self):
 
         parser = reqparse.RequestParser()
@@ -1378,6 +1400,8 @@ class CreateLogin(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
+    #TODO: Make POST request
+
     def get(self):
         # Get class id
         parser = reqparse.RequestParser()
@@ -1432,6 +1456,8 @@ class DeleteClass(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
+    #TODO: Make POST request
+
     def get(self):
         # Get class id
         parser = reqparse.RequestParser()
@@ -1466,6 +1492,8 @@ class DeleteProfRequest(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
+    #TODO: Make POST request
+
     def get(self):
         # Get class id
         parser = reqparse.RequestParser()
@@ -1499,6 +1527,8 @@ Approve prof request
 class ApproveProfRequest(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
+
+    #TODO: Make POST request
 
     def get(self):
         # Get class id
@@ -1736,6 +1766,7 @@ Enroll students to classes from the waitlist if there is any room in the class
 """
 class EnrollFromWaitlist(Resource):
 
+    #TODO: Make POST request
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
