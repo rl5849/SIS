@@ -73,7 +73,7 @@ Gets information about a student.
 
 #### Return
 
-```JSON
+```
 { student_info : [
     {
         profile_pic : url
@@ -206,7 +206,7 @@ None at the moment
 
 #### Return
 
-```JSON
+```
 { profs : [
     professor1,
     professor2,
@@ -237,7 +237,7 @@ Gets the professor name associated with the professor ID
 
 #### Return
 
-```JSON
+```
 { professor_name : string }
 ```
 
@@ -261,7 +261,7 @@ Gets a user id based on a provided LinkedIn authenticatiopn ID
 
 #### Return
 
-```JSON
+```
 { 'user_id' : int }
 ```
 
@@ -289,7 +289,7 @@ Get all courses that match a given criteria
 
 #### Return
 
-```JSON
+```
 {
     "courses": [
         {
@@ -323,7 +323,7 @@ Gets all classes that match a given criteria
 
 #### Return
 
-```JSON
+```
 {
     "classs": [
         {
@@ -410,7 +410,7 @@ Gets all classes for a student.
 
 #### Return
 
-```JSON
+```
 { students_classes : [
     class1,
     class2,
@@ -488,7 +488,7 @@ Gets all favorited classes for a student
 
 #### Return
 
-```JSON
+```
 { favorited_classes : [
     class1
     class2
@@ -563,7 +563,7 @@ None at the moment
 
 #### Return
 
-```JSON
+```
 { 'grade' : 'A' }
 ```
 
@@ -586,7 +586,7 @@ Gets a waitlist for a given class
 
 #### Return
 
-```JSON
+```
 { waitlist : [
     student_id1,
     student_id2,
@@ -617,7 +617,7 @@ None
 
 #### Return
 
-```JSON
+```
 {current_semester : string }
 ```
 
