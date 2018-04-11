@@ -87,32 +87,66 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <div class="grid-x grid-padding-x" style="padding-top:2%;">
   
       <div class="large-1 medium-2 small-3 cell">
-        <img class="profile-picture" src="
-        <?php
-            $profile_picture = $student_info["student_info"][0]["profile_pic"];
-            if ( $profile_picture != null ) {
-                echo $profile_picture;
-            } else {
-                echo "images/user_profile_placeholder.png";
-            }
-        ?>
-        " alt="my_profile_image">
+        <div class="profile-picture-wrapper">
+            <img class="profile-picture"
+                 src="<?php
+                function showProfilePicIf200($profile_picture) {
+                    error_reporting(0);
+                    $placeholder = "images/user_profile_placeholder.png";
+                    if ( $profile_picture == null ) { // If not set
+                        echo $placeholder;
+                        $shown = 0;
+                    } else if ( get_headers($profile_picture)) { // if loads from URL
+                        echo $profile_picture;
+                        $shown = 1;
+                    } else { // set but didn't load
+                        echo $placeholder;
+                        $shown = -1;
+                    }
+                    error_reporting(E_STRICT);
+                    return $shown;
+                }
+
+                $profile_picture = $student_info["student_info"][0]["profile_pic"];
+
+                $shown = showProfilePicIf200($profile_picture);
+                echo '" alt="Profile Picture">';
+                if ($shown == -1) {
+                    echo "<div class='descriptor' id='load-fail-descriptor'>Image could not be loaded.</div>";
+                    echo "<i class='fi-page load-fail' onmouseover='showLoadFail()' onmouseout='hideLoadFail()'></i>";
+                }
+                ?>
+        </div>
       </div>
       <div class="large-6 medium-6 small-8 cell">
         <ul class="profile-list">
 		  <li><?php echo "<h4>".($student_info["student_info"][0]["student_name"])."</h4>"?></li>
-		  <li><?php
-                $date = strtotime($student_info["student_info"][0]["date_of_birth"]);
-                $date = date("d-m-Y", $date);
-                echo "DoB: ".($date);
-              ?>
+		  <li>
+              <table>
+                  <tr>
+                      <td>DoB:</td>
+                      <td><?php
+                          $date = strtotime($student_info["student_info"][0]["date_of_birth"]);
+                          $date = date("M d, Y", $date);
+                          echo ($date);
+                          ?></td>
+                      <td>Expected Grad Year:</td>
+                      <td><?php
+                          echo ($student_info["student_info"][0]["graduation_year"]);
+                          ?></td>
+                  </tr>
+                  <tr>
+                      <td>Major:</td>
+                      <td> <?php
+                          echo $student_info["student_info"][0]["major"];
+                          ?></td>
+                      <td>GPA:</td>
+                      <td><?php
+                          echo $student_info["student_info"][0]["GPA"];
+                          ?></td>
+                  </tr>
+              </table>
           </li>
-          <li>
-              <?php echo "Major: " . $student_info["student_info"][0]["major"]?>
-          </li>
-
-		  <li><?php echo "Expected Grad. Year: ".($student_info["student_info"][0]["graduation_year"])?></li>
-          <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
         </ul>
       </div>
       <div class="large-2 medium-2 small-3 cell">
@@ -141,21 +175,18 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
               <div class="tabs-panel is-active" id="panel1v">
                   <table class="hover">
                     <tr>
-                        <th>Course</th>
-                        <th>Section</th>
+                        <th align="left">Course</th>
+                        <th align="right">Section</th>
                         <th>Time</th>
                         <th>Instructor</th>
-                        <th>Room</th>
+                        <th align="right">Room</th>
                     </tr>
-                  </table>
-                  <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
-
-                  <table class="hover">
                       <tbody id="classes">
                       <!--                              Javascript builds table here-->
 
                       </tbody>
                 </table>
+                  <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
               </div>
             </div>
           </div>
@@ -185,10 +216,10 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                           var item = val[i];
                           buffer+="<tr>\
                                     <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
-                                    <td>" + item.section + "</td> \
-                                    <td>" + item.time + "</td> \
-                                    <td>" + item.professor_name + "</td> \
-                                    <td>" + item.room_number + "</td> \
+                                    <td align='right'>" + item.section + "</td> \
+                                    <td align='center'>" + item.time + "</td> \
+                                    <td align='center'>" + item.professor_name + "</td> \
+                                    <td align='right'>" + item.room_number + "</td> \
                                  </tr>";
                       }
                       $("#classes").empty();
