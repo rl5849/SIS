@@ -277,6 +277,11 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     makeNav();
     makeCallouts();
   </script>
+        <?php
+        if(isset($_GET["fromregister"]) && $_GET["fromregister"] == "true") {
+            echo "<script>window.onload = function() {showMessage('success', 'Account successfully created!');};</script>";
+        }
+        ?>
 
   </body>
 </html>

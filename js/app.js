@@ -71,7 +71,7 @@ function instantiateFilter() {
     // Filters the list if the page was generated with a search_parameter in the filter box
     window.onload = function() {filter_list();};
 }
-
+/*
 // Transitions the registration pages from the Account creation to the Account information pages
 function transitionRegisterPages() {
     var register = document.getElementById("register");
@@ -81,7 +81,7 @@ function transitionRegisterPages() {
         MotionUI.animateIn(accountInfo, "slide-in-right")
     })
 }
-
+*/
 // Display profile pic load failure
 function showLoadFail() {
     $("#load-fail-descriptor").show();
