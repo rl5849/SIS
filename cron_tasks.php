@@ -20,7 +20,7 @@ $entry = date("Y-m-d H:i:s") . " -- " . $result . "\n";
 
 
 //Open the log file and write the execution result
-$log = fopen("cron.log", "a") or die("Unable to open file!");
+$log = fopen("./API/cron.log", "a") or die("Unable to open file!");
 fwrite($log, $entry);
 fclose($log);
 
