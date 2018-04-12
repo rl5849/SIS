@@ -6,6 +6,7 @@ function showMessage(messageType, message) {
   callout.style.display = ""; 
 }
 
+/* Replaced with PHP Includes
 function makeNav(){
   $("#nav-placeholder").load("nav.php");
 }
@@ -13,7 +14,7 @@ function makeNav(){
 function makeCallouts() {
   $("#callouts-placeholder").load("callouts.html");
 }
-
+*/
 function emptyCallout(messageType) {
     var callout = document.getElementById(messageType + "-message");
     var noChildren = callout.childNodes.length;

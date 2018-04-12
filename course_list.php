@@ -19,10 +19,12 @@ else{
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
   <body>
-    <!-- Load Nav Bar and Callouts -->
-    <div id="nav-placeholder"></div>
-    <div id="callouts-placeholder"></div>
-    <!-- End load Nave Bar and Callouts -->
+
+      <?php
+          // Load Nav bar and callouts
+          include 'nav.php';
+          include 'callouts.html';
+      ?>
     
     
     <div class="grid-container">
@@ -98,8 +100,6 @@ else{
     <script src="js/app.js"></script>
     
     <script>
-      makeNav();
-      makeCallouts();
       instantiateFilter();
      </script>
   </body>

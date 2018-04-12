@@ -52,9 +52,10 @@
 
                     <hr/>
 
-                    <!-- Load Callouts -->
-                    <div id="callouts-placeholder"></div>
-                    <!-- End Callouts -->
+                    <?php
+                        // Load and callouts
+                        include 'callouts.html';
+                    ?>
 
                     <!-- Load the images of hover and active so that they aren't loaded first when the user interacts with the button -->
                     <img style="display:none;" src="images/Sign-In-Large---Hover.png">
@@ -85,7 +86,6 @@
 <script src="js/app.js"></script>
 
 <script>
-    makeCallouts();
 
     $("#login").on("submit", function (e) {
         e.preventDefault();

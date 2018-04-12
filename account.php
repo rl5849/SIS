@@ -57,13 +57,12 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
   </head>
   <body>
 
-    <!-- Load Nav Bar and Callouts -->
-    <div id="nav-placeholder"></div>
-    <div id="callouts-placeholder"></div>
-    <!-- End load Nave Bar and Callouts -->
+    <?php
+        // Load Nav bar and callouts
+        include 'nav.php';
+        include 'callouts.html';
+    ?>
 
-
-    
     <?php
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
     $current_semester = json_decode($current_semester, true)["current_semester"];
@@ -273,10 +272,6 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
   <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
   <script src="bower_components/motion-ui/dist/motion-ui.js"></script>
   <script src="js/app.js"></script>
-  <script>
-    makeNav();
-    makeCallouts();
-  </script>
         <?php
         if(isset($_GET["fromregister"]) && $_GET["fromregister"] == "true") {
             echo "<script>window.onload = function() {showMessage('success', 'Account successfully created!');};</script>";
