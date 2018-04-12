@@ -27,7 +27,6 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $gender = $_POST["gender"];
     $dob = $_POST["dob"];
     $gradYear = $_POST["grad-year"];
-    $userType = $_POST["user-type"];
 
     $profile_data = array (
             'user_id' => $_SESSION["user_id"],
@@ -35,17 +34,14 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
             'date_of_birth' => $dob,
             'gender' => $gender,
             'grad_year' => $gradYear,
-            'user_type' => $userType,
     );
-
-
 
     $results = file_get_contents("http://127.0.0.1:5002/ModProfile?".http_build_query($profile_data));
     $results = json_decode($results);
 
     // TODO if results are positive, report
 
-
+    $userType = $_POST["user-type"];
 
     if ($userType == "professor") {
         $results = file_get_contents("http://127.0.0.1:5002/RequestProfessorApproval?user_id=".$_SESSION["user_id"]);
@@ -63,7 +59,6 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIS - My Account</title>
     <link rel="stylesheet" href="css/app.css">
-    <link rel="stylesheet" href="css/foundation-icons.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
   <body>
@@ -80,25 +75,17 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $current_semester = json_decode($current_semester, true)["current_semester"];
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
     $student_info = json_decode($student_info, true);
+
     ?>
 
 	<div class="grid-container">
   
     <div class="grid-x grid-padding-x" style="padding-top:2%;">
   
-      <div class="large-1 medium-2 small-3 cell">
-        <img class="profile-picture" src="
-        <?php
-            $profile_picture = $student_info["student_info"][0]["profile_pic"];
-            if ( $profile_picture != null ) {
-                echo $profile_picture;
-            } else {
-                echo "images/user_profile_placeholder.png";
-            }
-        ?>
-        " alt="my_profile_image">
+      <div class="large-4 medium-4 small-4 cell">
+        <img src="<?php echo $student_info["student_info"][0]["profile_pic"]; ?>" alt="my_profile_image">
       </div>
-      <div class="large-6 medium-6 small-8 cell">
+      <div class="large-4 medium-4 small-4 cell">
         <ul class="profile-list">
 		  <li><?php echo "<h4>".($student_info["student_info"][0]["student_name"])."</h4>"?></li>
 		  <li><?php
@@ -112,11 +99,13 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
           </li>
 
 		  <li><?php echo "Expected Grad. Year: ".($student_info["student_info"][0]["graduation_year"])?></li>
-          <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
         </ul>
       </div>
       <div class="large-2 medium-2 small-3 cell">
-        <input type="button" href="https://www.linkedin.com" class="button expanded rit-orange" value="LinkedIn">
+        <ul class="profile-list">
+          <p><input type="button" href="https://www.linkedin.com" class="button expanded rit-orange" value="LinkedIn"></input></p>
+          <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
+        </ul>
       </div>
         <?php
         $semesters = file_get_contents("http://127.0.0.1:5002/GetSemesters");
@@ -124,40 +113,98 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         //var_dump($semesters[0][0])
         ?>
     </div>
-        <div class="grid-x grid-padding-x" style="padding-top: 2%;">
-          <div class="large-12 medium-12 small-12 columns">
-              <ul class="horizontal tabs" data-tabs id="course-tabs">
-                <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
-                <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
-                <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></a></li>
-                <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[2][0]?>);"><?php echo $semesters[2][1]?></a></li>
-                <li class="tabs-title"><a href="#panel1v">Earlier</a></li>
-              </ul>
+  
+    <div class="grid-x grid-padding-x" style="padding-top: 2%;">
+      <div class="large-12 medium-12 small-12 columns">
+      <ul class="horizontal tabs" data-tabs id="course-tabs">
+        <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
+        <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true">Current Semester</a></li>
+        <li class="tabs-title"><a href="#panel2v">Fall 2017</a></li>
+        <li class="tabs-title"><a href="#panel3v">Summer 2017</a></li>
+        <li class="tabs-title"><a href="#panel4v">Earlier</a></li>
+      </ul>
+      </div>
+      <div class="large-12 medium-12 small-12 cell">
+        <div class="tabs-content" data-tabs-content="course-tabs">
+          <div class="tabs-panel" id="panel0v">
+            <table class="hover">
+              <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+              </tr>
+            </table>
           </div>
+          <div class="tabs-panel is-active" id="panel1v">
+            <table class="hover">
+              <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+              </tr>
+                <!--For loop for query here, delete everything else-->
+                  <?php
+                  $classes = file_get_contents("http://127.0.0.1:5002/GetStudentsClasses?student_id=" . $student_id); //getclasses
+                  $classes = json_decode($classes, true);
+                  $classes = $classes["students_classes"];
 
 
-          <div class="large-12 medium-12 small-12 cell">
-            <div class="tabs-content" data-tabs-content="course-tabs">
-              <div class="tabs-panel is-active" id="panel1v">
-                  <table class="hover">
-                    <tr>
-                        <th>Course</th>
-                        <th>Section</th>
-                        <th>Time</th>
-                        <th>Instructor</th>
-                        <th>Room</th>
-                    </tr>
-                  </table>
-                  <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
 
-                  <table class="hover">
-                      <tbody id="classes">
-                      <!--                              Javascript builds table here-->
+                  foreach ($classes as $class){
+                      $professor = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" . $class["professor_id"]); //get professor
+                      $professor = json_decode($professor, true);
+                      $professor = $professor["professor_name"];
+                  ?>
+                <tr>
+                    <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $class["name"];?></a></td>
+                    <td><?php echo $class["section"];?></td>
+                    <td><?php echo $class["time"];?></td>
+                    <td><?php echo $professor;?></td>
+                    <td><?php echo $class["room_number"];?></td>
+                </tr>
 
-                      </tbody>
-                </table>
-              </div>
-            </div>
+                <?php } ?>
+            </table>
+          </div>
+          <div class="tabs-panel" id="panel2v">
+            <table class="hover">
+              <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+                  <th>Grade</th>
+              </tr>
+            </table>
+          </div>
+          <div class="tabs-panel" id="panel3v">
+            <table class="hover">
+              <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+                  <th>Grade</th>
+              </tr>
+            </table>
+          </div>
+          <div class="tabs-panel" id="panel4v">
+            <table class="hover">
+              <tr>
+                  <th>Course</th>
+                  <th>Section</th>
+                  <th>Time</th>
+                  <th>Instructor</th>
+                  <th>Room</th>
+                  <th>Grade</th>
+              </tr>
+            </table>
           </div>
         </div>
   </div>
