@@ -776,7 +776,7 @@ class RequestSpecialAccess(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('class_id', type=int)
         parser.add_argument('user_id', type=int)
-        parser.add_argument('requests', type=int)
+        parser.add_argument('requests', type=str)
 
         class_id = parser.parse_args().get("class_id")
         user_id = parser.parse_args().get("user_id")
@@ -789,11 +789,20 @@ class RequestSpecialAccess(Resource):
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
-        for request in requests:
-            cur.execute("INSERT INTO access_reqeusts "
-                    "user_id, class_id, request_type "
-                    "VALUES (%s, %s, %s)",
-                    [user_id, class_id, request])
+
+        if requests == "none":
+            cur.execute("DELETE FROM access_requests "
+                        "WHERE user_id = %s "
+                        "AND class_id = %s",
+                        [user_id, class_id])
+        else:
+            for req in set(requests.split(",")):
+                if req == '':
+                    continue
+                cur.execute("INSERT IGNORE INTO access_requests "
+                        "(user_id, class_id, request_type) "
+                        "VALUES (%s, %s, %s)",
+                        [user_id, class_id, req])
 
         try:
             db.commit()
