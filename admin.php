@@ -147,7 +147,7 @@ else{
                 </form>
                 <!-- End new form -->
             </div>
-            <div class="small-6 medium-6 large-6 columns">
+            <div class="small-4 medium-4 large-4 columns">
                 <div class="callout text-center" >
                     <h4>Delete Class</h4>
                     <div class="floated-label-wrapper">
@@ -160,6 +160,19 @@ else{
                         </table>
                     </div>
             </div>
+                <div class="small-4 medium-4 large-4 columns">
+                    <div class="callout text-center" >
+                        <h4>Delete Course</h4>
+                        <div class="floated-label-wrapper">
+                            <table class="hover">
+                                <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image-courses">
+                                <tbody id="courses">
+                                <!--                              Javascript builds table here-->
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
         </div>
     </div>
 
@@ -174,6 +187,7 @@ else{
         $(document).ready(function() {
             load_class_table();
             load_prof_requests();
+            load_course_table();
 
             $(".form-delete").on('submit', function (e){
                 e.preventDefault();
@@ -202,6 +216,32 @@ else{
             });
 
 
+            $(".form-delete-course").on('submit', function (e){
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    // dataType: 'json',
+                    // contentType: "application/x-www-form-urlencoded",
+                    url: 'admin_ajax_funcs.php',
+                    success: function (data) {
+                        if (data.includes("Success")) {
+                            showMessage("success", data);
+                            //this.parent.remove();
+                            $(load_course_table())
+                        }
+                        else {
+                            showMessage("failure", data);
+                        }
+
+                    },
+                    error: function (msg) {
+                        console.log(msg.responseText);
+                    }
+                });
+                return false;
+            });
+
             $(".text-center").on('submit', function (e) {
                 e.preventDefault();
                 $.ajax({
@@ -214,6 +254,7 @@ else{
                         if (data.includes("Success")) {
                             showMessage("success", data);
                             $(load_class_table());
+                            $(load_course_table());
                         }
                         else {
                             showMessage("failure", data);
@@ -296,6 +337,50 @@ else{
                 }
             });
         }
+
+        function load_course_table(){
+            $('#loading-image-delete').show();
+            $.ajax({
+                type : 'POST',
+                url : 'admin_ajax_funcs.php',
+                dataType : 'json',
+                data: {'action':'get_courses'},
+                contentType: "application/x-www-form-urlencoded",
+                async : false,
+                //beforeSend : function(){/*loading*/},
+
+                success : function(result){
+                    var buffer="";
+                    $.each(result, function(index, val){
+                        for(var i=0; i < val.length; i++){
+                            var item = val[i];
+                            buffer+="<tr>\
+                                            <td>" + item.course_name + "</a></td>\
+                                            <td>" + item.course_code + "</td> \
+                                            <td>" + item.course_id + "</td> \
+                                            <td> \
+                                                 <form class='form-delete-course' method='post'>\
+                                                     <input type='hidden' name='action' value='delete_course'> \
+                                                     <input type='hidden' name='course_id' value='" + item.course_id + "'> \
+                                                     <input class='button expanded rit-orange' type='submit' value='Delete'>\
+                                                 </form>\
+                                             </td>\
+                                         </tr>";
+
+                        }
+                        $("#courses").empty();
+                        $("#courses").append(buffer);
+                    });
+                },
+                error: function (msg) {
+                    console.log(msg.responseText);
+                },
+                complete: function(){
+                    $('#loading-image-courses').hide();
+                }
+            });
+        }
+
 
         function load_prof_requests(){
             $.ajax({

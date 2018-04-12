@@ -15,6 +15,9 @@ if (isset($_POST["action"])){
         case "add_course":
             add_course();
             break;
+        case "delete_course":
+            delete_course();
+            break;
         case "add_semester":
             add_semester();
             break;
@@ -29,6 +32,9 @@ if (isset($_POST["action"])){
             break;
         case "prof_approval":
             prof_approval();
+            break;
+        case "get_courses":
+            get_courses();
             break;
         case "get_student_classes_by_semester":
             get_student_classes_by_semester();
@@ -80,6 +86,18 @@ function add_course() {
         echo "Failed to add Course";
     }
 }
+function delete_course() {
+
+    $url_params = $_POST['course_id'];
+    $result = file_get_contents("http://127.0.0.1:5002/DeleteCourse?course_id=" . $url_params);
+    $result = json_decode($result, true);
+    if ($result == "SUCCESS"){
+        echo "Successfully deleted class";
+    }
+    else{
+        echo "Could not delete class: " . $_POST['course_id'];
+    }
+}
 
 function delete_class() {
 
@@ -96,6 +114,11 @@ function delete_class() {
 
 function get_classes() {
     $course_list = file_get_contents("http://127.0.0.1:5002/GetClasses");
+    echo $course_list;
+}
+
+function get_courses() {
+    $course_list = file_get_contents("http://127.0.0.1:5002/GetCourses");
     echo $course_list;
 }
 
