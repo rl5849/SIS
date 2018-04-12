@@ -287,7 +287,7 @@ class GetStudentInfo(Resource):
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
-                             host='129.21.208.224',
+                             host=self.config.get('database', 'host'),
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
@@ -776,8 +776,12 @@ class RequestSpecialAccess(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('class_id', type=int)
         parser.add_argument('user_id', type=int)
+        parser.add_argument('requests', type=int)
+
         class_id = parser.parse_args().get("class_id")
         user_id = parser.parse_args().get("user_id")
+        requests = parser.parse_args().get("requests")
+
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
@@ -785,13 +789,12 @@ class RequestSpecialAccess(Resource):
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
+        for request in requests:
+            cur.execute("INSERT INTO access_reqeusts "
+                    "user_id, class_id, request_type "
+                    "VALUES (%s, %s, %s)",
+                    [user_id, class_id, request])
 
-        # Select data from table using SQL query.
-        cur.execute("UPDATE student_to_class "
-                    "SET special_access = 1 "
-                    "WHERE class_id=%s "
-                    "AND student_id=%s",
-                    [class_id, user_id])
         try:
             db.commit()
         except MySQLdb.IntegrityError:
@@ -1830,6 +1833,42 @@ class EnrollFromWaitlist(Resource):
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(EnrollFromWaitlist, '/EnrollFromWaitlist')
+
+
+"""
+Get a students requested access for a class
+"""
+class GetStudentAccess(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get student id
+        parser = reqparse.RequestParser()
+        parser.add_argument('class_id', type=int)
+        parser.add_argument('user_id', type=int)
+        class_id = parser.parse_args().get("class_id")
+        user_id = parser.parse_args().get("user_id")
+
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT request_type FROM access_requests "
+                    "WHERE user_id = %s "
+                    "AND class_id = %s",
+                    [user_id, class_id])
+
+        query = cur.fetchall()
+        result = {"requests" : [i[0] for i in query]}
+        return jsonify(result)
+
+api.add_resource(GetStudentAccess, '/GetStudentAccess')
 
 if __name__ == '__main__':
      app.run(port=5002)

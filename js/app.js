@@ -81,3 +81,12 @@ function transitionRegisterPages() {
         MotionUI.animateIn(accountInfo, "slide-in-right")
     })
 }
+
+// Display profile pic load failure
+function showLoadFail() {
+    $("#load-fail-descriptor").show();
+}
+
+function hideLoadFail() {
+    $("#load-fail-descriptor").hide();
+}

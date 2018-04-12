@@ -248,8 +248,29 @@ html,body {
 
 }
 
-.profile-picture {
-  max-width: 100px;
-  max-height: 100px;
-}
+.profile-picture-wrapper {
+  position: relative;
 
+  .profile-picture {
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+  .load-fail {
+    color: red;
+    top: 0;
+    left: 5px;
+    position: absolute;
+  }
+
+  .descriptor {
+    position: absolute;
+    top: 0;
+    left: 15px;
+    background: lightgray;
+    color: black;
+    display: none;
+    border: 1px solid red;
+    padding: 5px;
+  }
+}

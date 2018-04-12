@@ -40,8 +40,9 @@
 		<li>
 			<a href="#"><i class="fi-list"></i></a>
 			<ul class="menu vertical">
-			  <li><a href="account.php">Profile</a></li>
-			  <li><a href="account.php">Classes</a></li>
+			  <li><a href="account.php">My Profile</a></li>
+              <li><a href="account.php?editprofile=true">Edit Profile</a></li>
+			  <li><a href="account.php">My Classes</a></li>
 			  <li><a href="https://www.linkedin.com/">LinkedIn</a></li>
 			  <li><a href="logout.php">Logout</a></li>
 			</ul>

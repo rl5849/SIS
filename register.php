@@ -62,6 +62,7 @@
                 <div>
                     <form class="callout translucent-background" method="post" action="account.php">
                         <h4>Account Information</h4>
+                        Please enter some information about yourself :^)
                         <!-- Load Callouts -->
                         <div id="callouts-placeholder"></div>
                         <!-- End Callouts -->
@@ -83,9 +84,18 @@
                         <div class="floated-label-wrapper">
                             <label class="show" for="gender">Gender</label>
                             <select name="gender" id="gender">
-                                <option value="m">Male</option>
-                                <option value="f">Female</option>
-                                <option value="o">Self-Identify</option>
+                                <?php
+                                // This is true equality
+                                $genders = array (
+                                    "<option value='o'>Self-Identify</option>",
+                                    "<option value='m'>Male</option>",
+                                    "<option value='f'>Female</option>"
+                                );
+                                shuffle($genders);
+                                foreach ($genders as $gender) {
+                                    echo $gender;
+                                }
+                                ?>
                             </select>
                         </div>
                         <div class="floated-label-wrapper">
