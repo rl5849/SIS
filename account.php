@@ -113,10 +113,16 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         <form action="account.php" method="post">
             <ul class="profile-list">
               <li><?php
+                  $name = $student_info["student_info"][0]["student_name"];
                   if ($is_editing) {
-                      echo "Name: <input name='name' value='".($student_info["student_info"][0]["student_name"])."'>";
+                      echo "Name: <input required name='name' value='".$name."'>";
                   } else {
-                      echo "<h4>".($student_info["student_info"][0]["student_name"])."</h4>";
+                      if ($name == "") {
+                          echo "<h4>Unknown User</h4>";
+                      } else {
+                          echo "<h4>".$name."</h4>";
+                      }
+
                   }
                   ?>
               </li>
@@ -130,33 +136,55 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               if ($is_editing) {
                                   echo "<input name='dob' placeholder='ex. 5-15-1980' value='".$date."'>";
                               } else {
-                                  echo $date;
+                                  if ($date == "") {
+                                      echo "N/A";
+                                  } else {
+                                      echo $date;
+                                  }
                               }
                               ?></td>
                           <td>Expected Grad Year</td>
                           <td><?php
+                              $grad_year = $student_info["student_info"][0]["graduation_year"];
                               if ($is_editing) {
-                                  echo "<input name='grad-year' placeholder='ex. 2020' value='".$student_info["student_info"][0]["graduation_year"]."'>";
+                                  echo "<input name='grad-year' placeholder='ex. 2020' value='".$grad_year."'>";
                               } else {
-                                  echo $student_info["student_info"][0]["graduation_year"];
+                                  if ($grad_year == "") {
+                                      echo "N/A";
+                                  } else {
+                                      echo $grad_year;
+                                  }
                               }
                               ?></td>
                       </tr>
                       <tr>
                           <td>Major</td>
                           <td> <?php
+                              $major = $student_info["student_info"][0]["major"];
                               if ($is_editing) {
-                                  echo "<input name='major' placeholder='ex. Software Engineering' value='".$student_info["student_info"][0]["major"]."'>";
+                                  echo "<input name='major' placeholder='ex. Software Engineering' value='".$major."'>";
                               } else {
-                                  echo $student_info["student_info"][0]["major"];
+
+                                  if ($major == "") {
+                                      echo "N/A";
+                                  } else {
+                                      echo $major;
+                                  }
+
                               }
                               ?></td>
                           <td>GPA</td>
                           <td><?php
+                              $gpa = $student_info["student_info"][0]["GPA"];
                               if ($is_editing) {
-                                  echo "<input name='gpa' placeholder='ex. 3.2' value='".$student_info["student_info"][0]["GPA"]."'>";
+                                  echo "<input name='gpa' placeholder='ex. 3.2' value='".$gpa."'>";
                               } else {
-                                  echo $student_info["student_info"][0]["GPA"];
+
+                                  if ($gpa == "") {
+                                      echo "N/A";
+                                  } else {
+                                      echo $gpa;
+                                  }
                               }
                               ?></td>
                       </tr>
@@ -184,8 +212,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
           <?php if(!$is_editing) {?>
       <div class="large-2 medium-2 small-3 cell">
         <ul class="profile-list">
-          <p><input type="button" href="https://www.linkedin.com" class="button expanded rit-orange" value="LinkedIn"></input></p>
-          <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
+            <p><a href="https://www.linkedin.com" class="button expanded rit-orange">LinkedIn</a></p>
         </ul>
       </div>
         <?php
