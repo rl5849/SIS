@@ -7,12 +7,15 @@
  */
 date_default_timezone_set('America/New_York');
 
+try {
+    //Call the API
+    $result = @file_get_contents("http://127.0.0.1:5002/EnrollFromWaitlist");
+    $result = json_decode($result, true);
+} catch (Exception $e) {
+    $result = $e->getMessage();
+}
 
-//Call the API
-$result = file_get_contents("http://127.0.0.1:5002/EnrollFromWaitlist");
-$result = json_decode($result, true);
-
-//Get the execution date
+//Get the execution date attach to log entry
 $entry = date("Y-m-d H:i:s") . " -- " . $result . "\n";
 
 
