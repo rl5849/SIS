@@ -58,9 +58,7 @@ else {
             if ($results->message == "SUCCESS") {
                 session_start();
                 $_SESSION["user_id"] = $results->user_id;
-                //echo "<script>window.onload = function() {showMessage('success', '".var_dump($results)."123".$results->message."');};</script>";
                 header("Location: http://localhost:63342/344Project/account.php?editprofile=true&fromregister=true");
-                //echo "<script>window.onload = function() {showMessage('success', 'Your account has been created.');};</script>";
             }
         }
     }
@@ -92,9 +90,10 @@ else {
                 <div>
                     <form class="callout translucent-background" method="post">
                         <h4>Register</h4>
-                        <!-- Load Callouts -->
-                        <div id="callouts-placeholder"></div>
-                        <!-- End Callouts -->
+                        <?php
+                            // Load callouts
+                            include 'callouts.html';
+                        ?>
                         <div class="floated-label-wrapper">
                             <label for="username">Username</label>
                             <input type="text" name="username" id="username" placeholder="Username" required value="<?php echo $username;?>">
@@ -182,10 +181,6 @@ else {
 <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
 <script src="bower_components/motion-ui/dist/motion-ui.js"></script>
 <script src="js/app.js"></script>
-
-<script>
-    makeCallouts();
-</script>
 
 </body>
 </html>
