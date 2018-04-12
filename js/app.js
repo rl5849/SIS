@@ -6,6 +6,7 @@ function showMessage(messageType, message) {
   callout.style.display = ""; 
 }
 
+/* Replaced with PHP Includes
 function makeNav(){
   $("#nav-placeholder").load("nav.php");
 }
@@ -13,7 +14,7 @@ function makeNav(){
 function makeCallouts() {
   $("#callouts-placeholder").load("callouts.html");
 }
-
+*/
 function emptyCallout(messageType) {
     var callout = document.getElementById(messageType + "-message");
     var noChildren = callout.childNodes.length;
@@ -71,7 +72,7 @@ function instantiateFilter() {
     // Filters the list if the page was generated with a search_parameter in the filter box
     window.onload = function() {filter_list();};
 }
-
+/*
 // Transitions the registration pages from the Account creation to the Account information pages
 function transitionRegisterPages() {
     var register = document.getElementById("register");
@@ -81,7 +82,7 @@ function transitionRegisterPages() {
         MotionUI.animateIn(accountInfo, "slide-in-right")
     })
 }
-
+*/
 // Display profile pic load failure
 function showLoadFail() {
     $("#load-fail-descriptor").show();

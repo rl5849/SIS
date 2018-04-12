@@ -9,9 +9,10 @@
 </head>
 <body>
 
-<!-- Load Callouts -->
-<div id="callouts-placeholder"></div>
-<!-- End Callouts -->
+<?php
+    // Load callouts
+    include 'callouts.html';
+?>
 
 
 <div class="grid-container">
@@ -45,9 +46,5 @@
 <script src="bower_components/what-input/dist/what-input.js"></script>
 <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
 <script src="js/app.js"></script>
-
-<script>
-    makeCallouts();
-</script>
 </body>
 </html>

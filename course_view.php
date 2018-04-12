@@ -7,6 +7,9 @@ else{
     $user_id = NIL;
 }
 
+// Load Nav bar and callouts
+include 'nav.php';
+include 'callouts.html';
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -68,7 +71,7 @@ else{
         }
 
 
-        $class_info = file_get_contents("http://127.0.0.1:5002/GetClassInfo?class_id=" .$class_id);
+        $class_info = file_get_contents("http://127.0.0.1:5002/GetClassInfo?class_id=" . $class_id);
         $class_info = json_decode($class_info, true);
 
         $course_id = $class_info["class_info"][0]["course_id"];
@@ -82,6 +85,10 @@ else{
 
         $wait_list = file_get_contents("http://127.0.0.1:5002/WaitlistByClass?class_id=" . $class_info["class_info"][0]["class_id"]);
         $wait_list = json_decode($wait_list, true);
+
+        $user_requested_access = file_get_contents("http://127.0.0.1:5002/GetStudentAccess?class_id=" . $class_info["class_info"][0]["class_id"] . "&user_id=" . $user_id);
+        $user_requested_access = json_decode($user_requested_access, true);
+        $user_requested_access = $user_requested_access['requests'];
 
     ?>
 
@@ -119,7 +126,6 @@ else{
                                value="<?php echo $favorite_status_msg; ?>">
                     </form>
                     </p>
-
                     <p>
                     <form class="ajax" method="post">
                         <input type="hidden" name="enroll" value="<?php echo !($enrollment_status) ?>">
@@ -129,16 +135,6 @@ else{
                                value="<?php echo $enrollment_status_msg; ?>">
                     </form>
                     </p>
-
-                    <p>
-                    <form class="ajax" method="post">
-                        <input type="hidden" name="action" value="RequestSpecialAccess">
-                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
-                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                        <input type="submit" class="button expanded rit-orange" value="Request Special Access">
-                    </form>
-                    </p>
-
                     <?php
                 }
               ?>
@@ -151,22 +147,49 @@ else{
       <div class="grid-x grid-padding-x" style="padding-top:2%;">
         
         <div class="large-4 medium-4 small-4 cell">
-          <div class="card">
-            <div class="card-divider">
-              Info
-            </div>
-            <div class="card-section">
-              <ul class="profile-list">
+              <div class="card">
+                  <div class="card-divider">
+                      Info
+                  </div>
+                  <div class="card-section">
+                      <ul class="profile-list">
 
 
-                <li>Credits: <?php echo ($class_info["class_info"][0]["credits"]) ?> </li>
-                <li>Enrolled: <?php echo ($class_info["class_info"][0]["num_enrolled"]) ?> / <?php echo ($class_info["class_info"][0]["capacity"]) ?>  </li> <!-- needs getPrereqs -->
-                <li>Wait List: <?php echo count($wait_list) ?> / 0 </li> <!-- needs waitlist capacity -->
-                <!-- <li>...</li> -->
-              </ul>
-            </div>
+                          <li>Credits: <?php echo ($class_info["class_info"][0]["credits"]) ?> </li>
+                          <li>Enrolled: <?php echo ($class_info["class_info"][0]["num_enrolled"]) ?> / <?php echo ($class_info["class_info"][0]["capacity"]) ?>  </li> <!-- needs getPrereqs -->
+                          <li>Wait List: <?php echo count($wait_list) ?> / 0 </li> <!-- needs waitlist capacity -->
+                          <!-- <li>...</li> -->
+                      </ul>
+                  </div>
+              </div>
           </div>
-        </div>
+
+          <div class="large-4 medium-4 small-4 cell">
+              <div class="card">
+                  <div class="card-divider">
+                      Special access required
+                  </div>
+                  <div class="card-section">
+                      <form class="ajax" method="post">
+                          <input type="hidden" name="action" value="RequestSpecialAccess">
+                          <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
+                          <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+
+                          <input class="access" onclick="unchecknone()" type="checkbox" name="hearing" <?php if(in_array('hearing', $user_requested_access)){echo "checked";} ?>>
+                          <label>Hearing</label><br>
+
+                          <input class="access" onclick="unchecknone()" type="checkbox" name="note_taking" <?php if(in_array('note_taking', $user_requested_access)){echo "checked";} ?>>
+                          <label>Note Taker</label><br>
+                          <input class="access" onclick="unchecknone()" type="checkbox" name="test_time" <?php if(in_array('test_time', $user_requested_access)){echo "checked";} ?>>
+                          <label>Test Time</label><br>
+                          <input id="none" onclick="uncheckaccess()" type="checkbox" name="none" <?php if([] == $user_requested_access){echo "checked";} ?>>
+                          <label>None</label><br>
+                          <input type="submit" class="button expanded rit-orange" value="Request Special Access">
+                      </form>
+                  </div>
+              </div>
+          </div>
+
         <div class="large-4 medium-4 small-4 cell">
           <div class="card">
             <div class="card-divider">
@@ -293,6 +316,26 @@ else{
             }
         });
     });
+
+
+    function uncheckaccess() {
+        // if (this.checked) {
+        $(document).ready(function () {
+            $('.access').each(function (i, item) {
+                $(item).attr('checked', false);
+                console.log("Unselecting" + $(item).id)
+                //$(item).checked = false;
+            });
+        });
+    }
+
+    function unchecknone() {
+        $(document).ready(function () {
+            document.getElementById('none').checked = false;
+        });
+
+    }
+
 </script>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -300,10 +343,5 @@ else{
     <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
     <script src="bower_components/motion-ui/dist/motion-ui.js"></script>
     <script src="js/app.js"></script>
-    
-    <script>
-      makeNav();
-      makeCallouts();
-     </script>
   </body>
 </html>

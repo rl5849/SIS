@@ -19,14 +19,18 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $name = $_POST["name"];
     $dob = $_POST["dob"];
     $gradYear = $_POST["grad-year"];
+
+
     $userType = $_POST["user-type"];
     $profilePic = $_POST["profile-pic"];
+
 
     $profile_data = array (
             'user_id' => $_SESSION["user_id"],
             'name' => $name,
             'date_of_birth' => $dob,
             'grad_year' => $gradYear,
+
             'user_type' => $userType,
             'profile_pic' => $profilePic,
     );
@@ -52,29 +56,27 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIS - My Account</title>
     <link rel="stylesheet" href="css/app.css">
-    <link rel="stylesheet" href="css/foundation-icons.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
   <body>
 
-    <!-- Load Nav Bar and Callouts -->
-    <div id="nav-placeholder"></div>
-    <div id="callouts-placeholder"></div>
-    <!-- End load Nave Bar and Callouts -->
+    <?php
+        // Load Nav bar and callouts
+        include 'nav.php';
+        include 'callouts.html';
+    ?>
 
-
-    
     <?php
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
     $current_semester = json_decode($current_semester, true)["current_semester"];
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
     $student_info = json_decode($student_info, true);
+
     ?>
 
 	<div class="grid-container">
   
     <div class="grid-x grid-padding-x" style="padding-top:2%;">
-  
       <div class="large-1 medium-2 small-3 cell">
         <div class="profile-picture-wrapper">
             <img class="profile-picture"
@@ -181,7 +183,10 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
       </div>
           <?php if(!$is_editing) {?>
       <div class="large-2 medium-2 small-3 cell">
-        <input type="button" href="https://www.linkedin.com" class="button expanded rit-orange" value="LinkedIn">
+        <ul class="profile-list">
+          <p><input type="button" href="https://www.linkedin.com" class="button expanded rit-orange" value="LinkedIn"></input></p>
+          <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
+        </ul>
       </div>
         <?php
         $semesters = file_get_contents("http://127.0.0.1:5002/GetSemesters");
@@ -206,20 +211,24 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
               <div class="tabs-panel is-active" id="panel1v">
                   <table class="hover">
                     <tr>
-                        <th align="left">Course</th>
-                        <th align="right">Section</th>
+                        <th>Course</th>
+                        <th>Section</th>
                         <th>Time</th>
                         <th>Instructor</th>
-                        <th align="right">Room</th>
+                        <th>Room</th>
                     </tr>
+                  </table>
+                  <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
+
+                  <table class="hover">
                       <tbody id="classes">
                       <!--                              Javascript builds table here-->
 
                       </tbody>
                 </table>
-                  <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
               </div>
             </div>
+
           </div>
         </div>
   </div>
@@ -248,10 +257,10 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                           var item = val[i];
                           buffer+="<tr>\
                                     <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
-                                    <td align='right'>" + item.section + "</td> \
-                                    <td align='center'>" + item.time + "</td> \
-                                    <td align='center'>" + item.professor_name + "</td> \
-                                    <td align='right'>" + item.room_number + "</td> \
+                                    <td>" + item.section + "</td> \
+                                    <td>" + item.time + "</td> \
+                                    <td>" + item.professor_name + "</td> \
+                                    <td>" + item.room_number + "</td> \
                                  </tr>";
                       }
                       $("#classes").empty();
@@ -273,10 +282,11 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
   <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
   <script src="bower_components/motion-ui/dist/motion-ui.js"></script>
   <script src="js/app.js"></script>
-  <script>
-    makeNav();
-    makeCallouts();
-  </script>
+        <?php
+        if(isset($_GET["fromregister"]) && $_GET["fromregister"] == "true") {
+            echo "<script>window.onload = function() {showMessage('success', 'Account successfully created!');};</script>";
+        }
+        ?>
 
   </body>
 </html>

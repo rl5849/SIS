@@ -84,7 +84,26 @@ function unfavorite() {
     }
 }
 function RequestSpecialAccess() {
-    $result = file_get_contents("http://127.0.0.1:5002/RequestSpecialAccess?class_id=" . $_POST['class_id'] . "&user_id=" .  $_POST['user_id']);
+    //url encode post data and attach
+    $requests = "";
+    if(isset($_POST['hearing'])){
+        unset($_POST['hearing']);
+        $requests .= "hearing,";
+    }
+    if(isset($_POST['test_time'])){
+        unset($_POST['test_time']);
+        $requests .= "test_time,";
+    }
+    if(isset($_POST['note_taking'])){
+        unset($_POST['note_taking']);
+        $requests .= "note_taking,";
+    }
+    if(isset($_POST['none'])){
+        unset($_POST['none']);
+        $requests .= "none";
+    }
+
+    $result = file_get_contents("http://127.0.0.1:5002/RequestSpecialAccess?class_id=" . $_POST['class_id'] . "&user_id=" .  $_POST['user_id'] . "&requests=" . $requests);
     $result = json_decode($result, true);
     if ($result == "SUCCESS"){
         echo "Successfully Requested Special Access";
