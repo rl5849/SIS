@@ -102,10 +102,6 @@ function RequestSpecialAccess() {
         unset($_POST['none']);
         $requests .= "none";
     }
-//
-//    if (substr($requests, -1) == '+') {
-//        $requests = $requests.substr($requests, 0, -1);
-//    }
 
     $result = file_get_contents("http://127.0.0.1:5002/RequestSpecialAccess?class_id=" . $_POST['class_id'] . "&user_id=" .  $_POST['user_id'] . "&requests=" . $requests);
     $result = json_decode($result, true);
