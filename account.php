@@ -218,7 +218,6 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         <?php
         $semesters = file_get_contents("http://127.0.0.1:5002/GetSemesters");
         $semesters = json_decode($semesters, true)["semesters"];
-        //var_dump($semesters[0][0])
         ?>
     </div>
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">

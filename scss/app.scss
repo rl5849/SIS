@@ -274,3 +274,18 @@ html,body {
     padding: 5px;
   }
 }
+
+.prereqs {
+  .prereq-fulfilled {
+    color: green;
+    padding-right: 5px;
+  }
+  .prereq-unfulfilled {
+    color: red;
+    padding-right: 5px;
+  }
+  .prereq-unknown {
+    color: GoldenRod;
+    padding-right: 4px;
+  }
+}
