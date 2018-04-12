@@ -3,17 +3,11 @@
 date_default_timezone_set("America/New_York");
 session_start();
 
-
-if (isset($_POST['login'])) {
-    if ($_POST['login'] == "Login as student"){
-        $student_id = 1;
-        $_SESSION['user_id'] = 1;
-    }else{
-        $student_id = 67;
-        $_SESSION['user_id'] = 67;
-    }
+if (isset($_GET["editprofile"]) && $_GET["editprofile"] == "true") {
+    $is_editing = true;
 }
-else if(isset($_SESSION['user_id'])){
+
+if(isset($_SESSION['user_id'])){
     $student_id = $_SESSION['user_id'];
 }else{
     echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
@@ -22,26 +16,29 @@ else if(isset($_SESSION['user_id'])){
 
 // If an update action was made and sent to this page, then process it.
 if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
-    $fName = $_POST["fName"];
-    $lName = $_POST["lName"];
-    $gender = $_POST["gender"];
+    $name = $_POST["name"];
     $dob = $_POST["dob"];
     $gradYear = $_POST["grad-year"];
 
+
+    $userType = $_POST["user-type"];
+    $profilePic = $_POST["profile-pic"];
+
+
     $profile_data = array (
             'user_id' => $_SESSION["user_id"],
-            'name' => $fName." ".$lName,
+            'name' => $name,
             'date_of_birth' => $dob,
-            'gender' => $gender,
             'grad_year' => $gradYear,
+
+            'user_type' => $userType,
+            'profile_pic' => $profilePic,
     );
 
     $results = file_get_contents("http://127.0.0.1:5002/ModProfile?".http_build_query($profile_data));
     $results = json_decode($results);
 
     // TODO if results are positive, report
-
-    $userType = $_POST["user-type"];
 
     if ($userType == "professor") {
         $results = file_get_contents("http://127.0.0.1:5002/RequestProfessorApproval?user_id=".$_SESSION["user_id"]);
@@ -63,13 +60,12 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
   </head>
   <body>
 
-    <!-- Load Nav Bar and Callouts -->
-    <div id="nav-placeholder"></div>
-    <div id="callouts-placeholder"></div>
-    <!-- End load Nave Bar and Callouts -->
+    <?php
+        // Load Nav bar and callouts
+        include 'nav.php';
+        include 'callouts.html';
+    ?>
 
-
-    
     <?php
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
     $current_semester = json_decode($current_semester, true)["current_semester"];
@@ -81,26 +77,111 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
 	<div class="grid-container">
   
     <div class="grid-x grid-padding-x" style="padding-top:2%;">
-  
-      <div class="large-4 medium-4 small-4 cell">
-        <img src="<?php echo $student_info["student_info"][0]["profile_pic"]; ?>" alt="my_profile_image">
-      </div>
-      <div class="large-4 medium-4 small-4 cell">
-        <ul class="profile-list">
-		  <li><?php echo "<h4>".($student_info["student_info"][0]["student_name"])."</h4>"?></li>
-		  <li><?php
-                $date = strtotime($student_info["student_info"][0]["date_of_birth"]);
-                $date = date("d-m-Y", $date);
-                echo "DoB: ".($date);
-              ?>
-          </li>
-          <li>
-              <?php echo "Major: " . $student_info["student_info"][0]["major"]?>
-          </li>
+      <div class="large-1 medium-2 small-3 cell">
+        <div class="profile-picture-wrapper">
+            <img class="profile-picture"
+                 src="<?php
+                function showProfilePicIf200($profile_picture) {
+                    error_reporting(0);
+                    $placeholder = "images/user_profile_placeholder.png";
+                    if ( $profile_picture == null ) { // If not set
+                        echo $placeholder;
+                        $shown = 0;
+                    } else if ( get_headers($profile_picture)) { // if loads from URL
+                        echo $profile_picture;
+                        $shown = 1;
+                    } else { // set but didn't load
+                        echo $placeholder;
+                        $shown = -1;
+                    }
+                    error_reporting(E_STRICT);
+                    return $shown;
+                }
 
-		  <li><?php echo "Expected Grad. Year: ".($student_info["student_info"][0]["graduation_year"])?></li>
-        </ul>
+                $profile_picture = $student_info["student_info"][0]["profile_pic"];
+
+                $shown = showProfilePicIf200($profile_picture);
+                echo '" alt="Profile Picture">';
+                if ($shown == -1) {
+                    echo "<div class='descriptor' id='load-fail-descriptor'>Image could not be loaded.</div>";
+                    echo "<i class='fi-page load-fail' onmouseover='showLoadFail()' onmouseout='hideLoadFail()'></i>";
+                }
+                ?>
+        </div>
       </div>
+      <div class="large-6 medium-6 small-8 cell">
+        <form action="account.php" method="post">
+            <ul class="profile-list">
+              <li><?php
+                  if ($is_editing) {
+                      echo "Name: <input name='name' value='".($student_info["student_info"][0]["student_name"])."'>";
+                  } else {
+                      echo "<h4>".($student_info["student_info"][0]["student_name"])."</h4>";
+                  }
+                  ?>
+              </li>
+              <li>
+                  <table>
+                      <tr>
+                          <td>DoB</td>
+                          <td><?php
+                              $date = strtotime($student_info["student_info"][0]["date_of_birth"]);
+                              $date = date("M d, Y", $date);
+                              if ($is_editing) {
+                                  echo "<input name='dob' placeholder='ex. 5-15-1980' value='".$date."'>";
+                              } else {
+                                  echo $date;
+                              }
+                              ?></td>
+                          <td>Expected Grad Year</td>
+                          <td><?php
+                              if ($is_editing) {
+                                  echo "<input name='grad-year' placeholder='ex. 2020' value='".$student_info["student_info"][0]["graduation_year"]."'>";
+                              } else {
+                                  echo $student_info["student_info"][0]["graduation_year"];
+                              }
+                              ?></td>
+                      </tr>
+                      <tr>
+                          <td>Major</td>
+                          <td> <?php
+                              if ($is_editing) {
+                                  echo "<input name='major' placeholder='ex. Software Engineering' value='".$student_info["student_info"][0]["major"]."'>";
+                              } else {
+                                  echo $student_info["student_info"][0]["major"];
+                              }
+                              ?></td>
+                          <td>GPA</td>
+                          <td><?php
+                              if ($is_editing) {
+                                  echo "<input name='gpa' placeholder='ex. 3.2' value='".$student_info["student_info"][0]["GPA"]."'>";
+                              } else {
+                                  echo $student_info["student_info"][0]["GPA"];
+                              }
+                              ?></td>
+                      </tr>
+                      <?php if ($is_editing) { ?>
+                      <tr>
+                          <td>Profile Picture</td>
+                          <td colspan="3">
+                              <input name='profile-pic' placeholder='Enter a URL' value='<?php echo $profile_picture; ?>'>
+                          </td>
+                      </tr>
+                      <?php } ?>
+                  </table>
+                  <?php
+                  if ($is_editing) {
+                      echo "<input type='hidden' name='user-type' value='student'>"; // TODO correct user type
+                      echo "<input type='hidden' name='action' value='update-profile'>";
+                      echo "<input class='button expanded rit-orange' type='submit' name='submit' value='Update Profile'>";
+                  }
+                  ?>
+
+              </li>
+            </ul>
+        </form>
+      </div>
+          <?php if(!$is_editing) {?>
       <div class="large-2 medium-2 small-3 cell">
         <ul class="profile-list">
           <p><input type="button" href="https://www.linkedin.com" class="button expanded rit-orange" value="LinkedIn"></input></p>
@@ -113,102 +194,46 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         //var_dump($semesters[0][0])
         ?>
     </div>
-  
-    <div class="grid-x grid-padding-x" style="padding-top: 2%;">
-      <div class="large-12 medium-12 small-12 columns">
-      <ul class="horizontal tabs" data-tabs id="course-tabs">
-        <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
-        <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true">Current Semester</a></li>
-        <li class="tabs-title"><a href="#panel2v">Fall 2017</a></li>
-        <li class="tabs-title"><a href="#panel3v">Summer 2017</a></li>
-        <li class="tabs-title"><a href="#panel4v">Earlier</a></li>
-      </ul>
-      </div>
-      <div class="large-12 medium-12 small-12 cell">
-        <div class="tabs-content" data-tabs-content="course-tabs">
-          <div class="tabs-panel" id="panel0v">
-            <table class="hover">
-              <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
-              </tr>
-            </table>
+        <div class="grid-x grid-padding-x" style="padding-top: 2%;">
+          <div class="large-12 medium-12 small-12 columns">
+              <ul class="horizontal tabs" data-tabs id="course-tabs">
+                <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
+                <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
+                <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></a></li>
+                <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[2][0]?>);"><?php echo $semesters[2][1]?></a></li>
+                <li class="tabs-title"><a href="#panel1v">Earlier</a></li>
+              </ul>
           </div>
-          <div class="tabs-panel is-active" id="panel1v">
-            <table class="hover">
-              <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
-              </tr>
-                <!--For loop for query here, delete everything else-->
-                  <?php
-                  $classes = file_get_contents("http://127.0.0.1:5002/GetStudentsClasses?student_id=" . $student_id); //getclasses
-                  $classes = json_decode($classes, true);
-                  $classes = $classes["students_classes"];
 
 
+          <div class="large-12 medium-12 small-12 cell">
+            <div class="tabs-content" data-tabs-content="course-tabs">
+              <div class="tabs-panel is-active" id="panel1v">
+                  <table class="hover">
+                    <tr>
+                        <th>Course</th>
+                        <th>Section</th>
+                        <th>Time</th>
+                        <th>Instructor</th>
+                        <th>Room</th>
+                    </tr>
+                  </table>
+                  <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
 
-                  foreach ($classes as $class){
-                      $professor = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" . $class["professor_id"]); //get professor
-                      $professor = json_decode($professor, true);
-                      $professor = $professor["professor_name"];
-                  ?>
-                <tr>
-                    <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $class["name"];?></a></td>
-                    <td><?php echo $class["section"];?></td>
-                    <td><?php echo $class["time"];?></td>
-                    <td><?php echo $professor;?></td>
-                    <td><?php echo $class["room_number"];?></td>
-                </tr>
+                  <table class="hover">
+                      <tbody id="classes">
+                      <!--                              Javascript builds table here-->
 
-                <?php } ?>
-            </table>
-          </div>
-          <div class="tabs-panel" id="panel2v">
-            <table class="hover">
-              <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
-                  <th>Grade</th>
-              </tr>
-            </table>
-          </div>
-          <div class="tabs-panel" id="panel3v">
-            <table class="hover">
-              <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
-                  <th>Grade</th>
-              </tr>
-            </table>
-          </div>
-          <div class="tabs-panel" id="panel4v">
-            <table class="hover">
-              <tr>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
-                  <th>Grade</th>
-              </tr>
-            </table>
+                      </tbody>
+                </table>
+              </div>
+            </div>
+
           </div>
         </div>
   </div>
     <center><img src="images/LOGO.png" style="width:75px;height:75px;"></center>
+        <?php }// End $is_editing check ?>
 
   <script>
       $(document).ready(function() {
@@ -257,10 +282,11 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
   <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
   <script src="bower_components/motion-ui/dist/motion-ui.js"></script>
   <script src="js/app.js"></script>
-  <script>
-    makeNav();
-    makeCallouts();
-  </script>
+        <?php
+        if(isset($_GET["fromregister"]) && $_GET["fromregister"] == "true") {
+            echo "<script>window.onload = function() {showMessage('success', 'Account successfully created!');};</script>";
+        }
+        ?>
 
   </body>
 </html>

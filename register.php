@@ -3,6 +3,66 @@
     $username = $_POST["username"];
     $password = $_POST["password"];
     $password_confirm = $_POST["password_confirm"];
+// If user hasn't entered anything
+if (!isset($_POST["username"]) && !isset($_POST["password"])) {
+    // Do nothing
+}
+// If user has entered a password, but not a username
+else if (!isset($_POST["username"]) && isset($_POST["password"])) {
+    echo "<script>window.onload = function() {showMessage('failure', 'Please enter a username.');};</script>";
+}
+// If user has entered a username, but not a password
+else if (!isset($_POST["password"]) && isset($_POST["username"])) {
+    echo "<script>window.onload = function() {showMessage('failure', 'Please enter a password.');};</script>";
+}
+// User has entered a confirmation password that does not match the first password
+else if ($password != $password_confirm) {
+    echo "<script>window.onload = function() {showMessage('failure', 'Passwords do not match.');};</script>";
+}
+// User has submitted an invalid password. This is also checked for in the HTML but that can be tampered with
+else if (isset($_POST["password"]) && !preg_match("/^(?=.*[A-Z])(?=.*[0-9]).{5,}$/", $password)) {
+    echo "<script>window.onload = function() {showMessage('failure', 'Passwords is not of specified format.');};</script>";
+}
+// User account submission is valid
+else {
+    // Check and see if the user already has an account
+    $results = file_get_contents("http://127.0.0.1:5002/UserExists?username=".$username);
+    $user_exists = json_decode($results, true)["user_exists"];
+    if ($user_exists == "True") {
+        echo "<script>window.onload = function() {showMessage('failure', 'A user account with that username already exists. <a href=\"#\">Forgot Password?</a>');};</script>";
+    } else {
+        // Get salt from config file
+        $myfile = fopen("LinkedIn/config.ini", "r") or die("Unable to open file!");
+        $readfile = fread($myfile,filesize("LinkedIn/config.ini"));
+        $arr = explode("\n", $readfile);
+        $salt = explode("=", $arr[2])[1];
+
+        fclose($myfile);
+
+        $hashed_password = hash("sha256", $password);
+        $hashed_password = $hashed_password.$salt;
+        $hashed_password = hash("sha256", $hashed_password);
+
+        $results = file_get_contents("http://127.0.0.1:5002/UserExists?username=".$username);
+        $user_exists = json_decode($results, true)["user_exists"];
+        // Check if user already exists
+        if ($user_exists == "True") {
+            echo "<script>window.onload = function() {showMessage('failure', 'A user account with that name already exists');};</script>";
+        }
+        // Use account can be created
+        else {
+
+            $results = file_get_contents("http://127.0.0.1:5002/CreateLogin?username=".$username."&password=".$hashed_password);
+            $results = json_decode($results);
+
+            if ($results->message == "SUCCESS") {
+                session_start();
+                $_SESSION["user_id"] = $results->user_id;
+                header("Location: http://localhost:63342/344Project/account.php?editprofile=true&fromregister=true");
+            }
+        }
+    }
+}
 ?>
 
 <!doctype html>
@@ -29,9 +89,10 @@
                 <div>
                     <form class="callout translucent-background" method="post">
                         <h4>Register</h4>
-                        <!-- Load Callouts -->
-                        <div id="callouts-placeholder"></div>
-                        <!-- End Callouts -->
+                        <?php
+                            // Load callouts
+                            include 'callouts.html';
+                        ?>
                         <div class="floated-label-wrapper">
                             <label for="username">Username</label>
                             <input type="text" name="username" id="username" placeholder="Username" required value="<?php echo $username;?>">
@@ -56,14 +117,17 @@
                     <!-- End new form -->
                 </div>
             </div>
+<<<<<<< HEAD
 
             <div class="small-12 medium-6 large-4 columns">
+=======
+            <!-- Old register page
+            <div id="account-info" class="small-12 medium-6 large-4 columns" style="display:none;">
+>>>>>>> 5346e43d65fa42c1321f891d24998e05725888c8
                 <div>
                     <form class="callout translucent-background" method="post" action="account.php">
                         <h4>Account Information</h4>
-                        <!-- Load Callouts -->
-                        <div id="callouts-placeholder"></div>
-                        <!-- End Callouts -->
+                        Please enter some information about yourself :^)
                         <div class="floated-label-wrapper">
                             <label for="fName">First Name</label>
                             <input type="text" name="fName" id="fName" placeholder="First Name" required>
@@ -82,9 +146,23 @@
                         <div class="floated-label-wrapper">
                             <label class="show" for="gender">Gender</label>
                             <select name="gender" id="gender">
+<<<<<<< HEAD
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                                 <option value="self-identify">Self-Identify</option>
+=======
+                                // This is true equality
+                                $genders = array (
+                                    "<option value='o'>Self-Identify</option>",
+                                    "<option value='m'>Male</option>",
+                                    "<option value='f'>Female</option>"
+                                );
+                                shuffle($genders);
+                                foreach ($genders as $gender) {
+                                    echo $gender;
+                                }
+                                ?>
+>>>>>>> 5346e43d65fa42c1321f891d24998e05725888c8
                             </select>
                         </div>
                         <div class="floated-label-wrapper">
@@ -98,9 +176,9 @@
                         <input type="hidden" name="action" value="update-profile">
                         <input type="submit" class="button expanded rit-orange" value="Continue to Profile">
                     </form>
-                    <!-- End new form -->
                 </div>
             </div>
+            -->
 
         </div>
     </div>
@@ -114,6 +192,7 @@
 <script src="bower_components/motion-ui/dist/motion-ui.js"></script>
 <script src="js/app.js"></script>
 
+<<<<<<< HEAD
 <script>
     makeCallouts();
 </script>
@@ -181,6 +260,8 @@ else {
 
 
 
+=======
+>>>>>>> 5346e43d65fa42c1321f891d24998e05725888c8
 </body>
 </html>
 
