@@ -1498,6 +1498,42 @@ api.add_resource(DeleteClass, '/DeleteClass')
 
 
 """
+Delete a course
+"""
+class DeleteCourse(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    #TODO: Make POST request
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('course_id', type=int)
+        course_id = parser.parse_args().get("course_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+        try:
+            cur.execute("DELETE FROM courses "
+                        "WHERE course_id = %s",
+                        [course_id])
+
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+
+
+api.add_resource(DeleteCourse, '/DeleteCourse')
+
+
+"""
 Delete prof request
 """
 class DeleteProfRequest(Resource):
