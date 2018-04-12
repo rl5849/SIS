@@ -35,7 +35,16 @@
         if ($_SESSION["user_id"] != null) {
         ?>
 		<li>
-			<a href="account.php">Welcome, <?php echo ($user_info["student_info"][0]["student_name"])?></a>
+			<a href="account.php">Welcome,
+                <?php
+                    $name = $user_info["student_info"][0]["student_name"];
+                    if ($name == "") {
+                        echo "Unknown User";
+                    } else {
+                        echo $name;
+                    }
+                ?>
+            </a>
 		</li>
 		<li>
 			<a href="#"><i class="fi-list"></i></a>
