@@ -37,7 +37,11 @@ if (isset($_POST["action"])){
             get_courses();
             break;
         case "get_student_classes_by_semester":
-            get_student_classes_by_semester();
+            if ($_POST['semester_id'] === 'favs'){
+                get_student_favs();
+            }else{
+                get_student_classes_by_semester();
+            }
             break;
     }
 }
@@ -157,3 +161,7 @@ function get_student_classes_by_semester() {
     echo $list;
 }
 
+function get_student_favs() {
+    $list = file_get_contents("http://127.0.0.1:5002/GetFavoritedClasses?user_id=" . $_POST['user_id']);
+    echo $list;
+}

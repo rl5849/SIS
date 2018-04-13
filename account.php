@@ -225,7 +225,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">
           <div class="large-12 medium-12 small-12 columns">
               <ul class="horizontal tabs" data-tabs id="course-tabs">
-                <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
+                  <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
                 <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[2][0]?>);"><?php echo $semesters[2][1]?></a></li>
@@ -284,9 +284,15 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                   $.each(result, function(index, val){
                       for(var i=0; i < val.length; i++){
                           var item = val[i];
+                          // if ($.inArray(item.class_id, result.favs)){
+                          //     document.getElementById('favorite').classList.add("favorited");
+                          // }
+                          // else{
+                          //     document.getElementById('favorite').classList.add("unfavorited");
+                          // }
                           buffer+="<tr>\
                                     <td>\
-                                        <i class=\"fi-heart favorited\"></i>\
+                                        <i id='favorite' class=\"fi-heart unfavorited\"></i>\
                                     </td>\
                                     <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
                                     <td>" + item.section + "</td> \
