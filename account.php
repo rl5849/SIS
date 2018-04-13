@@ -56,7 +56,9 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIS - My Account</title>
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/foundation-icons.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
   </head>
   <body>
 
@@ -237,6 +239,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
               <div class="tabs-panel is-active" id="panel1v">
                   <table class="hover">
                     <tr>
+                        <th>Favorite</th>
                         <th>Course</th>
                         <th>Section</th>
                         <th>Time</th>
@@ -282,6 +285,9 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                       for(var i=0; i < val.length; i++){
                           var item = val[i];
                           buffer+="<tr>\
+                                    <td>\
+                                        <i class=\"fi-heart favorited\"></i>\
+                                    </td>\
                                     <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
                                     <td>" + item.section + "</td> \
                                     <td>" + item.time + "</td> \
