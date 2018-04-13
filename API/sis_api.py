@@ -221,16 +221,26 @@ class GetFavoritedClasses(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT class_id "
-                    "FROM favorites "
-                    "WHERE student_id = %s",
-                    [user_id])
-
+        cur.execute(
+            "SELECT classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+            "RIGHT JOIN professors ON "
+            "(professors.professor_id = classes.professor_id) "
+            "INNER JOIN favorites "
+            "ON (favorites.class_id = classes.class_id) "
+            "WHERE classes.semester_id = (SELECT MAX(id) FROM semesters) "
+            "AND favorites.student_id=%s "
+            "ORDER BY classes.name",
+            [user_id])
 
         query = cur.fetchall()
 
-        result = {'students_favorites': i for i in query}
+        column_names = ["course_id", "name", "section", "time", "room_number", "professor_name"]
+
+        result = {'classes': [dict(zip(
+            column_names, i)) for i in query]}
+
         return jsonify(result)
+
 
 api.add_resource(GetFavoritedClasses, '/GetFavoritedClasses')
 
@@ -1649,12 +1659,23 @@ class GetStudentsClassesForSemester(Resource):
                     "AND student_to_class.student_id=%s "
                     "ORDER BY classes.name",
                     [semester_id, user_id])
+
         query = cur.fetchall()
+
+        cur.execute("SELECT class_id "
+                    "FROM favorites "
+                    "WHERE student_id = %s",
+                    [user_id])
+
+        favs = cur.fetchall()
+
+
 
         column_names= ["course_id", "name", "section", "time", "room_number", "professor_name"]
 
         result = {'classes': [dict(zip(
-            column_names, i)) for i in query]}
+            column_names, i)) for i in query],
+                  "favs": [j[0] for j in favs]}
 
         return jsonify(result)
 
