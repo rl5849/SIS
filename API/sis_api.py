@@ -11,44 +11,6 @@ api = Api(app)
 SUCCESS_MESSAGE = "SUCCESS"
 FAILURE_MESSAGE = "FAILURE"
 
-###Use a student ID to get all their classes currently enrolled
-class GetStudentsClasses(Resource):
-    config = ConfigParser.ConfigParser()
-    config.read('./config.ini')
-
-    def get(self):
-        # Get student id
-        parser = reqparse.RequestParser()
-        parser.add_argument('student_id', type=int)
-        student_id = parser.parse_args().get("student_id")
-
-        db = MySQLdb.connect(user=self.config.get('database', 'username'),
-                             passwd=self.config.get('database', 'password'),
-                             host=self.config.get('database', 'host'),
-                             db=self.config.get('database', 'dbname'))
-
-        cur = db.cursor()
-
-        # Select data from table using SQL query.
-        cur.execute("SELECT * FROM classes "
-                    "LEFT JOIN student_to_class ON (classes.class_id = student_to_class.class_id) "
-                    "WHERE student_to_class.student_id = %s "
-                    "ORDER BY classes.name",
-                    [student_id])
-        query = cur.fetchall()
-        # Get variable names
-        cur.execute(
-            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'classes'")
-
-        column_names = cur.fetchall()
-        column_names_clean = [x[0] for x in column_names]
-
-        result = {'students_classes': [dict(zip(
-            column_names_clean, i)) for i in query]}
-        return jsonify(result)
-        
-api.add_resource(GetStudentsClasses, '/GetStudentsClasses')
-
 
 ###Add a new course
 ### url path: /add_course?course_name=NAME&date_of_birth=2001-02-01&profile_pic=www.linked.com&gender=F&graduation_year=2018
@@ -259,16 +221,26 @@ class GetFavoritedClasses(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT class_id "
-                    "FROM favorites "
-                    "WHERE student_id = %s",
-                    [user_id])
-
+        cur.execute(
+            "SELECT classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+            "RIGHT JOIN professors ON "
+            "(professors.professor_id = classes.professor_id) "
+            "INNER JOIN favorites "
+            "ON (favorites.class_id = classes.class_id) "
+            "WHERE classes.semester_id = (SELECT MAX(id) FROM semesters) "
+            "AND favorites.student_id=%s "
+            "ORDER BY classes.name",
+            [user_id])
 
         query = cur.fetchall()
 
-        result = {'students_favorites': i for i in query}
+        column_names = ["course_id", "name", "section", "time", "room_number", "professor_name"]
+
+        result = {'classes': [dict(zip(
+            column_names, i)) for i in query]}
+
         return jsonify(result)
+
 
 api.add_resource(GetFavoritedClasses, '/GetFavoritedClasses')
 
@@ -891,8 +863,6 @@ class CheckFavoriteStatus(Resource):
 api.add_resource(CheckFavoriteStatus, '/CheckFavoriteStatus')
 
 
-#TODO: LOW : Add get favorites for student
-
 """
 Gets a grade for a class and a student
 
@@ -1143,9 +1113,6 @@ class CheckIfAdmin(Resource):
             result = {'is_admin': False}
         return jsonify(result)
 api.add_resource(CheckIfAdmin, '/CheckIfAdmin')
-
-
-
 
 
 """
@@ -1498,6 +1465,42 @@ api.add_resource(DeleteClass, '/DeleteClass')
 
 
 """
+Delete a course
+"""
+class DeleteCourse(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    #TODO: Make POST request
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('course_id', type=int)
+        course_id = parser.parse_args().get("course_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+        try:
+            cur.execute("DELETE FROM courses "
+                        "WHERE course_id = %s",
+                        [course_id])
+
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+
+
+api.add_resource(DeleteCourse, '/DeleteCourse')
+
+
+"""
 Delete prof request
 """
 class DeleteProfRequest(Resource):
@@ -1577,33 +1580,6 @@ api.add_resource(ApproveProfRequest, '/ApproveProfRequest')
 
 """
 Get students in class
-FORMAT:
-{
-  "enrolled": [
-    {
-      "grade": 45,
-      "user_id": 88,
-      "user_name": "Robert Liedka"
-    },
-    {
-      "grade": 24,
-      "user_id": 77,
-      "user_name": "Ben Christians"
-    },
-    {
-      "grade": 89,
-      "user_id": 87,
-      "user_name": "Joshua Eng"
-    }
-  ],
-  "waitlisted": [
-    {
-      "position": 1,
-      "user_id": 90,
-      "user_name": "John Murray"
-    }
-  ]
-}
 """
 class GetStudentsByClassId(Resource):
     config = ConfigParser.ConfigParser()
@@ -1638,34 +1614,21 @@ class GetStudentsByClassId(Resource):
                         [class_id])
             waitlisted = cur.fetchall()
 
-
-
         except MySQLdb.IntegrityError:
             return jsonify(FAILURE_MESSAGE)
 
         enrolled_schema = ['user_id', 'user_name', 'grade']
         waitlist_schema = ['user_id', 'user_name', 'position']
 
-
         result = { 'enrolled' : [dict(zip(enrolled_schema, i)) for i in enrolled], 'waitlisted' : [dict(zip(waitlist_schema, i)) for i in  waitlisted]}
 
         return jsonify(result)
-
 
 api.add_resource(GetStudentsByClassId, '/GetStudentsByClassId')
 
 
 """
 Get Student class by student_id and semeseter code
-{
-    classes : {
-        {   class_id  : id
-            .
-            .
-            .
-        }
-    }
-}
 """
 class GetStudentsClassesForSemester(Resource):
     config = ConfigParser.ConfigParser()
@@ -1696,12 +1659,23 @@ class GetStudentsClassesForSemester(Resource):
                     "AND student_to_class.student_id=%s "
                     "ORDER BY classes.name",
                     [semester_id, user_id])
+
         query = cur.fetchall()
+
+        cur.execute("SELECT class_id "
+                    "FROM favorites "
+                    "WHERE student_id = %s",
+                    [user_id])
+
+        favs = cur.fetchall()
+
+
 
         column_names= ["course_id", "name", "section", "time", "room_number", "professor_name"]
 
         result = {'classes': [dict(zip(
-            column_names, i)) for i in query]}
+            column_names, i)) for i in query],
+                  "favs": [j[0] for j in favs]}
 
         return jsonify(result)
 

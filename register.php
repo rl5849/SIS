@@ -23,13 +23,13 @@ else if ($password != $password_confirm) {
 else if (isset($_POST["password"]) && !preg_match("/^(?=.*[A-Z])(?=.*[0-9]).{5,}$/", $password)) {
     echo "<script>window.onload = function() {showMessage('failure', 'Passwords is not of specified format.');};</script>";
 }
-// User account submission is valid
+// User account submission form is valid
 else {
-    // Check and see if the user already has an account
+    // Check and see if there exists an account with that username
     $results = file_get_contents("http://127.0.0.1:5002/UserExists?username=".$username);
-    $user_exists = json_decode($results, true)["user_exists"];
+    $user_exists = json_decode($results, true)["exists"];
     if ($user_exists == "True") {
-        echo "<script>window.onload = function() {showMessage('failure', 'A user account with that username already exists. <a href=\"#\">Forgot Password?</a>');};</script>";
+        echo "<script>window.onload = function() {showMessage('failure', 'A user account with that username already exists.');};</script>";
     } else {
         // Get salt from config file
         $myfile = fopen("LinkedIn/config.ini", "r") or die("Unable to open file!");
@@ -58,7 +58,7 @@ else {
             if ($results->message == "SUCCESS") {
                 session_start();
                 $_SESSION["user_id"] = $results->user_id;
-                header("Location: http://localhost:63342/344Project/account.php?editprofile=true&fromregister=true");
+                header("Location: account.php?editprofile=true&fromregister=true");
             }
         }
     }
@@ -85,7 +85,7 @@ else {
             </div>
 
 
-            <div class="small-12 medium-6 large-4 columns"  style="display:none;">
+            <div class="small-12 medium-6 large-4 columns">
                 <div>
                     <form class="callout translucent-background" method="post">
                         <h4>Register</h4>
@@ -117,68 +117,6 @@ else {
                     <!-- End new form -->
                 </div>
             </div>
-<<<<<<< HEAD
-
-            <div class="small-12 medium-6 large-4 columns">
-=======
-            <!-- Old register page
-            <div id="account-info" class="small-12 medium-6 large-4 columns" style="display:none;">
->>>>>>> 5346e43d65fa42c1321f891d24998e05725888c8
-                <div>
-                    <form class="callout translucent-background" method="post" action="account.php">
-                        <h4>Account Information</h4>
-                        Please enter some information about yourself :^)
-                        <div class="floated-label-wrapper">
-                            <label for="fName">First Name</label>
-                            <input type="text" name="fName" id="fName" placeholder="First Name" required>
-                        </div>
-                        <div class="floated-label-wrapper">
-                            <label for="lName">Last Name</label>
-                            <input type="text" name="lName" id="lName" placeholder="Last Name" required>
-                        </div>
-                        <div class="floated-label-wrapper">
-                            <label class="show" for="user-type">I am a...</label>
-                            <select name="user-type" id="user-type">
-                                <option value="student">Student</option>
-                                <option value="professor">Professor</option>
-                            </select>
-                        </div>
-                        <div class="floated-label-wrapper">
-                            <label class="show" for="gender">Gender</label>
-                            <select name="gender" id="gender">
-<<<<<<< HEAD
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="self-identify">Self-Identify</option>
-=======
-                                // This is true equality
-                                $genders = array (
-                                    "<option value='o'>Self-Identify</option>",
-                                    "<option value='m'>Male</option>",
-                                    "<option value='f'>Female</option>"
-                                );
-                                shuffle($genders);
-                                foreach ($genders as $gender) {
-                                    echo $gender;
-                                }
-                                ?>
->>>>>>> 5346e43d65fa42c1321f891d24998e05725888c8
-                            </select>
-                        </div>
-                        <div class="floated-label-wrapper">
-                            <label for="dob">Date of Birth</label>
-                            <input type="text" name="dob" id="dob" placeholder="Date of Birth">
-                        </div>
-                        <div class="floated-label-wrapper">
-                            <label for="grad-year">Graduation Year</label>
-                            <input type="text" name="grad-year" id="grad-year" placeholder="Graduation Year">
-                        </div>
-                        <input type="hidden" name="action" value="update-profile">
-                        <input type="submit" class="button expanded rit-orange" value="Continue to Profile">
-                    </form>
-                </div>
-            </div>
-            -->
 
         </div>
     </div>
@@ -192,7 +130,7 @@ else {
 <script src="bower_components/motion-ui/dist/motion-ui.js"></script>
 <script src="js/app.js"></script>
 
-<<<<<<< HEAD
+
 <script>
     makeCallouts();
 </script>
@@ -257,11 +195,6 @@ else {
     }
 }
 ?>
-
-
-
-=======
->>>>>>> 5346e43d65fa42c1321f891d24998e05725888c8
 </body>
 </html>
 

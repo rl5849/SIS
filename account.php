@@ -56,7 +56,9 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIS - My Account</title>
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/foundation-icons.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
   </head>
   <body>
 
@@ -113,10 +115,16 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         <form action="account.php" method="post">
             <ul class="profile-list">
               <li><?php
+                  $name = $student_info["student_info"][0]["student_name"];
                   if ($is_editing) {
-                      echo "Name: <input name='name' value='".($student_info["student_info"][0]["student_name"])."'>";
+                      echo "Name: <input required name='name' value='".$name."'>";
                   } else {
-                      echo "<h4>".($student_info["student_info"][0]["student_name"])."</h4>";
+                      if ($name == "") {
+                          echo "<h4>Unknown User</h4>";
+                      } else {
+                          echo "<h4>".$name."</h4>";
+                      }
+
                   }
                   ?>
               </li>
@@ -130,33 +138,55 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               if ($is_editing) {
                                   echo "<input name='dob' placeholder='ex. 5-15-1980' value='".$date."'>";
                               } else {
-                                  echo $date;
+                                  if ($date == "") {
+                                      echo "N/A";
+                                  } else {
+                                      echo $date;
+                                  }
                               }
                               ?></td>
                           <td>Expected Grad Year</td>
                           <td><?php
+                              $grad_year = $student_info["student_info"][0]["graduation_year"];
                               if ($is_editing) {
-                                  echo "<input name='grad-year' placeholder='ex. 2020' value='".$student_info["student_info"][0]["graduation_year"]."'>";
+                                  echo "<input name='grad-year' placeholder='ex. 2020' value='".$grad_year."'>";
                               } else {
-                                  echo $student_info["student_info"][0]["graduation_year"];
+                                  if ($grad_year == "") {
+                                      echo "N/A";
+                                  } else {
+                                      echo $grad_year;
+                                  }
                               }
                               ?></td>
                       </tr>
                       <tr>
                           <td>Major</td>
                           <td> <?php
+                              $major = $student_info["student_info"][0]["major"];
                               if ($is_editing) {
-                                  echo "<input name='major' placeholder='ex. Software Engineering' value='".$student_info["student_info"][0]["major"]."'>";
+                                  echo "<input name='major' placeholder='ex. Software Engineering' value='".$major."'>";
                               } else {
-                                  echo $student_info["student_info"][0]["major"];
+
+                                  if ($major == "") {
+                                      echo "N/A";
+                                  } else {
+                                      echo $major;
+                                  }
+
                               }
                               ?></td>
                           <td>GPA</td>
                           <td><?php
+                              $gpa = $student_info["student_info"][0]["GPA"];
                               if ($is_editing) {
-                                  echo "<input name='gpa' placeholder='ex. 3.2' value='".$student_info["student_info"][0]["GPA"]."'>";
+                                  echo "<input name='gpa' placeholder='ex. 3.2' value='".$gpa."'>";
                               } else {
-                                  echo $student_info["student_info"][0]["GPA"];
+
+                                  if ($gpa == "") {
+                                      echo "N/A";
+                                  } else {
+                                      echo $gpa;
+                                  }
                               }
                               ?></td>
                       </tr>
@@ -184,20 +214,18 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
           <?php if(!$is_editing) {?>
       <div class="large-2 medium-2 small-3 cell">
         <ul class="profile-list">
-          <p><input type="button" href="https://www.linkedin.com" class="button expanded rit-orange" value="LinkedIn"></input></p>
-          <li>GPA: <?php echo $student_info["student_info"][0]["GPA"];?></li>
+            <p><a href="https://www.linkedin.com" class="button expanded rit-orange">LinkedIn</a></p>
         </ul>
       </div>
         <?php
         $semesters = file_get_contents("http://127.0.0.1:5002/GetSemesters");
         $semesters = json_decode($semesters, true)["semesters"];
-        //var_dump($semesters[0][0])
         ?>
     </div>
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">
           <div class="large-12 medium-12 small-12 columns">
               <ul class="horizontal tabs" data-tabs id="course-tabs">
-                <li class="tabs-title favorited-classes-title"><a href="#panel0v">Favorited</a></li>
+                  <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
                 <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[2][0]?>);"><?php echo $semesters[2][1]?></a></li>
@@ -211,6 +239,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
               <div class="tabs-panel is-active" id="panel1v">
                   <table class="hover">
                     <tr>
+                        <th>Favorite</th>
                         <th>Course</th>
                         <th>Section</th>
                         <th>Time</th>
@@ -255,7 +284,16 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                   $.each(result, function(index, val){
                       for(var i=0; i < val.length; i++){
                           var item = val[i];
+                          // if ($.inArray(item.class_id, result.favs)){
+                          //     document.getElementById('favorite').classList.add("favorited");
+                          // }
+                          // else{
+                          //     document.getElementById('favorite').classList.add("unfavorited");
+                          // }
                           buffer+="<tr>\
+                                    <td>\
+                                        <i id='favorite' class=\"fi-heart unfavorited\"></i>\
+                                    </td>\
                                     <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
                                     <td>" + item.section + "</td> \
                                     <td>" + item.time + "</td> \

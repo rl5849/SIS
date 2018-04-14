@@ -206,10 +206,10 @@ include 'callouts.html';
               Prerequisites
             </div>
             <div class="card-section">
-              <ul class="profile-list">
-                <li>3rd Year status</li>
-                <li>Major: Software Engineering</li>
-                <li>Must be pretty cool</li>
+              <ul class="profile-list prereqs">
+                <li><i class="fi-check prereq-fulfilled"></i>3rd Year Standing</li>
+                <li><i class="fi-x prereq-unfulfilled"></i>Major: Software Engineering</li>
+                <li><i class="fi-minus prereq-unknown"></i>Must be pretty cool</li>
                 <!-- <li>...</li> -->
               </ul>
             </div>
