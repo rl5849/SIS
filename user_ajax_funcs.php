@@ -41,7 +41,7 @@ function enroll() {
     if ($enroll == "SUCCESS"){
         echo "<script>showMessage(\"success\", \"Successfully Enrolled in class\");</script>";
     }
-    else if ($enroll = "WAITLISTED"){
+    else if ($enroll == "WAITLISTED"){
         echo "Class is full. Successfully added to waitlist";
     }
     else{

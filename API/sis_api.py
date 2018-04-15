@@ -3,7 +3,7 @@ import MySQLdb
 import ConfigParser, os
 from flask_restful import Resource, Api, reqparse
 from flask import jsonify
-
+import datetime
 
 app = Flask(__name__)
 api = Api(app)
@@ -488,7 +488,8 @@ class GetPrereqs(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT prereqs.type, "
+        cur.execute("SELECT prereqs.prereq_id, "
+                    "       prereqs.type, "
                     "       prereqs.program_of_enrollment, "
                     "       prereqs.year_level "
                     "FROM prereqs "
@@ -499,7 +500,7 @@ class GetPrereqs(Resource):
         query = cur.fetchall()
         # Get variable names
 
-        column_names = ["type", "program_or_enrollment", "year_level"]
+        column_names = ["type", "program_of_enrollment", "year_level"]
 
         result = {'prereqs': [dict(zip(
             column_names, i)) for i in query]}
@@ -507,6 +508,77 @@ class GetPrereqs(Resource):
         return jsonify(result)
 
 api.add_resource(GetPrereqs, '/GetPrereqs')
+
+
+"""
+checks if a student fulfills a specific prereq
+"""
+class CheckPrereq(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get course id
+        parser = reqparse.RequestParser()
+        parser.add_argument('student_id', type=int)
+        student_id = parser.parse_args().get("student_id")
+        parser.add_argument('prereq_id', type=int)
+        prereq_id = parser.parse_args().get("prereq_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT * "
+                    "FROM prereqs "
+                    "WHERE prereq_id = %s ",
+                    [prereq_id])
+
+        query = cur.fetchall()
+
+        prereq_type = query[0][1]
+        if prereq_type == "program_of_enrollment":
+            #check if student is enrolled in the correct program
+            program = query[0][2]
+            cur.execute("SELECT major "
+                        "FROM students "
+                        "WHERE student_id = %s",
+                        [student_id])
+            
+            query = cur.fetchall()
+            if program == query[0][0]:
+                result = {'meets_prereq' : True}
+            else:
+                result = {'meets_prereq' : False}
+
+        elif prereq_type == "year_level":
+            #check if student is enrolled in the correct year level
+            year_level = query[0][3]
+            cur.execute("SELECT graduation_year "
+                        "FROM students "
+                        "WHERE student_id = %s",
+                        [student_id])
+            
+            query = cur.fetchall()
+            grad_year = query[0][0]
+            now = datetime.datetime.now()
+
+            # no field for year level, must be calculated,
+            # TODO consider changing 'year_level' in prereqs to 'grad_year'
+            if grad_year == (5 - grad_year - now.year):
+                result = {'meets_prereq' : True}
+            else:
+                result = {'meets_prereq' : False}
+        else:
+            #prereq cannot be determined
+            result = {'meets_prereq' : None}
+
+        return jsonify(result)
+
+api.add_resource(GetPrereqs, '/CheckPrereq')
 
 """
 Enrolls a student in a course
