@@ -131,6 +131,18 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
               <li>
                   <table>
                       <tr>
+                          <td>Status</td>
+                          <td><?php
+                              $status = $userType;
+                              if($status == ""){
+                                  echo "N/A";
+                              }
+                              else{
+                                  echo $status;
+                              }
+                              ?></td>
+                      </tr>
+                      <tr>
                           <td>DoB</td>
                           <td><?php
                               $date = strtotime($student_info["student_info"][0]["date_of_birth"]);
