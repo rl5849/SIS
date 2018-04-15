@@ -469,6 +469,46 @@ class GetClassInfo(Resource):
 api.add_resource(GetClassInfo, '/GetClassInfo')
 
 """
+Gets all of the prereqs for a given course
+"""
+class GetPrereqs(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get course id
+        parser = reqparse.RequestParser()
+        parser.add_argument('course_id', type=int)
+        course_id = parser.parse_args().get("course_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT prereqs.type, "
+                    "       prereqs.program_of_enrollment, "
+                    "       prereqs.year_level "
+                    "FROM prereqs "
+                    "JOIN course_to_prereqs ON "
+                    "course_to_prereqs.prereq_id = prereqs.prereq_id "
+                    "WHERE course_to_prereqs.course_id = %s "
+                    [course_id])
+        query = cur.fetchall()
+        # Get variable names
+
+        column_names = ["type", "program_or_enrollment", "year_level"]
+
+        result = {'prereqs': [dict(zip(
+            column_names, i)) for i in query]}
+
+        return jsonify(result)
+
+api.add_resource(GetPrereqs, '/GetPrereqs')
+
+"""
 Enrolls a student in a course
 """
 class EnrollStudent(Resource):
