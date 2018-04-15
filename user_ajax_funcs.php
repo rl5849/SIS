@@ -36,6 +36,19 @@ if (isset($_POST["action"])){
 
 
 function enroll() {
+    #check prereqs
+    $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
+    $prerequisites = json_decode($prerequisites, true);
+
+    foreach ($prerequisites['prereqs'][0] as $prereq){
+        $meetsPrereq = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $user_id);
+        $meetsPrereq = json_decode($meetsPrereq, true);
+        $meetsPrereq = $meetsPrereq[$prereq['prereq_id']]["meets_prereq"];
+        if ($meetsPrereq == False){
+            echo "Some prerequisites for this course have not been met. Failed to Enroll in class";
+        }
+    }
+
     $enroll = file_get_contents("http://127.0.0.1:5002/EnrollStudent?class_id=" . $_POST['class_id'] . "&user_id=" . $_POST['user_id']);
     $enroll = json_decode($enroll, true);
     if ($enroll == "SUCCESS"){
