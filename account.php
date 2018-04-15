@@ -74,6 +74,13 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
     $student_info = json_decode($student_info, true);
 
+    //used to check if a professor type
+    $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor");
+    $is_prof = json_decode($is_prof, true);
+
+    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin");
+    $is_admin = json_decode($is_admin, true);
+
     ?>
 
 	<div class="grid-container">
@@ -133,12 +140,14 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                       <tr>
                           <td>Status</td>
                           <td><?php
-                              $status = $userType;
-                              if($status == ""){
-                                  echo "N/A";
+                              if($is_prof["is_prof"] == True){
+                                  echo "Professor";
+                              }
+                              else if($is_admin["is_admin"] == True){
+                                  echo "Admin";
                               }
                               else{
-                                  echo $status;
+                                  echo "Student";
                               }
                               ?></td>
                       </tr>
