@@ -284,16 +284,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                   $.each(result, function(index, val){
                       for(var i=0; i < val.length; i++){
                           var item = val[i];
-                          // if ($.inArray(item.class_id, result.favs)){
-                          //     document.getElementById('favorite').classList.add("favorited");
-                          // }
-                          // else{
-                          //     document.getElementById('favorite').classList.add("unfavorited");
-                          // }
                           buffer+="<tr>\
-                                    <td>\
-                                        <i id='favorite' class=\"fi-heart unfavorited\"></i>\
-                                    </td>\
                                     <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
                                     <td>" + item.section + "</td> \
                                     <td>" + item.time + "</td> \
