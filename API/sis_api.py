@@ -578,7 +578,7 @@ class CheckPrereq(Resource):
 
         return jsonify(result)
 
-api.add_resource(GetPrereqs, '/CheckPrereq')
+api.add_resource(CheckPrereq, '/CheckPrereq')
 
 """
 Enrolls a student in a course
