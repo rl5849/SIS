@@ -3,7 +3,7 @@ import MySQLdb
 import ConfigParser, os
 from flask_restful import Resource, Api, reqparse
 from flask import jsonify
-
+import datetime
 
 app = Flask(__name__)
 api = Api(app)
@@ -221,16 +221,26 @@ class GetFavoritedClasses(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT class_id "
-                    "FROM favorites "
-                    "WHERE student_id = %s",
-                    [user_id])
-
+        cur.execute(
+            "SELECT classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+            "RIGHT JOIN professors ON "
+            "(professors.professor_id = classes.professor_id) "
+            "INNER JOIN favorites "
+            "ON (favorites.class_id = classes.class_id) "
+            "WHERE classes.semester_id = (SELECT MAX(id) FROM semesters) "
+            "AND favorites.student_id=%s "
+            "ORDER BY classes.name",
+            [user_id])
 
         query = cur.fetchall()
 
-        result = {'students_favorites': i for i in query}
+        column_names = ["course_id", "name", "section", "time", "room_number", "professor_name"]
+
+        result = {'classes': [dict(zip(
+            column_names, i)) for i in query]}
+
         return jsonify(result)
+
 
 api.add_resource(GetFavoritedClasses, '/GetFavoritedClasses')
 
@@ -457,6 +467,118 @@ class GetClassInfo(Resource):
         return jsonify(result)
 
 api.add_resource(GetClassInfo, '/GetClassInfo')
+
+"""
+Gets all of the prereqs for a given course
+"""
+class GetPrereqs(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get course id
+        parser = reqparse.RequestParser()
+        parser.add_argument('course_id', type=int)
+        course_id = parser.parse_args().get("course_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT prereqs.prereq_id, "
+                    "       prereqs.type, "
+                    "       prereqs.program_of_enrollment, "
+                    "       prereqs.year_level "
+                    "FROM prereqs "
+                    "JOIN course_to_prereqs ON "
+                    "course_to_prereqs.prereq_id = prereqs.prereq_id "
+                    "WHERE course_to_prereqs.course_id = %s "
+                    [course_id])
+        query = cur.fetchall()
+        # Get variable names
+
+        column_names = ["type", "program_of_enrollment", "year_level"]
+
+        result = {'prereqs': [dict(zip(
+            column_names, i)) for i in query]}
+
+        return jsonify(result)
+
+api.add_resource(GetPrereqs, '/GetPrereqs')
+
+
+"""
+checks if a student fulfills a specific prereq
+"""
+class CheckPrereq(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get course id
+        parser = reqparse.RequestParser()
+        parser.add_argument('student_id', type=int)
+        student_id = parser.parse_args().get("student_id")
+        parser.add_argument('prereq_id', type=int)
+        prereq_id = parser.parse_args().get("prereq_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT * "
+                    "FROM prereqs "
+                    "WHERE prereq_id = %s ",
+                    [prereq_id])
+
+        query = cur.fetchall()
+
+        prereq_type = query[0][1]
+        if prereq_type == "program_of_enrollment":
+            #check if student is enrolled in the correct program
+            program = query[0][2]
+            cur.execute("SELECT major "
+                        "FROM students "
+                        "WHERE student_id = %s",
+                        [student_id])
+            
+            query = cur.fetchall()
+            if program == query[0][0]:
+                result = {'meets_prereq' : True}
+            else:
+                result = {'meets_prereq' : False}
+
+        elif prereq_type == "year_level":
+            #check if student is enrolled in the correct year level
+            year_level = query[0][3]
+            cur.execute("SELECT graduation_year "
+                        "FROM students "
+                        "WHERE student_id = %s",
+                        [student_id])
+            
+            query = cur.fetchall()
+            grad_year = query[0][0]
+            now = datetime.datetime.now()
+
+            # no field for year level, must be calculated,
+            # TODO consider changing 'year_level' in prereqs to 'grad_year'
+            if grad_year == (5 - grad_year - now.year):
+                result = {'meets_prereq' : True}
+            else:
+                result = {'meets_prereq' : False}
+        else:
+            #prereq cannot be determined
+            result = {'meets_prereq' : None}
+
+        return jsonify(result)
+
+api.add_resource(CheckPrereq, '/CheckPrereq')
 
 """
 Enrolls a student in a course
@@ -1106,6 +1228,38 @@ api.add_resource(CheckIfAdmin, '/CheckIfAdmin')
 
 
 """
+Check if user has professor privileges
+"""
+class CheckIfProfessor(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get student id
+        parser = reqparse.RequestParser()
+        parser.add_argument('id', type=int)
+        id = parser.parse_args().get("id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT user_status FROM users "
+                    "WHERE user_id = %s",
+                    [id])
+        query = cur.fetchall()
+        if query[0][0] == 1:
+            result = {'is_prof': True}
+        else:
+            result = {'is_prof': False}
+        return jsonify(result)
+api.add_resource(CheckIfProfessor, '/CheckIfProfessor')
+
+"""
 Get Professor name by id, use to get professor name from id associated with a class
 """
 class GetProfessorByID(Resource):
@@ -1649,12 +1803,23 @@ class GetStudentsClassesForSemester(Resource):
                     "AND student_to_class.student_id=%s "
                     "ORDER BY classes.name",
                     [semester_id, user_id])
+
         query = cur.fetchall()
+
+        cur.execute("SELECT class_id "
+                    "FROM favorites "
+                    "WHERE student_id = %s",
+                    [user_id])
+
+        favs = cur.fetchall()
+
+
 
         column_names= ["course_id", "name", "section", "time", "room_number", "professor_name"]
 
         result = {'classes': [dict(zip(
-            column_names, i)) for i in query]}
+            column_names, i)) for i in query],
+                  "favs": [j[0] for j in favs]}
 
         return jsonify(result)
 

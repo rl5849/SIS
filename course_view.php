@@ -61,7 +61,7 @@ include 'callouts.html';
                 $enrollment_status = True;
                 break;
             case "WAITLIST":
-                $enrollment_status_msg = "Enroll";
+                $enrollment_status_msg = "Drop Waitlist";
                 $enrollment_status = True;
                 break;
             default:
@@ -89,6 +89,26 @@ include 'callouts.html';
         $user_requested_access = file_get_contents("http://127.0.0.1:5002/GetStudentAccess?class_id=" . $class_info["class_info"][0]["class_id"] . "&user_id=" . $user_id);
         $user_requested_access = json_decode($user_requested_access, true);
         $user_requested_access = $user_requested_access['requests'];
+
+
+        $enrolled_students = file_get_contents("http://127.0.0.1:5002/GetStudentsByClassId?class_id=" . $class_info["class_info"][0]["class_id"] );
+        $enrolled_students = json_decode($enrolled_students, true);
+
+        $user_status = "";
+
+        $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
+        $prerequisites = json_decode($prerequisites, true);
+
+        $meetsAllPrereqs = True;
+        $meetsPrereq = array();
+        foreach ($prerequisites['prereqs'][0] as $prereq){
+            $meetsPrereq[$prereq['prereq_id']] = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $user_id);
+            $meetsPrereq[$prereq['prereq_id']] = json_decode($meetsPrereq[$prereq['prereq_id']], true);
+            $meetsPrereq[$prereq['prereq_id']] = $meetsPrereq[$prereq['prereq_id']]["meets_prereq"];
+            if ($meetsPrereq[$prereq['prereq_id']] == False){
+                $meetsAllPrereqs = False;
+            }
+        }
 
     ?>
 
@@ -207,9 +227,40 @@ include 'callouts.html';
             </div>
             <div class="card-section">
               <ul class="profile-list prereqs">
-                <li><i class="fi-check prereq-fulfilled"></i>3rd Year Standing</li>
+                <?php
+                    //assembles a list of prerequisites for the class
+                    try {
+                        $prerequisite = $prerequisites["prereqs"][0];
+                        foreach ($prerequisites as $prereq ){
+                            if ($meetsPrereq[$prereq["prereq_id"]] == True){
+                                $class = "fi-check prereq-fulfilled";
+                            }
+                            elseif ($meetsPrereq[$prereq["prereq_id"]] == False){
+                                $class = "fi-x prereq-unfulfilled";
+                            }
+                            else{
+                                $class = "fi-minus prereq-unknown";
+                            }
+                            echo("<li><i class='$class'></i>");
+                            switch ($prereq["type"]){
+                                case "program_of_enrollment":
+                                    echo ("Major: " . $prereq["program_of_enrollment"] . "</li>");
+                                    break;
+                                case "year_level":
+                                    echo ("Year Level: " . $prereq["Year Level"] . "</li>");
+                                    break;
+                                default:
+                                    echo ($prereq["type"] . "</li>");
+                            }
+                        }
+                    }
+                    catch (Exception $e){
+                        echo("<li>Prerequisites Unavailable</li>");
+                    }
+                ?>
+                <!-- <li><i class="fi-check prereq-fulfilled"></i>3rd Year Standing</li>
                 <li><i class="fi-x prereq-unfulfilled"></i>Major: Software Engineering</li>
-                <li><i class="fi-minus prereq-unknown"></i>Must be pretty cool</li>
+                <li><i class="fi-minus prereq-unknown"></i>Must be pretty cool</li> -->
                 <!-- <li>...</li> -->
               </ul>
             </div>
@@ -217,6 +268,10 @@ include 'callouts.html';
         </div>
 
           <?php // TODO make this only display for the professor associated with the class ?>
+          <?php if(){
+
+
+          } ?>
           <div class="large-12 medium-12 small-12 cell">
               <div class="card">
                   <div class="card-divider">
