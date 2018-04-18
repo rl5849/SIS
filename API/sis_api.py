@@ -578,7 +578,7 @@ class CheckPrereq(Resource):
 
         return jsonify(result)
 
-api.add_resource(GetPrereqs, '/CheckPrereq')
+api.add_resource(CheckPrereq, '/CheckPrereq')
 
 """
 Enrolls a student in a course
@@ -1226,6 +1226,38 @@ class CheckIfAdmin(Resource):
         return jsonify(result)
 api.add_resource(CheckIfAdmin, '/CheckIfAdmin')
 
+
+"""
+Check if user has professor privileges
+"""
+class CheckIfProfessor(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get student id
+        parser = reqparse.RequestParser()
+        parser.add_argument('id', type=int)
+        id = parser.parse_args().get("id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT user_status FROM users "
+                    "WHERE user_id = %s",
+                    [id])
+        query = cur.fetchall()
+        if query[0][0] == 1:
+            result = {'is_prof': True}
+        else:
+            result = {'is_prof': False}
+        return jsonify(result)
+api.add_resource(CheckIfProfessor, '/CheckIfProfessor')
 
 """
 Get Professor name by id, use to get professor name from id associated with a class

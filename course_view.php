@@ -90,6 +90,12 @@ include 'callouts.html';
         $user_requested_access = json_decode($user_requested_access, true);
         $user_requested_access = $user_requested_access['requests'];
 
+
+        $enrolled_students = file_get_contents("http://127.0.0.1:5002/GetStudentsByClassId?class_id=" . $class_info["class_info"][0]["class_id"] );
+        $enrolled_students = json_decode($enrolled_students, true);
+
+        $user_status = "";
+
         $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
         $prerequisites = json_decode($prerequisites, true);
 
@@ -261,6 +267,10 @@ include 'callouts.html';
         </div>
 
           <?php // TODO make this only display for the professor associated with the class ?>
+          <?php if(){
+
+
+          } ?>
           <div class="large-12 medium-12 small-12 cell">
               <div class="card">
                   <div class="card-divider">

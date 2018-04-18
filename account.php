@@ -71,8 +71,15 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <?php
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
     $current_semester = json_decode($current_semester, true)["current_semester"];
-    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
+    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?id=".$student_id);
     $student_info = json_decode($student_info, true);
+
+    //used to check if a professor type
+    $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$student_id);
+    $is_prof = json_decode($is_prof, true);
+
+    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$student_id);
+    $is_admin = json_decode($is_admin, true);
 
     ?>
 
@@ -133,12 +140,14 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                       <tr>
                           <td>Status</td>
                           <td><?php
-                              $status = $userType;
-                              if($status == ""){
-                                  echo "N/A";
+                              if($is_prof["is_prof"] == True){
+                                  echo "Professor";
+                              }
+                              else if($is_admin["is_admin"] == True){
+                                  echo "Admin";
                               }
                               else{
-                                  echo $status;
+                                  echo "Student";
                               }
                               ?></td>
                       </tr>
@@ -296,16 +305,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                   $.each(result, function(index, val){
                       for(var i=0; i < val.length; i++){
                           var item = val[i];
-                          // if ($.inArray(item.class_id, result.favs)){
-                          //     document.getElementById('favorite').classList.add("favorited");
-                          // }
-                          // else{
-                          //     document.getElementById('favorite').classList.add("unfavorited");
-                          // }
                           buffer+="<tr>\
-                                    <td>\
-                                        <i id='favorite' class=\"fi-heart unfavorited\"></i>\
-                                    </td>\
                                     <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
                                     <td>" + item.section + "</td> \
                                     <td>" + item.time + "</td> \
