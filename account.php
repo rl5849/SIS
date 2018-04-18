@@ -78,7 +78,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$student_id);
     $is_prof = json_decode($is_prof, true);
 
-    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin");
+    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$student_id);
     $is_admin = json_decode($is_admin, true);
 
     ?>
