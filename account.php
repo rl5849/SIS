@@ -71,11 +71,11 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <?php
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
     $current_semester = json_decode($current_semester, true)["current_semester"];
-    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
+    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?id=".$student_id);
     $student_info = json_decode($student_info, true);
 
     //used to check if a professor type
-    $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor");
+    $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$student_id);
     $is_prof = json_decode($is_prof, true);
 
     $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin");
