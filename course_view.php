@@ -93,7 +93,6 @@ include 'callouts.html';
         $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
         $prerequisites = json_decode($prerequisites, true);
 
-        $meetsAllPrereqs = True;
         $meetsPrereq = array();
         foreach ($prerequisites['prereqs'][0] as $prereq){
             $meetsPrereq[$prereq['prereq_id']] = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $user_id);
