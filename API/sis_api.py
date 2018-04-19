@@ -56,6 +56,55 @@ class AddCourse(Resource):
 
 api.add_resource(AddCourse, '/AddCourse')
 
+"""
+Add prereq to a course
+
+prereq type: 0 = program_of_enrollment
+             1 = year_level
+"""
+class AddPrereqs(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get course id
+        parser = reqparse.RequestParser()
+        parser.add_argument('course_id')
+        parser.add_argument('type')
+        parser.add_argument('program')
+        parser.add_argument('year_level')
+        course_id = parser.parse_args().get("course_id")
+        prereq_type = parser.parse_args().get("type")
+        program = parser.parse_args().get("program")
+        year_level = parser.parse_args().get("year_level")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+        cur = db.cursor()
+
+        # insert new prerequisite into table
+        cur.execute("INSERT INTO prereqs "
+                    "(type, program_of_enrollment, year_level) "
+                    "VALUES (%s, %s, %s) ",
+                    [prereq_type, program, year_level])
+
+        # link prereq to course
+        cur.execute("INSERT INTO course_to_prereqs "
+                    "(course_id, prereq_id) "
+                    "VALUES (%s, ("
+                    "    SELECT MAX(prereq_id) "
+                    "    FROM prereqs))",
+                    [course_id])
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+
+api.add_resource(AddPrereqs, '/AddPrereqs')
 
 class AddSemester(Resource):
 
@@ -198,6 +247,44 @@ class AddUser(Resource):
 
 
 api.add_resource(AddUser, '/AddUser')
+
+"""
+Remove a prereq from a course
+"""
+class DeletePrereq(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get course id
+        parser = reqparse.RequestParser()
+        parser.add_argument("prereq_id")
+        prereq_id = parser.parse_args().get("prereq_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+        cur = db.cursor()
+
+        # remove from prereq table
+        cur.execute("DELETE FROM prereqs "
+                    "WHERE prereq_id=%s ",
+                    [prereq_id])
+
+        # remove from prereq to course table
+        cur.execute("DELETE FROM course_to_prereqs "
+                    "WHERE prereq_id=%s ",
+                    [prereq_id])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        return jsonify(SUCCESS_MESSAGE)
+
+api.add_resource(DeletePrereq, '/DeletePrereq')
 
 
 """
@@ -488,19 +575,19 @@ class GetPrereqs(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT prereqs.prereq_id, "
-                    "       prereqs.type, "
-                    "       prereqs.program_of_enrollment, "
-                    "       prereqs.year_level "
-                    "FROM prereqs "
-                    "JOIN course_to_prereqs ON "
-                    "course_to_prereqs.prereq_id = prereqs.prereq_id "
-                    "WHERE course_to_prereqs.course_id = %s "
+        cur.execute("SELECT p.prereq_id, "
+                    "       p.type, "
+                    "       p.program_of_enrollment, "
+                    "       p.year_level "
+                    "FROM prereqs p "
+                    "JOIN course_to_prereqs cp ON "
+                    "cp.prereq_id = p.prereq_id "
+                    "WHERE cp.course_id = %s ",
                     [course_id])
         query = cur.fetchall()
         # Get variable names
 
-        column_names = ["type", "program_of_enrollment", "year_level"]
+        column_names = ["prereq_id", "type", "program_of_enrollment", "year_level"]
 
         result = {'prereqs': [dict(zip(
             column_names, i)) for i in query]}
@@ -540,7 +627,7 @@ class CheckPrereq(Resource):
         query = cur.fetchall()
 
         prereq_type = query[0][1]
-        if prereq_type == "program_of_enrollment":
+        if prereq_type == 0: #program of enrollment
             #check if student is enrolled in the correct program
             program = query[0][2]
             cur.execute("SELECT major "
@@ -554,7 +641,7 @@ class CheckPrereq(Resource):
             else:
                 result = {'meets_prereq' : False}
 
-        elif prereq_type == "year_level":
+        elif prereq_type == 1: #year level
             #check if student is enrolled in the correct year level
             year_level = query[0][3]
             cur.execute("SELECT graduation_year "
@@ -568,7 +655,7 @@ class CheckPrereq(Resource):
 
             # no field for year level, must be calculated,
             # TODO consider changing 'year_level' in prereqs to 'grad_year'
-            if grad_year == (5 - grad_year - now.year):
+            if year_level <= (5 - (grad_year - now.year)):
                 result = {'meets_prereq' : True}
             else:
                 result = {'meets_prereq' : False}
