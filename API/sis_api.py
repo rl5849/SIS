@@ -1488,7 +1488,7 @@ api.add_resource(GetUserIDFromLogin, '/GetUserIDFromLogin')
 
 
 """
-GetUserIdFromLogin
+UserExists
 """
 class UserExists(Resource):
     config = ConfigParser.ConfigParser()
