@@ -46,23 +46,29 @@ $(function () {
 });
 
 
-function instantiateFilter() {
+function instantiateFilter(filter_id, listing_names, hide_by_default) {
     // Get the filter if it's on the page, leave function if it isn't
-    var filter = document.getElementById('filter');
+    var filter = document.getElementById(filter_id);
+
     if( filter == null ) {
         return;
     }
 
-    filter.onchange = function() {filter_list();};
+    $(filter).on( "input", function() {filter_list();});
 
     function filter_list() {
-        var list_entries = document.getElementsByName('class_listing');
+        var list_entries = document.getElementsByName(listing_names);
         var filter_text = filter.value;
         // Sanitize inputs
         filter_text = filter_text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
         for (var x = 0; x < list_entries.length; x++) {
-            if (filter_text === '' || list_entries[x].innerHTML.toLowerCase().indexOf(filter_text.toLowerCase()) > -1) {
-                list_entries[x].removeAttribute('hidden');
+            if (list_entries[x].innerHTML.toLowerCase().indexOf(filter_text.toLowerCase()) > -1) {
+                if (filter_text === '' && hide_by_default) {
+                    list_entries[x].setAttribute('hidden', 'true');
+                } else {
+                    list_entries[x].removeAttribute('hidden');
+                }
+
             }
             else {
                 list_entries[x].setAttribute('hidden', 'true');
@@ -70,7 +76,7 @@ function instantiateFilter() {
         }
     }
     // Filters the list if the page was generated with a search_parameter in the filter box
-    window.onload = function() {filter_list();};
+    window.ready = function() {filter_list();};
 }
 /*
 // Transitions the registration pages from the Account creation to the Account information pages

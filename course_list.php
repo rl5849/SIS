@@ -136,9 +136,7 @@ else{
 
         });
 
-
-
-      instantiateFilter();
+      instantiateFilter("filter", "class_listing", false);
      </script>
   </body>
 </html>

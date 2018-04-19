@@ -72,6 +72,7 @@ else{
                     case "users":
                         printAdminHeader("Users");
                         include("admin_php/approveProfessor.php");
+                        include("admin_php/addAdmin.php");
                         break;
                     default:
                         // TODO put the no args text here. This will be the admin landing page
@@ -333,6 +334,9 @@ else{
 
             });
         }
+        // Load the filter for adding a new admin. This does nothing if that element is not loaded on the page
+        instantiateFilter("user_filter", "user_listing", true);
+
         </script>
 </body>
 </html>
