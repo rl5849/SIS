@@ -318,7 +318,14 @@ include 'callouts.html';
 										</td>
 										<?php } ?>
 										<?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
-											<td>Fit Grade Thing Here</td>
+										  <td>
+											<form action="post">
+											<input class="grade-number" type="number" name="grade" min=0 max=100 placeholder=<?php echo $curr_stud["grade"] ?>>
+											<p class="grade-total" style="">/100</p>
+											<input type="hidden" name="submit" value="submit_grade">
+											<input class="button expanded submit-button" type="submit" value="Submit Grade">
+										  </td>
+                                      </form>
 										<?php } ?>
 									</tr>
 									
