@@ -1142,11 +1142,11 @@ class ModProfile(Resource):
                 statement += key + " = %s, "
                 values += [args[key]]
         statement = statement.rstrip(', ')
-        statement += " WHERE %s = '%s'"
-        values += [id_type, id]
+        statement += " WHERE " + id_type + " = '%s'"
+        values += [id]
         print(statement % tuple(values))
         #if nothing was updated, the statement is not executed
-        if len(values) >= 3:
+        if len(values) >= 2:
             cur.execute(statement, values)
 
         try:
