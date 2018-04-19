@@ -99,13 +99,8 @@ include 'callouts.html';
         $user_requested_access = json_decode($user_requested_access, true);
         $user_requested_access = $user_requested_access['requests'];
 
-
         $enrolled_students = file_get_contents("http://127.0.0.1:5002/GetStudentsByClassId?class_id=" . $class_id);
         $enrolled_students = json_decode($enrolled_students, true);
-
-        //used to check if a professor type
-        $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor");
-        $is_prof = json_decode($is_prof, true);
 
         $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
         $prerequisites = json_decode($prerequisites, true);
@@ -282,7 +277,7 @@ include 'callouts.html';
 
           <?php // TODO make this only display for the professor associated with the class ?>
 
-          <?php if($is_prof["is_prof"] == True){ ?>
+          <?php // if($is_prof["is_prof"] == True && $is_admin["is_admin"] == True){ ?>
 
               <div class="large-12 medium-12 small-12 cell">
                   <div class="card">
@@ -296,8 +291,12 @@ include 'callouts.html';
                                   <th><!-- Intentionally blank for picture --></th>
                                   <th align="left">Name</th>
                                   <th align="left">Major</th>
-                                  <th align="left">Status</th>
+								  <?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
+									<th align="left">Status</th>
+								  <?php } ?>
+								  <?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
                                   <th align="left">Grade</th>
+								  <?php } ?>
                               </tr>
 
                               <?php
@@ -312,11 +311,15 @@ include 'callouts.html';
 										<td><img src =<?php echo $curr_stud["profile_pic"] ?>></td>
 										<td><?php echo $curr_stud["name"] ?></td>
 										<td><?php echo $curr_stud["major"] ?></td>
+										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 										<td>
 											<i class="fi-check enrolled-check"></i>
 											Enrolled
 										</td>
-										<td>Fit Grade Thing Here</td>
+										<?php } ?>
+										<?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
+											<td>Fit Grade Thing Here</td>
+										<?php } ?>
 									</tr>
 									
                               
@@ -325,15 +328,19 @@ include 'callouts.html';
 								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?user_id=".$enroll_stud["user_id"]);
 								  $curr_stud = json_decode($curr_stud,true);
 								  ?>
-								  <tr>
+									<tr>
 										<td src =<?php echo $curr_stud["profile_pic"] ?>></td>
 										<td><?php echo $curr_stud["name"] ?></td>
 										<td><?php echo $curr_stud["major"] ?></td>
-										<td>
-											<i class="fi-minus waitlisted-minus"></i>
-											Waitlisted (<?php echo $enroll_stud["position"] ?>)
-										</td>
-										<td>Fit Grade Thing Here</td>
+										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
+											<td>
+												<i class="fi-minus waitlisted-minus"></i>
+												Waitlisted (<?php echo $enroll_stud["position"] ?>)
+											</td>
+										<?php } ?>
+										<?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
+											<td>Not Enrolled</td>
+										<?php } ?>
 									</tr>
 							  <?php } ?>
 								  
@@ -390,7 +397,7 @@ include 'callouts.html';
          
                   </div>
               </div>
-        <?php } ?>
+        <?php // } ?>
       </div>
       
     </div>
