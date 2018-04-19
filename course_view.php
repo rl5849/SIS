@@ -14,7 +14,7 @@ $is_prof = json_decode($is_prof, true);
 $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
 $is_admin = json_decode($is_admin, true);
 
-$is_student = (!$is_admin && !$is_prof && $user_id != NIL);
+$is_student = (!$is_admin["is_admin"] && !$is_prof["is_prof"] && $user_id != NIL);
 
 // Load Nav bar and callouts
 include 'nav.php';
@@ -102,16 +102,18 @@ include 'callouts.html';
         $enrolled_students = file_get_contents("http://127.0.0.1:5002/GetStudentsByClassId?class_id=" . $class_id);
         $enrolled_students = json_decode($enrolled_students, true);
 
-        $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
-        $prerequisites = json_decode($prerequisites, true);
+        if($is_student){
+            $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
+            $prerequisites = json_decode($prerequisites, true);
 
-        $meetsPrereq = array();
-        foreach ($prerequisites['prereqs'][0] as $prereq){
-            $meetsPrereq[$prereq['prereq_id']] = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $user_id);
-            $meetsPrereq[$prereq['prereq_id']] = json_decode($meetsPrereq[$prereq['prereq_id']], true);
-            $meetsPrereq[$prereq['prereq_id']] = $meetsPrereq[$prereq['prereq_id']]["meets_prereq"];
-            if ($meetsPrereq[$prereq['prereq_id']] == False){
-                $meetsAllPrereqs = False;
+            $meetsPrereq = array();
+            foreach ($prerequisites['prereqs'][0] as $prereq){
+                $meetsPrereq[$prereq['prereq_id']] = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $user_id);
+                $meetsPrereq[$prereq['prereq_id']] = json_decode($meetsPrereq[$prereq['prereq_id']], true);
+                $meetsPrereq[$prereq['prereq_id']] = $meetsPrereq[$prereq['prereq_id']]["meets_prereq"];
+                if ($meetsPrereq[$prereq['prereq_id']] == False){
+                    $meetsAllPrereqs = False;
+                }
             }
         }
 
@@ -237,33 +239,39 @@ include 'callouts.html';
               <ul class="profile-list prereqs">
                 <?php
                     //assembles a list of prerequisites for the class
-                    try {
+                    if (sizeof($prerequisites["prereqs"]) > 0){
                         $prerequisite = $prerequisites["prereqs"][0];
                         foreach ($prerequisites as $prereq ){
-                            if ($meetsPrereq[$prereq["prereq_id"]] == True){
-                                $class = "fi-check prereq-fulfilled";
+                            if(!($is_prof["is_prof"] || $is_admin["is_admin"])){ 
+                                //only display icons for students
+                                if ($meetsPrereq[$prereq["prereq_id"]] == True){
+                                    $class = "fi-check prereq-fulfilled";
+                                }
+                                elseif ($meetsPrereq[$prereq["prereq_id"]] == False){
+                                    $class = "fi-x prereq-unfulfilled";
+                                }
+                                else{
+                                    $class = "fi-minus prereq-unknown";
+                                }
+                                echo("<li><i class='$class'></i>");
+                            }else{
+                                echo("<li>");
                             }
-                            elseif ($meetsPrereq[$prereq["prereq_id"]] == False){
-                                $class = "fi-x prereq-unfulfilled";
-                            }
-                            else{
-                                $class = "fi-minus prereq-unknown";
-                            }
-                            echo("<li><i class='$class'></i>");
+
                             switch ($prereq["type"]){
-                                case "program_of_enrollment":
+                                case 0:
                                     echo ("Major: " . $prereq["program_of_enrollment"] . "</li>");
                                     break;
-                                case "year_level":
+                                case 1:
                                     echo ("Year Level: " . $prereq["Year Level"] . "</li>");
                                     break;
                                 default:
-                                    echo ($prereq["type"] . "</li>");
+                                    echo ("</li>");
                             }
                         }
                     }
-                    catch (Exception $e){
-                        echo("<li>Prerequisites Unavailable</li>");
+                    else{
+                        echo("<li>No Prerequisites</li>");
                     }
                 ?>
                 <!-- <li><i class="fi-check prereq-fulfilled"></i>3rd Year Standing</li>
