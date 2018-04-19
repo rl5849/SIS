@@ -14,7 +14,7 @@
           <?php
           if ($_SESSION["is_admin"] == "true"){
           ?>
-            <a href="admin.php">Admin</a>
+            <a href="javascript:void(0)">Admin</a>
             <ul class="menu vertical">
               <li><a href="admin.php?view=system">System</a></li>
               <li><a href="admin.php?view=courses">Courses</a></li>
