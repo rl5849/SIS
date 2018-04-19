@@ -50,26 +50,29 @@ else{
                   $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
                   $current_semester = json_decode($current_semester, true)["current_semester"];
 
+                  $classes = file_get_contents("http://127.0.0.1:5002/GetClasses");
+                  $classes = json_decode($classes, true);
+                  $classes = $classes["classes"]; //fix this
 
-                $classes = file_get_contents("http://127.0.0.1:5002/GetClasses");
-                $classes = json_decode($classes, true);
-                $classes = $classes["classes"]; //fix this
+                  $favorites = file_get_contents("http://127.0.0.1:5002/GetFavoritedClasses?user_id=" . $user_id);
+                  $favorites = json_decode($favorites, true);
 
-                foreach ($classes as $class){
+                  $fav_ids = [];
+                  foreach ($favorites as $fav){
+                      array_push($fav_ids, $fav['class_id']);
+                  }
 
-                  $course = file_get_contents("http://127.0.0.1:5002/GetCourseInfo?course_id=" . $class["course_id"]);
-                  $course = json_decode($course, true);
-                  $course = $course["course_info"][0];
 
-                  $professor = file_get_contents("http://127.0.0.1:5002/GetProfessorByID?professor_id=" . $class["professor_id"]);
-                  $professor = json_decode($professor, true);
+              foreach ($classes as $class){
+                    if (in_array($class['class_id'], $fav_ids)){
+                        $favorite = true;
+                    }
+                    else{
+                        $favorite = false;
+                    }
 
-                    //TODO: refactor, get users list of favs and compare
-                  $favorite = file_get_contents("http://127.0.0.1:5002/CheckFavoriteStatus?class_id=" . $class["class_id"] . "&user_id=" . $user_id);
-                  $favorite = json_decode($favorite, true);
-                  $favorite = ($favorite['favorite_status'] == "True" ? true: false);
 
-                    ?>
+               ?>
               <tr name="class_listing">
                   <td>
                       <?php
@@ -80,10 +83,10 @@ else{
                         }
                       ?>
                   </td>
-                <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
+                <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $class["name"];?></a></td>
                 <td><?php echo $class["section"];?></td>
                 <td><?php echo $class["time"];?></td>
-                <td><?php echo $professor["professor_name"];?></td>
+                <td><?php echo $class["professor_name"];?></td>
                 <td><?php echo $class["room_number"];?></td>
               </tr>
 
