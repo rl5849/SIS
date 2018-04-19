@@ -67,11 +67,11 @@ else{
                         else{$favorite = false;}
                ?>
               <tr name="class_listing">
-                  <?php if ($is_student) {
+                  <?php if (!$is_student) {
                         if ($favorite){
-                            echo ("<td><i class=\"fi-heart favorited\"></i></td>");
+                            echo ("<td><div class=\"fi-heart favorited\" id='favorite' value='" . $class['class_id'] . "'></div></td>");
                         }else{
-                            echo ("<td><i class=\"fi-heart unfavorited\"></i></td>");
+                            echo ("<td><div class=\"fi-heart unfavorited\" id='favorite' value='" . $class['class_id'] . "'></div></td>");
                         }
                       }
                   ?>
@@ -95,6 +95,54 @@ else{
     <script src="js/app.js"></script>
     
     <script>
+        $(document).ready(function () {
+            $('.fi-heart').on('click', function () {
+                var action = "";
+                var orig = "";
+                if ($(this).hasClass('favorited')){
+                    console.log("Clicked was favorited, unfavoriting");
+                    orig = "favorite";
+                    action = 1;
+                }else {
+                    console.log("Clicked was unfavorited, favoriting");
+                    action = 0; //0 means you're going to favorite the class
+                    orig = 'unfavorite';
+                }
+
+                //Make the request
+                $.ajax({
+                    type: 'POST',
+                    data: {'action': 'favorite', 'user_id' : "<?php echo $user_id;?>", 'class_id' : $(this).attr('value'), 'favorite' : action},
+                    url: 'user_ajax_funcs.php',
+                    success: function (data) {
+                        if (data.includes("Success")) {
+                            //Toggle the class
+                            if ($(this).hasClass('favorited')) {
+                                console.log("Making item unfavorited")
+                                $(this).removeClass('favorited');
+                                $(this).addClass('unfavorited');
+                            }
+                            else {
+                                console.log("Making item favorited")
+
+                                $(this).removeClass('unfavorited');
+                                $(this).addClass('favorited');
+                            }
+                        }
+                        else {
+                            showMessage("failure", data);
+
+                        }
+                    },
+                    error: function (msg) {
+                        console.log(msg.responseText);
+                    }
+                });
+
+            })
+        });
+
+
       instantiateFilter();
      </script>
   </body>
