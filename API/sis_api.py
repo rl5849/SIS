@@ -222,7 +222,7 @@ class GetFavoritedClasses(Resource):
 
         # Select data from table using SQL query.
         cur.execute(
-            "SELECT classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+            "SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
             "RIGHT JOIN professors ON "
             "(professors.professor_id = classes.professor_id) "
             "INNER JOIN favorites "
@@ -234,7 +234,7 @@ class GetFavoritedClasses(Resource):
 
         query = cur.fetchall()
 
-        column_names = ["course_id", "name", "section", "time", "room_number", "professor_name"]
+        column_names = ["class_id", "course_id", "name", "section", "time", "room_number", "professor_name"]
 
         result = {'classes': [dict(zip(
             column_names, i)) for i in query]}
@@ -401,21 +401,27 @@ class GetClasses(Resource):
 
         # Select data from table using SQL query.
         if class_id:
-            cur.execute("SELECT * FROM classes "
-                        "WHERE class_id = %s "
-                        "ORDER BY name",
-                        [class_id])
+            cur.execute(
+                "SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+                "RIGHT JOIN professors ON "
+                "(professors.professor_id = classes.professor_id) "
+                "WHERE classes.semester_id = (SELECT MAX(id) FROM semesters) "
+                "AND classes.class_id = %s "
+                "ORDER BY classes.name",
+                [class_id])
         else:
-            cur.execute("SELECT * FROM classes "
-                        "ORDER BY name")
+            cur.execute(
+                "SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+                "RIGHT JOIN professors ON "
+                "(professors.professor_id = classes.professor_id) "
+                "WHERE classes.semester_id = (SELECT MAX(id) FROM semesters) "
+                "ORDER BY classes.name",
+                )
 
         query = cur.fetchall()
         # Get variable names
-        cur.execute(
-            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'classes'")
 
-        column_names = cur.fetchall()
-        column_names_clean = [x[0] for x in column_names]
+        column_names_clean = ["class_id", "course_id", "name", "section", "time", "room_number", "professor_name"]
 
         result = {'classes': [dict(zip(
             column_names_clean, i)) for i in query]}
@@ -578,7 +584,7 @@ class CheckPrereq(Resource):
 
         return jsonify(result)
 
-api.add_resource(GetPrereqs, '/CheckPrereq')
+api.add_resource(CheckPrereq, '/CheckPrereq')
 
 """
 Enrolls a student in a course
@@ -648,20 +654,25 @@ class EnrollStudent(Resource):
 
             waitlist = cur.fetchall()
 
-            if len(waitlist) == 0:
+            if waitlist[0][0] == None:
                 position = 0
             else:
+
                 position = waitlist[0][0] + 1 #waitlist[0][0] == MAX(position) for class
                 #TODO add waitlist capacity to database
                 #if position >= waitlist_capacity:
                 #   return jsonify(FAILURE_MESSAGE)
-
             cur.execute("INSERT IGNORE INTO waitlist (student_id, class_id, position) "
                     "VALUES (%s, %s, %s)",
                     [user_id, class_id, position])
 
-            # TODO send notification in php that user was waitlisted and not enrolled
+            try:
+                db.commit()
+            except MySQLdb.IntegrityError:
+                return jsonify(FAILURE_MESSAGE)
+
             return jsonify("WAITLISTED")
+
 
         # Select data from table using SQL query.
         cur.execute("INSERT IGNORE INTO student_to_class (student_id, class_id) "
@@ -743,8 +754,8 @@ class DropStudent(Resource):
                 
                 #shift up the remaining members of the waitlist
                 cur.execute("UPDATE waitlist "
-                            "SET position=position-1"
-                            "WHERE position > %s"
+                            "SET position=position-1 "
+                            "WHERE position > %s "
                             "AND class_id = %s",
                             [query[0][0], class_id])
             
@@ -1142,11 +1153,11 @@ class ModProfile(Resource):
                 statement += key + " = %s, "
                 values += [args[key]]
         statement = statement.rstrip(', ')
-        statement += " WHERE %s = '%s'"
-        values += [id_type, id]
+        statement += " WHERE " + id_type + " = '%s'"
+        values += [id]
         print(statement % tuple(values))
         #if nothing was updated, the statement is not executed
-        if len(values) >= 3:
+        if len(values) >= 2:
             cur.execute(statement, values)
 
         try:
@@ -1252,6 +1263,8 @@ class CheckIfProfessor(Resource):
                     "WHERE user_id = %s",
                     [id])
         query = cur.fetchall()
+
+
         if query[0][0] == 1:
             result = {'is_prof': True}
         else:
@@ -1923,12 +1936,14 @@ class EnrollFromWaitlist(Resource):
         if len(query) == 0:
             return jsonify("NO STUDENTS TO ENROLL")
 
-
         #enroll students
         statement = "INSERT IGNORE INTO student_to_class (student_id, class_id) " \
-                    "VALUES " + ("(%s, %s), " * len(query)-1) + "(%s, %s)"
+                    "VALUES " + ("(%s, %s), " * (len(query)-1)) + "(%s, %s)"
 
-        values = [] + (row for row in query)
+        values = []
+        for row in query:
+            print(row)
+            values+= row
 
         cur.execute(statement, values)
 
@@ -1946,10 +1961,10 @@ class EnrollFromWaitlist(Resource):
                     "   student_to_class.class_id = waitlist.class_id)")
 
         #move remaining students up in waitlist position
-        cur.execute("UPDATE waitlist a"
-                    "SET position = position - ("
+        cur.execute("UPDATE waitlist a "
+                    "SET a.position = a.position - ("
                     "   SELECT MIN(position) "
-                    "   FROM waitlist b "
+                    "   FROM ( select * from waitlist ) b "
                     "   WHERE b.class_id = a.class_id) + 1")
 
         try:

@@ -16,21 +16,19 @@ if(isset($_SESSION['user_id'])){
 
 // If an update action was made and sent to this page, then process it.
 if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
-    $name = $_POST["name"];
-    $dob = $_POST["dob"];
-    $gradYear = $_POST["grad-year"];
 
-
+    // htmlspecialchars sanitizes xss attempts
+    $name = htmlspecialchars($_POST["name"], ENT_QUOTES, 'UTF-8');
+    $dob = htmlspecialchars($_POST["dob"], ENT_QUOTES, 'UTF-8');
+    $gradYear = htmlspecialchars($_POST["grad-year"], ENT_QUOTES, 'UTF-8');
     $userType = $_POST["user-type"];
-    $profilePic = $_POST["profile-pic"];
-
+    $profilePic = htmlspecialchars($_POST["profile-pic"], ENT_QUOTES, 'UTF-8');
 
     $profile_data = array (
             'user_id' => $_SESSION["user_id"],
             'name' => $name,
             'date_of_birth' => $dob,
             'grad_year' => $gradYear,
-
             'user_type' => $userType,
             'profile_pic' => $profilePic,
     );
@@ -39,13 +37,6 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $results = json_decode($results);
 
     // TODO if results are positive, report
-
-    if ($userType == "professor") {
-        $results = file_get_contents("http://127.0.0.1:5002/RequestProfessorApproval?user_id=".$_SESSION["user_id"]);
-        $results = json_decode($results);
-
-        // TODO if results are positive, report
-    }
 }
 ?>
 <!doctype html>
@@ -71,14 +62,14 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <?php
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
     $current_semester = json_decode($current_semester, true)["current_semester"];
-    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
+    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?id=".$student_id);
     $student_info = json_decode($student_info, true);
 
     //used to check if a professor type
-    $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor");
+    $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$student_id);
     $is_prof = json_decode($is_prof, true);
 
-    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin");
+    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$student_id);
     $is_admin = json_decode($is_admin, true);
 
     ?>
@@ -151,6 +142,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               }
                               ?></td>
                       </tr>
+                      <?php if (!$is_prof && !$is_admin) { ?>
                       <tr>
                           <td>DoB</td>
                           <td><?php
@@ -214,11 +206,14 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                       <?php if ($is_editing) { ?>
                       <tr>
                           <td>Profile Picture</td>
-                          <td colspan="3">
+                          <td>
                               <input name='profile-pic' placeholder='Enter a URL' value='<?php echo $profile_picture; ?>'>
                           </td>
+                          <td></td>
+                          <td><input class='button expanded rit-orange' type="submit" name="prof-approval" value="Request Professor Approval"></td>
                       </tr>
-                      <?php } ?>
+                      <?php } // End $is_editing check
+                            } // End $is_prof and $is_admin check?>
                   </table>
                   <?php
                   if ($is_editing) {
@@ -246,7 +241,12 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">
           <div class="large-12 medium-12 small-12 columns">
               <ul class="horizontal tabs" data-tabs id="course-tabs">
-                  <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
+              <?php
+              if(!$is_prof && !$is_admin) {
+              ?>
+                <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
+
+              <?php } ?>
                 <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[2][0]?>);"><?php echo $semesters[2][1]?></a></li>
@@ -254,28 +254,23 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
               </ul>
           </div>
 
-
           <div class="large-12 medium-12 small-12 cell">
             <div class="tabs-content" data-tabs-content="course-tabs">
               <div class="tabs-panel is-active" id="panel1v">
                   <table class="hover">
                     <tr>
-                        <th>Favorite</th>
-                        <th>Course</th>
-                        <th>Section</th>
-                        <th>Time</th>
-                        <th>Instructor</th>
-                        <th>Room</th>
+                        <th align="left">Course</th>
+                        <th align="left">Section</th>
+                        <th align="left">Time</th>
+                        <th align="left">Instructor</th>
+                        <th align="left">Room</th>
                     </tr>
-                  </table>
-                  <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
-
-                  <table class="hover">
                       <tbody id="classes">
                       <!--                              Javascript builds table here-->
 
                       </tbody>
                 </table>
+                  <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
               </div>
             </div>
 
@@ -305,16 +300,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                   $.each(result, function(index, val){
                       for(var i=0; i < val.length; i++){
                           var item = val[i];
-                          // if ($.inArray(item.class_id, result.favs)){
-                          //     document.getElementById('favorite').classList.add("favorited");
-                          // }
-                          // else{
-                          //     document.getElementById('favorite').classList.add("unfavorited");
-                          // }
                           buffer+="<tr>\
-                                    <td>\
-                                        <i id='favorite' class=\"fi-heart unfavorited\"></i>\
-                                    </td>\
                                     <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
                                     <td>" + item.section + "</td> \
                                     <td>" + item.time + "</td> \
@@ -345,7 +331,24 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         if(isset($_GET["fromregister"]) && $_GET["fromregister"] == "true") {
             echo "<script>window.onload = function() {showMessage('success', 'Account successfully created!');};</script>";
         }
+
+        if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
+            // TODO check if this was actually done
+            echo "<script>window.onload = function() {showMessage('success', 'Account information updated successfully.');};</script>";
+        }
+
+        // If the professor approval is not an empty string, then the associated button was clicked
+        if ($_POST["prof-approval"] != "") {
+            $results = file_get_contents("http://127.0.0.1:5002/RequestProfessorApproval?user_id=".$_SESSION["user_id"]);
+            $results = json_decode($results);
+
+            // TODO if results are actually positive, report
+            echo "<script>window.onload = function() {showMessage('success', 'A request has been made to give you professor status within the system.');};</script>";
+            // TODO add undo link to callout
+        }
         ?>
+
+
 
   </body>
 </html>

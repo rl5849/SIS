@@ -9,14 +9,17 @@
   <div class="top-bar-left">
 	<ul class="dropdown menu" data-dropdown-menu>
 	  <li><a href="account.php"  class="site-title">SIS++</a></li>
-	  <li><a href="course_list.php">Course List</a></li>
+	  <li><a href="course_list.php">Class List</a></li>
 	  <li>
           <?php
           if ($_SESSION["is_admin"] == "true"){
           ?>
-            <a href="#">Admin</a>
+            <a href="admin.php">Admin</a>
             <ul class="menu vertical">
-              <li><a href="admin.php">Modify Classes</a></li>
+              <li><a href="admin.php?view=system">System</a></li>
+              <li><a href="admin.php?view=courses">Courses</a></li>
+              <li><a href="admin.php?view=classes">Classes</a></li>
+              <li><a href="admin.php?view=users">Users</a></li>
             </ul>
           <?php }?>
 	  </li>
