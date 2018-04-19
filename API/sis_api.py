@@ -648,20 +648,25 @@ class EnrollStudent(Resource):
 
             waitlist = cur.fetchall()
 
-            if len(waitlist) == 0:
+            if waitlist[0][0] == None:
                 position = 0
             else:
+
                 position = waitlist[0][0] + 1 #waitlist[0][0] == MAX(position) for class
                 #TODO add waitlist capacity to database
                 #if position >= waitlist_capacity:
                 #   return jsonify(FAILURE_MESSAGE)
-
             cur.execute("INSERT IGNORE INTO waitlist (student_id, class_id, position) "
                     "VALUES (%s, %s, %s)",
                     [user_id, class_id, position])
 
-            # TODO send notification in php that user was waitlisted and not enrolled
+            try:
+                db.commit()
+            except MySQLdb.IntegrityError:
+                return jsonify(FAILURE_MESSAGE)
+
             return jsonify("WAITLISTED")
+
 
         # Select data from table using SQL query.
         cur.execute("INSERT IGNORE INTO student_to_class (student_id, class_id) "
@@ -743,8 +748,8 @@ class DropStudent(Resource):
                 
                 #shift up the remaining members of the waitlist
                 cur.execute("UPDATE waitlist "
-                            "SET position=position-1"
-                            "WHERE position > %s"
+                            "SET position=position-1 "
+                            "WHERE position > %s "
                             "AND class_id = %s",
                             [query[0][0], class_id])
             
@@ -1142,11 +1147,11 @@ class ModProfile(Resource):
                 statement += key + " = %s, "
                 values += [args[key]]
         statement = statement.rstrip(', ')
-        statement += " WHERE %s = '%s'"
-        values += [id_type, id]
+        statement += " WHERE " + id_type + " = '%s'"
+        values += [id]
         print(statement % tuple(values))
         #if nothing was updated, the statement is not executed
-        if len(values) >= 3:
+        if len(values) >= 2:
             cur.execute(statement, values)
 
         try:
@@ -1923,12 +1928,14 @@ class EnrollFromWaitlist(Resource):
         if len(query) == 0:
             return jsonify("NO STUDENTS TO ENROLL")
 
-
         #enroll students
         statement = "INSERT IGNORE INTO student_to_class (student_id, class_id) " \
-                    "VALUES " + ("(%s, %s), " * len(query)-1) + "(%s, %s)"
+                    "VALUES " + ("(%s, %s), " * (len(query)-1)) + "(%s, %s)"
 
-        values = [] + (row for row in query)
+        values = []
+        for row in query:
+            print(row)
+            values+= row
 
         cur.execute(statement, values)
 
@@ -1946,10 +1953,10 @@ class EnrollFromWaitlist(Resource):
                     "   student_to_class.class_id = waitlist.class_id)")
 
         #move remaining students up in waitlist position
-        cur.execute("UPDATE waitlist a"
-                    "SET position = position - ("
+        cur.execute("UPDATE waitlist a "
+                    "SET a.position = a.position - ("
                     "   SELECT MIN(position) "
-                    "   FROM waitlist b "
+                    "   FROM ( select * from waitlist ) b "
                     "   WHERE b.class_id = a.class_id) + 1")
 
         try:

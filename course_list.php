@@ -38,12 +38,14 @@ else{
 
           <table class="hover" style="margin-top:2%;">
               <tr>
-                  <th>Fav.</th>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
+                  <?php if ($is_student) { ?>
+                  <th align="left">Fav.</th>
+                  <?php } ?>
+                  <th align="left">Course</th>
+                  <th align="left">Section</th>
+                  <th align="left">Time</th>
+                  <th align="left">Instructor</th>
+                  <th align="left">Room</th>
               </tr>
 
               <?php
@@ -74,6 +76,7 @@ else{
 
                ?>
               <tr name="class_listing">
+                  <?php if ($is_student) {?>
                   <td>
                       <?php
                         if ($favorite){
@@ -83,7 +86,8 @@ else{
                         }
                       ?>
                   </td>
-                <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $class["name"];?></a></td>
+                  <?php } ?>
+                <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
                 <td><?php echo $class["section"];?></td>
                 <td><?php echo $class["time"];?></td>
                 <td><?php echo $class["professor_name"];?></td>

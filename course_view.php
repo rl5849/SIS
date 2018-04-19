@@ -7,6 +7,15 @@ else{
     $user_id = NIL;
 }
 
+//used to check if a professor type
+$is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
+$is_prof = json_decode($is_prof, true);
+
+$is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
+$is_admin = json_decode($is_admin, true);
+
+$is_student = (!$is_admin && !$is_prof && $user_id != NIL);
+
 // Load Nav bar and callouts
 include 'nav.php';
 include 'callouts.html';
@@ -99,7 +108,6 @@ include 'callouts.html';
         $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
         $prerequisites = json_decode($prerequisites, true);
 
-        $meetsAllPrereqs = True;
         $meetsPrereq = array();
         foreach ($prerequisites['prereqs'][0] as $prereq){
             $meetsPrereq[$prereq['prereq_id']] = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $user_id);
@@ -184,10 +192,12 @@ include 'callouts.html';
               </div>
           </div>
 
+          <?php if ($is_student) { ?>
+
           <div class="large-4 medium-4 small-4 cell">
               <div class="card">
                   <div class="card-divider">
-                      Special access required
+                      Special Access Required
                   </div>
                   <div class="card-section">
                       <form class="ajax" method="post">
@@ -209,6 +219,7 @@ include 'callouts.html';
                   </div>
               </div>
           </div>
+          <?php } ?>
 
         <div class="large-4 medium-4 small-4 cell">
           <div class="card">
@@ -268,10 +279,7 @@ include 'callouts.html';
         </div>
 
           <?php // TODO make this only display for the professor associated with the class ?>
-          <?php if(){
-
-
-          } ?>
+          <?php  ?>
           <div class="large-12 medium-12 small-12 cell">
               <div class="card">
                   <div class="card-divider">
