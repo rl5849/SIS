@@ -309,7 +309,7 @@ class GetFavoritedClasses(Resource):
 
         # Select data from table using SQL query.
         cur.execute(
-            "SELECT classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+            "SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
             "RIGHT JOIN professors ON "
             "(professors.professor_id = classes.professor_id) "
             "INNER JOIN favorites "
@@ -321,7 +321,7 @@ class GetFavoritedClasses(Resource):
 
         query = cur.fetchall()
 
-        column_names = ["course_id", "name", "section", "time", "room_number", "professor_name"]
+        column_names = ["class_id", "course_id", "name", "section", "time", "room_number", "professor_name"]
 
         result = {'classes': [dict(zip(
             column_names, i)) for i in query]}
@@ -488,21 +488,27 @@ class GetClasses(Resource):
 
         # Select data from table using SQL query.
         if class_id:
-            cur.execute("SELECT * FROM classes "
-                        "WHERE class_id = %s "
-                        "ORDER BY name",
-                        [class_id])
+            cur.execute(
+                "SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+                "RIGHT JOIN professors ON "
+                "(professors.professor_id = classes.professor_id) "
+                "WHERE classes.semester_id = (SELECT MAX(id) FROM semesters) "
+                "AND classes.class_id = %s "
+                "ORDER BY classes.name",
+                [class_id])
         else:
-            cur.execute("SELECT * FROM classes "
-                        "ORDER BY name")
+            cur.execute(
+                "SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+                "RIGHT JOIN professors ON "
+                "(professors.professor_id = classes.professor_id) "
+                "WHERE classes.semester_id = (SELECT MAX(id) FROM semesters) "
+                "ORDER BY classes.name",
+                )
 
         query = cur.fetchall()
         # Get variable names
-        cur.execute(
-            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'classes'")
 
-        column_names = cur.fetchall()
-        column_names_clean = [x[0] for x in column_names]
+        column_names_clean = ["class_id", "course_id", "name", "section", "time", "room_number", "professor_name"]
 
         result = {'classes': [dict(zip(
             column_names_clean, i)) for i in query]}
@@ -1286,6 +1292,47 @@ class RequestProfessorApproval(Resource):
 api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
 
 
+
+class MakeAdmin(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get course info
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int)
+
+        parsed = parser.parse_args()
+
+        user_id = parsed.get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("UPDATE users "
+                    "SET user_status = 2 "
+                    "WHERE user_id = %s",
+                    [user_id])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        cur.close()
+
+        return jsonify(SUCCESS_MESSAGE)
+
+api.add_resource(MakeAdmin, '/MakeAdmin')
+
+
+
+
 """
 Check if student/user has admin privileges
 """
@@ -1344,6 +1391,8 @@ class CheckIfProfessor(Resource):
                     "WHERE user_id = %s",
                     [id])
         query = cur.fetchall()
+
+
         if query[0][0] == 1:
             result = {'is_prof': True}
         else:
@@ -1543,6 +1592,38 @@ class GetUserIDFromLinkedInID(Resource):
         return jsonify(result)
 api.add_resource(GetUserIDFromLinkedInID, '/GetUserIDFromLinkedInID')
 
+"""
+GetUsers
+"""
+class GetUsers(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('linkedin_id', type=str)
+        linkedin_id = parser.parse_args().get("linkedin_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT user_id, name, user_status FROM users ")
+
+        columns = ["user_id", 'name', 'user_status']
+
+
+        query = cur.fetchall()
+
+        result = {'users': [dict(zip(columns, i)) for i in query] }
+
+        return jsonify(result)
+api.add_resource(GetUsers, '/GetUsers')
+
 
 """
 GetUserIdFromLogin
@@ -1580,7 +1661,7 @@ api.add_resource(GetUserIDFromLogin, '/GetUserIDFromLogin')
 
 
 """
-GetUserIdFromLogin
+UserExists
 """
 class UserExists(Resource):
     config = ConfigParser.ConfigParser()
