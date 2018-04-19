@@ -113,7 +113,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         <form action="account.php" method="post">
             <ul class="profile-list">
               <li><?php
-                  $name = $student_info["student_info"][0]["student_name"];
+                  // $name is defined in nav.php
                   if ($is_editing) {
                       echo "Name: <input required name='name' value='".$name."'>";
                   } else {
