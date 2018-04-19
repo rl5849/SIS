@@ -58,36 +58,24 @@ else{
 
                   $favorites = file_get_contents("http://127.0.0.1:5002/GetFavoritedClasses?user_id=" . $user_id);
                   $favorites = json_decode($favorites, true);
-
-                  $fav_ids = [];
-                  foreach ($favorites as $fav){
-                      array_push($fav_ids, $fav['class_id']);
-                  }
+                  $favorites = $favorites['classes'];
 
 
-              foreach ($classes as $class){
-                    if (in_array($class['class_id'], $fav_ids)){
-                        $favorite = true;
-                    }
-                    else{
-                        $favorite = false;
-                    }
-
-
+                  foreach ($classes as $class){
+                        if (in_array($class, $favorites)){
+                            $favorite = true;}
+                        else{$favorite = false;}
                ?>
               <tr name="class_listing">
-                  <?php if ($is_student) {?>
-                  <td>
-                      <?php
+                  <?php if (!$is_student) {//TODO remove
                         if ($favorite){
-                            echo ("<i class=\"fi-heart favorited\"></i>");
+                            echo ("<td><i class=\"fi-heart favorited\"></i></td>");
                         }else{
-                            echo ("<i class=\"fi-heart unfavorited\"></i>");
+                            echo ("<td><i class=\"fi-heart unfavorited\"></i></td>");
                         }
-                      ?>
-                  </td>
-                  <?php } ?>
-                <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
+                      }
+                  ?>
+                <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $class["name"];?></a></td>
                 <td><?php echo $class["section"];?></td>
                 <td><?php echo $class["time"];?></td>
                 <td><?php echo $class["professor_name"];?></td>
