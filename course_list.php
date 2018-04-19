@@ -95,52 +95,54 @@ else{
     <script src="js/app.js"></script>
     
     <script>
-        $(document).ready(function () {
-            $('.fi-heart').on('click', function () {
-                var action = "";
-                var orig = "";
-                if ($(this).hasClass('favorited')){
-                    console.log("Clicked was favorited, unfavoriting");
-                    orig = "favorite";
-                    action = 1;
-                }else {
-                    console.log("Clicked was unfavorited, favoriting");
-                    action = 0; //0 means you're going to favorite the class
-                    orig = 'unfavorite';
-                }
+        $('.fi-heart').on('click', function () {
+            var action = "";
+            var orig = "";
+            if ($(this).hasClass('favorited')){
+                console.log("Clicked was favorited, unfavoriting");
+                orig = "favorited";
+                action = 1;
+            }else {
+                console.log("Clicked was unfavorited, favoriting");
+                action = 0; //0 means you're going to favorite the class
+                orig = 'unfavorite';
+            }
 
-                //Make the request
-                $.ajax({
-                    type: 'POST',
-                    data: {'action': 'favorite', 'user_id' : "<?php echo $user_id;?>", 'class_id' : $(this).attr('value'), 'favorite' : action},
-                    url: 'user_ajax_funcs.php',
-                    success: function (data) {
-                        if (data.includes("Success")) {
-                            //Toggle the class
-                            if ($(this).hasClass('favorited')) {
-                                console.log("Making item unfavorited")
-                                $(this).removeClass('favorited');
-                                $(this).addClass('unfavorited');
-                            }
-                            else {
-                                console.log("Making item favorited")
+            //Make the request
+            $.ajax({
+                type: 'POST',
+                data: {'action': 'favorite', 'user_id' : "<?php echo $user_id;?>", 'class_id' : $(this).attr('value'), 'favorite' : action},
+                url: 'user_ajax_funcs.php',
+                success: function (data) {
+                    if (data.includes("Success")) {
+                        //Toggle the class
 
-                                $(this).removeClass('unfavorited');
-                                $(this).addClass('favorited');
-                            }
-                        }
-                        else {
-                            showMessage("failure", data);
-
-                        }
-                    },
-                    error: function (msg) {
-                        console.log(msg.responseText);
                     }
-                });
+                    else {
+                        showMessage("failure", data);
+                        return
 
-            })
+                    }
+                },
+                error: function (msg) {
+                    console.log(msg.responseText);
+                }
+            });
+            if ($(this).hasClass('favorited')) {
+                console.log("Making item UNfavorited")
+                $(this).removeClass('favorited');
+                $(this).addClass('unfavorited');
+
+            }
+            else {
+                console.log("Making item favorited")
+
+                $(this).removeClass('unfavorited');
+                $(this).addClass('favorited');
+            }
+
         });
+
 
 
       instantiateFilter();
