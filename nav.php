@@ -9,7 +9,7 @@
   <div class="top-bar-left">
 	<ul class="dropdown menu" data-dropdown-menu>
 	  <li><a href="account.php"  class="site-title">SIS++</a></li>
-	  <li><a href="course_list.php">Course List</a></li>
+	  <li><a href="course_list.php">Class List</a></li>
 	  <li>
           <?php
           if ($_SESSION["is_admin"] == "true"){

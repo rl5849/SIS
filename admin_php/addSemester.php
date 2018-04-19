@@ -10,4 +10,16 @@
         <input class="button expanded" type="submit" value="Create Semester">
     </form>
     <!-- End new form -->
+
+    <!-- Start new form -->
+    <form class="callout text-center" method="post">
+        <input type="hidden" name="action" value="add_semester">
+        <h4>Add a new Admin</h4>
+        <div class="floated-label-wrapper">
+            <label for="User">User</label>
+            <input type="text" id="user" name="user" placeholder="User">
+        </div>
+        <input class="button expanded" type="submit" value="Add Admin">
+    </form>
+    <!-- End new form -->
 </div>
