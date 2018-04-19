@@ -6,6 +6,15 @@ if (isset($_SESSION['user_id'])){
 else{
     $user_id = NIL;
 }
+
+//used to check if a professor type
+$is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
+$is_prof = json_decode($is_prof, true);
+
+$is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
+$is_admin = json_decode($is_admin, true);
+
+$is_student = (!$is_admin && !$is_prof && $user_id != NIL);
  ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -38,12 +47,14 @@ else{
 
           <table class="hover" style="margin-top:2%;">
               <tr>
-                  <th>Fav.</th>
-                  <th>Course</th>
-                  <th>Section</th>
-                  <th>Time</th>
-                  <th>Instructor</th>
-                  <th>Room</th>
+                  <?php if ($is_student) { ?>
+                  <th align="left">Fav.</th>
+                  <?php } ?>
+                  <th align="left">Course</th>
+                  <th align="left">Section</th>
+                  <th align="left">Time</th>
+                  <th align="left">Instructor</th>
+                  <th align="left">Room</th>
               </tr>
 
               <?php
@@ -71,6 +82,7 @@ else{
 
                     ?>
               <tr name="class_listing">
+                  <?php if ($is_student) {?>
                   <td>
                       <?php
                         if ($favorite){
@@ -80,6 +92,7 @@ else{
                         }
                       ?>
                   </td>
+                  <?php } ?>
                 <td><a href="course_view.php?class_id=<?php echo $class["class_id"];?>"><?php echo $course["course_name"];?></a></td>
                 <td><?php echo $class["section"];?></td>
                 <td><?php echo $class["time"];?></td>
