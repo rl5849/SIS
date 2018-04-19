@@ -320,10 +320,10 @@ include 'callouts.html';
 										<?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
 										  <td>
 											<form action="post">
-											<input class="grade-number" type="number" name="grade" min=0 max=100 placeholder=<?php echo $curr_stud["grade"] ?>>
+											<input class="grade-number" type="number" name="grade" min=0 max=100 placeholder= "0" value=<?php echo $curr_stud["grade"] ?>>
 											<p class="grade-total" style="">/100</p>
 											<input type="hidden" name="submit" value="submit_grade">
-											<input class="button expanded submit-button" type="submit" value="Submit Grade">
+											<input class="button expanded submit-button" type="submit" value="Re-Grade">
 										  </td>
                                       </form>
 										<?php } ?>
