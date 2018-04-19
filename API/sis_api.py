@@ -50,8 +50,10 @@ class AddCourse(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(AddCourse, '/AddCourse')
@@ -100,8 +102,10 @@ class AddPrereqs(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(AddPrereqs, '/AddPrereqs')
@@ -137,8 +141,10 @@ class AddSemester(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(AddSemester, '/AddSemester')
@@ -190,8 +196,10 @@ class AddClass(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 
@@ -241,8 +249,10 @@ class AddUser(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify("INSERT FAILED!")
 
+        cur.close()
         return jsonify("SUCCESS")
 
 
@@ -280,8 +290,10 @@ class DeletePrereq(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(DeletePrereq, '/DeletePrereq')
@@ -326,6 +338,7 @@ class GetFavoritedClasses(Resource):
         result = {'classes': [dict(zip(
             column_names, i)) for i in query]}
 
+        cur.close()
         return jsonify(result)
 
 
@@ -366,6 +379,7 @@ class GetStudentInfo(Resource):
         result = {'student_info': [dict(zip(
             column_names_clean, i)) for i in query]}
 
+        cur.close()
         return jsonify(result)
 
 api.add_resource(GetStudentInfo, '/GetStudentInfo')
@@ -414,6 +428,7 @@ class GetCourses(Resource):
         result = {'courses': [dict(zip(
             column_names_clean, i)) for i in query]}
 
+        cur.close()
         return jsonify(result)
 
 api.add_resource(GetCourses, '/GetCourses')
@@ -457,6 +472,7 @@ class GetCourseInfo(Resource):
         result = {'course_info': [dict(zip(
             column_names_clean, i)) for i in query]}
 
+        cur.close()
         return jsonify(result)
 
 api.add_resource(GetCourseInfo, '/GetCourseInfo')
@@ -499,20 +515,20 @@ class GetClasses(Resource):
         else:
             cur.execute(
                 "SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
-                "RIGHT JOIN professors ON "
+                "INNER JOIN professors ON "
                 "(professors.professor_id = classes.professor_id) "
                 "WHERE classes.semester_id = (SELECT MAX(id) FROM semesters) "
-                "ORDER BY classes.name",
-                )
+                "ORDER BY classes.name")
+
 
         query = cur.fetchall()
         # Get variable names
 
         column_names_clean = ["class_id", "course_id", "name", "section", "time", "room_number", "professor_name"]
 
-        result = {'classes': [dict(zip(
-            column_names_clean, i)) for i in query]}
+        result = {'classes': [dict(zip(column_names_clean, i)) for i in query]}
 
+        cur.close()
         return jsonify(result)
 
 api.add_resource(GetClasses, '/GetClasses')
@@ -557,6 +573,7 @@ class GetClassInfo(Resource):
         result = {'class_info': [dict(zip(
             column_names_clean, i)) for i in query]}
 
+        cur.close()
         return jsonify(result)
 
 api.add_resource(GetClassInfo, '/GetClassInfo')
@@ -598,6 +615,7 @@ class GetPrereqs(Resource):
         result = {'prereqs': [dict(zip(
             column_names, i)) for i in query]}
 
+        cur.close()
         return jsonify(result)
 
 api.add_resource(GetPrereqs, '/GetPrereqs')
@@ -669,6 +687,7 @@ class CheckPrereq(Resource):
             #prereq cannot be determined
             result = {'meets_prereq' : None}
 
+        cur.close()
         return jsonify(result)
 
 api.add_resource(CheckPrereq, '/CheckPrereq')
@@ -708,6 +727,7 @@ class EnrollStudent(Resource):
         query = cur.fetchall()
         # if student is enrolled return a failure
         if query[0][0] > 0:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
         #check if student is already waitlisted
@@ -719,6 +739,7 @@ class EnrollStudent(Resource):
         query = cur.fetchall()
         # if student is already waitlisted, return a failure
         if query[0][0] > 0:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
         # check if the class is full
@@ -729,6 +750,7 @@ class EnrollStudent(Resource):
         capacity = cur.fetchall()
 
         if len(capacity) == 0:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
         #compare num_enrolled to capacity
@@ -756,8 +778,10 @@ class EnrollStudent(Resource):
             try:
                 db.commit()
             except MySQLdb.IntegrityError:
+                cur.close()
                 return jsonify(FAILURE_MESSAGE)
 
+            cur.close()
             return jsonify("WAITLISTED")
 
 
@@ -774,8 +798,10 @@ class EnrollStudent(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(EnrollStudent, '/EnrollStudent')
@@ -847,14 +873,17 @@ class DropStudent(Resource):
                             [query[0][0], class_id])
             
             else:
+                cur.close()
                 return jsonify(FAILURE_MESSAGE)
             
 
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(DropStudent, '/DropStudent')
@@ -904,6 +933,7 @@ class CheckEnrollmentStatus(Resource):
 
         result = {'enrollment_status': status}
 
+        cur.close()
         return jsonify(result)
 
 api.add_resource(CheckEnrollmentStatus, '/CheckEnrollmentStatus')
@@ -939,8 +969,10 @@ class FavoriteClass(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(FavoriteClass, '/FavoriteClass')
@@ -989,8 +1021,10 @@ class RequestSpecialAccess(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 
@@ -1028,8 +1062,10 @@ class UnfavoriteClass(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(UnfavoriteClass, '/UnfavoriteClass')
@@ -1068,6 +1104,7 @@ class CheckFavoriteStatus(Resource):
 
         result = {'favorite_status': str(query[0][0] > 0)}
 
+        cur.close()
         return jsonify(result)
 
 api.add_resource(CheckFavoriteStatus, '/CheckFavoriteStatus')
@@ -1083,6 +1120,7 @@ class GetGrade(Resource):
     config.read('./config.ini')
     
     def get(self):
+        #cur.close()
         return jsonify(
                         grade="A",
                       )
@@ -1126,8 +1164,10 @@ class SetGPA(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(SetGPA, '/SetGPA')
@@ -1144,6 +1184,7 @@ class ModClass(Resource):
     config.read('./config.ini')
     
     def get(self):
+        #cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(ModClass, '/ModClass')
@@ -1160,6 +1201,7 @@ class ModCourse(Resource):
     config.read('./config.ini')
     
     def get(self):
+        #cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(ModCourse, '/ModCourse')
@@ -1250,8 +1292,10 @@ class ModProfile(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(ModProfile, '/ModProfile')
@@ -1285,8 +1329,10 @@ class RequestProfessorApproval(Resource):
         try:
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
@@ -1323,8 +1369,8 @@ class MakeAdmin(Resource):
             db.commit()
         except MySQLdb.IntegrityError:
             return jsonify(FAILURE_MESSAGE)
-
-        cur.close()
+        finally:
+            cur.close()
 
         return jsonify(SUCCESS_MESSAGE)
 
@@ -1362,6 +1408,8 @@ class CheckIfAdmin(Resource):
             result = {'is_admin': True}
         else:
             result = {'is_admin': False}
+
+        cur.close()
         return jsonify(result)
 api.add_resource(CheckIfAdmin, '/CheckIfAdmin')
 
@@ -1397,6 +1445,8 @@ class CheckIfProfessor(Resource):
             result = {'is_prof': True}
         else:
             result = {'is_prof': False}
+
+        cur.close()
         return jsonify(result)
 api.add_resource(CheckIfProfessor, '/CheckIfProfessor')
 
@@ -1427,7 +1477,7 @@ class GetProfessorByID(Resource):
         query = cur.fetchall()
 
         result = {'professor_name': query[0][0]}
-
+        cur.close()
         return jsonify(result)
 
 
@@ -1455,7 +1505,7 @@ class GetProfessorRequests(Resource):
         query = cur.fetchall()
 
         result = {'requests': [[i[1], i[0]] for i in query]}
-
+        cur.close()
         return jsonify(result)
 
 
@@ -1503,7 +1553,7 @@ class WaitlistByClass(Resource):
 
         result = [dict(zip(
             column_names_clean, i)) for i in query]
-
+        cur.close()
         return jsonify(result)
 
 api.add_resource(WaitlistByClass, '/WaitlistByClass')
@@ -1528,7 +1578,7 @@ class GetCurrentSemester(Resource):
         result = {'current_semester': query[0][0]}
 
         db.close()
-
+        cur.close()
         return jsonify(result)
 
 api.add_resource(GetCurrentSemester, '/GetCurrentSemester')
@@ -1555,7 +1605,7 @@ class GetProfs(Resource):
         query = cur.fetchall()
 
         result = {'profs': [[i[0], i[1]] for i in query]}
-
+        cur.close()
         return jsonify(result)
 
 api.add_resource(GetProfs, '/GetProfs')
@@ -1588,7 +1638,7 @@ class GetUserIDFromLinkedInID(Resource):
         query = cur.fetchall()
 
         result = {'user_id': (query[0][0] if query else None) }
-
+        cur.close()
         return jsonify(result)
 api.add_resource(GetUserIDFromLinkedInID, '/GetUserIDFromLinkedInID')
 
@@ -1620,7 +1670,7 @@ class GetUsers(Resource):
         query = cur.fetchall()
 
         result = {'users': [dict(zip(columns, i)) for i in query] }
-
+        cur.close()
         return jsonify(result)
 api.add_resource(GetUsers, '/GetUsers')
 
@@ -1655,7 +1705,7 @@ class GetUserIDFromLogin(Resource):
         query = cur.fetchall()
 
         result = {'user_id': (query[0][0] if query else None)}
-
+        cur.close()
         return jsonify(result)
 api.add_resource(GetUserIDFromLogin, '/GetUserIDFromLogin')
 
@@ -1687,7 +1737,7 @@ class UserExists(Resource):
         query = cur.fetchall()
 
         result = {'exists': ('True' if query else 'False')}
-
+        cur.close()
         return jsonify(result)
 api.add_resource(UserExists, '/UserExists')
 
@@ -1736,7 +1786,7 @@ class CreateLogin(Resource):
             db.commit()
         except MySQLdb.IntegrityError:
             return jsonify(FAILURE_MESSAGE)
-
+        cur.close()
         return jsonify({"message": SUCCESS_MESSAGE,
                         "user_id": new_user_id})
 
@@ -1774,7 +1824,7 @@ class DeleteClass(Resource):
             db.commit()
         except MySQLdb.IntegrityError:
             return jsonify(FAILURE_MESSAGE)
-
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 
@@ -1810,7 +1860,7 @@ class DeleteCourse(Resource):
             db.commit()
         except MySQLdb.IntegrityError:
             return jsonify(FAILURE_MESSAGE)
-
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 
@@ -1846,7 +1896,7 @@ class DeleteProfRequest(Resource):
             db.commit()
         except MySQLdb.IntegrityError:
             return jsonify(FAILURE_MESSAGE)
-
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 
@@ -1886,8 +1936,9 @@ class ApproveProfRequest(Resource):
 
             db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
-
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 
@@ -1932,13 +1983,14 @@ class GetStudentsByClassId(Resource):
             waitlisted = cur.fetchall()
 
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
         enrolled_schema = ['user_id', 'user_name', 'grade']
         waitlist_schema = ['user_id', 'user_name', 'position']
 
         result = { 'enrolled' : [dict(zip(enrolled_schema, i)) for i in enrolled], 'waitlisted' : [dict(zip(waitlist_schema, i)) for i in  waitlisted]}
-
+        cur.close()
         return jsonify(result)
 
 api.add_resource(GetStudentsByClassId, '/GetStudentsByClassId')
@@ -1993,7 +2045,7 @@ class GetStudentsClassesForSemester(Resource):
         result = {'classes': [dict(zip(
             column_names, i)) for i in query],
                   "favs": [j[0] for j in favs]}
-
+        cur.close()
         return jsonify(result)
 
 
@@ -2021,7 +2073,7 @@ class GetSemesters(Resource):
         query = cur.fetchall()
 
         result = {'semesters': (query if query else None)}
-
+        cur.close()
         return jsonify(result)
 api.add_resource(GetSemesters, '/GetSemesters')
 
@@ -2057,7 +2109,7 @@ class GetCourseList(Resource):
 
         result = {'classes': [dict(zip(
             column_names, i)) for i in query]}
-
+        cur.close()
         return jsonify(result)
 
 
@@ -2094,6 +2146,7 @@ class EnrollFromWaitlist(Resource):
 
         #if there are no students eligable to be enrolled, return
         if len(query) == 0:
+            cur.close()
             return jsonify("NO STUDENTS TO ENROLL")
 
         #enroll students
@@ -2130,8 +2183,10 @@ class EnrollFromWaitlist(Resource):
         try:
                     db.commit()
         except MySQLdb.IntegrityError:
+            cur.close()
             return jsonify(FAILURE_MESSAGE)
 
+        cur.close()
         return jsonify(SUCCESS_MESSAGE)
 
 api.add_resource(EnrollFromWaitlist, '/EnrollFromWaitlist')
@@ -2168,6 +2223,7 @@ class GetStudentAccess(Resource):
 
         query = cur.fetchall()
         result = {"requests" : [i[0] for i in query]}
+        cur.close()
         return jsonify(result)
 
 api.add_resource(GetStudentAccess, '/GetStudentAccess')
