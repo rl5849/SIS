@@ -1662,9 +1662,12 @@ class GetUsers(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT user_id, name, user_status FROM users ")
+        cur.execute("SELECT logins.username, users.user_id, users.name, users.user_status "
+                    "FROM users "
+                    "INNER JOIN logins ON "
+                    "(users.user_id = logins.user_id)")
 
-        columns = ["user_id", 'name', 'user_status']
+        columns = ["username", "user_id", 'name', 'user_status']
 
 
         query = cur.fetchall()
