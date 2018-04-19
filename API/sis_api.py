@@ -222,7 +222,7 @@ class GetFavoritedClasses(Resource):
 
         # Select data from table using SQL query.
         cur.execute(
-            "SELECT classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+            "SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
             "RIGHT JOIN professors ON "
             "(professors.professor_id = classes.professor_id) "
             "INNER JOIN favorites "
@@ -234,7 +234,7 @@ class GetFavoritedClasses(Resource):
 
         query = cur.fetchall()
 
-        column_names = ["course_id", "name", "section", "time", "room_number", "professor_name"]
+        column_names = ["class_id", "course_id", "name", "section", "time", "room_number", "professor_name"]
 
         result = {'classes': [dict(zip(
             column_names, i)) for i in query]}
@@ -401,21 +401,27 @@ class GetClasses(Resource):
 
         # Select data from table using SQL query.
         if class_id:
-            cur.execute("SELECT * FROM classes "
-                        "WHERE class_id = %s "
-                        "ORDER BY name",
-                        [class_id])
+            cur.execute(
+                "SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+                "RIGHT JOIN professors ON "
+                "(professors.professor_id = classes.professor_id) "
+                "WHERE classes.semester_id = (SELECT MAX(id) FROM semesters) "
+                "AND classes.class_id = %s "
+                "ORDER BY classes.name",
+                [class_id])
         else:
-            cur.execute("SELECT * FROM classes "
-                        "ORDER BY name")
+            cur.execute(
+                "SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+                "RIGHT JOIN professors ON "
+                "(professors.professor_id = classes.professor_id) "
+                "WHERE classes.semester_id = (SELECT MAX(id) FROM semesters) "
+                "ORDER BY classes.name",
+                )
 
         query = cur.fetchall()
         # Get variable names
-        cur.execute(
-            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'classes'")
 
-        column_names = cur.fetchall()
-        column_names_clean = [x[0] for x in column_names]
+        column_names_clean = ["class_id", "course_id", "name", "section", "time", "room_number", "professor_name"]
 
         result = {'classes': [dict(zip(
             column_names_clean, i)) for i in query]}
@@ -1257,6 +1263,8 @@ class CheckIfProfessor(Resource):
                     "WHERE user_id = %s",
                     [id])
         query = cur.fetchall()
+
+
         if query[0][0] == 1:
             result = {'is_prof': True}
         else:
