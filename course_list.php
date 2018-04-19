@@ -67,7 +67,7 @@ else{
                         else{$favorite = false;}
                ?>
               <tr name="class_listing">
-                  <?php if (!$is_student) {
+                  <?php if ($is_student) {
                         if ($favorite){
                             echo ("<td><div class=\"fi-heart favorited\" id='favorite' value='" . $class['class_id'] . "'></div></td>");
                         }else{
@@ -115,13 +115,10 @@ else{
                 url: 'user_ajax_funcs.php',
                 success: function (data) {
                     if (data.includes("Success")) {
-                        //Toggle the class
-
+                        //Do nothing here
                     }
                     else {
                         showMessage("failure", data);
-                        return
-
                     }
                 },
                 error: function (msg) {
@@ -129,14 +126,10 @@ else{
                 }
             });
             if ($(this).hasClass('favorited')) {
-                console.log("Making item UNfavorited")
                 $(this).removeClass('favorited');
                 $(this).addClass('unfavorited');
-
             }
             else {
-                console.log("Making item favorited")
-
                 $(this).removeClass('unfavorited');
                 $(this).addClass('favorited');
             }
