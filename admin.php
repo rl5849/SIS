@@ -155,7 +155,7 @@ else{
                     // contentType: "application/x-www-form-urlencoded",
                     url: 'admin_ajax_funcs.php',
                     success: function (data) {
-                        if (data.includes("Success")) {
+                        if (data.includes("Success") || data.includes("SUCCESS")) {
                             showMessage("success", data);
                             $(load_class_table());
                             $(load_course_table());

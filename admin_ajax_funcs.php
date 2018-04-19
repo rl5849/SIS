@@ -36,6 +36,9 @@ if (isset($_POST["action"])){
         case "get_courses":
             get_courses();
             break;
+        case "make_admin":
+            make_admin();
+            break;
         case "get_student_classes_by_semester":
             if ($_POST['semester_id'] === 'favs'){
                 get_student_favs();
@@ -164,4 +167,14 @@ function get_student_classes_by_semester() {
 function get_student_favs() {
     $list = file_get_contents("http://127.0.0.1:5002/GetFavoritedClasses?user_id=" . $_POST['user_id']);
     echo $list;
+}
+
+function make_admin() {
+    $result = file_get_contents("http://127.0.0.1:5002/MakeAdmin?user_id=" . $_POST['user_id']);
+    if($result == "\"SUCCESS\""){
+        echo "Successfully granted admin privileges";
+    }
+    else{
+        echo "Could not grant admin privileges";
+    }
 }

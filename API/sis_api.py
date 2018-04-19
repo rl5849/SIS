@@ -1205,6 +1205,47 @@ class RequestProfessorApproval(Resource):
 api.add_resource(RequestProfessorApproval, '/RequestProfessorApproval')
 
 
+
+class MakeAdmin(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get course info
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int)
+
+        parsed = parser.parse_args()
+
+        user_id = parsed.get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("UPDATE users "
+                    "SET user_status = 2 "
+                    "WHERE user_id = %s",
+                    [user_id])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+
+        cur.close()
+
+        return jsonify(SUCCESS_MESSAGE)
+
+api.add_resource(MakeAdmin, '/MakeAdmin')
+
+
+
+
 """
 Check if student/user has admin privileges
 """
@@ -1463,6 +1504,38 @@ class GetUserIDFromLinkedInID(Resource):
 
         return jsonify(result)
 api.add_resource(GetUserIDFromLinkedInID, '/GetUserIDFromLinkedInID')
+
+"""
+GetUsers
+"""
+class GetUsers(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('linkedin_id', type=str)
+        linkedin_id = parser.parse_args().get("linkedin_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT user_id, name, user_status FROM users ")
+
+        columns = ["user_id", 'name', 'user_status']
+
+
+        query = cur.fetchall()
+
+        result = {'users': [dict(zip(columns, i)) for i in query] }
+
+        return jsonify(result)
+api.add_resource(GetUsers, '/GetUsers')
 
 
 """
