@@ -67,7 +67,7 @@ else{
                         else{$favorite = false;}
                ?>
               <tr name="class_listing">
-                  <?php if (!$is_student) {//TODO remove
+                  <?php if ($is_student) {
                         if ($favorite){
                             echo ("<td><i class=\"fi-heart favorited\"></i></td>");
                         }else{
