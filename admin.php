@@ -66,7 +66,7 @@ else{
                         printAdminHeader("Classes");
                         include("admin_php/addClass.php");
                         include("admin_php/deleteClass.php");
-                        //include("admin_php/accessRequests.php");
+                        include("admin_php/accessRequests.php");
 
                         break;
                     case "users":
