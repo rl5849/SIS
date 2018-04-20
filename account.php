@@ -301,7 +301,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                       for(var i=0; i < val.length; i++){
                           var item = val[i];
                           buffer+="<tr>\
-                                    <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
+                                    <td><a href='course_view.php?class_id=" + item.class_id + "'>" + item.name + "</a></td>\
                                     <td>" + item.section + "</td> \
                                     <td>" + item.time + "</td> \
                                     <td>" + item.professor_name + "</td> \
