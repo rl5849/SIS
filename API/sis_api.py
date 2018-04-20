@@ -2248,20 +2248,20 @@ class GetAccessRequests(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT classes.name, users.name, access_requests.request_type "
+        cur.execute("SELECT classes.time, courses.course_code, classes.section, classes.name, users.name, access_requests.request_type "
                     "FROM access_requests "
                     "INNER JOIN classes "
                     "ON (classes.class_id = access_requests.class_id) "
+                    "INNER JOIN courses "
+                    "ON (classes.course_id = courses.course_id) "
                     "INNER JOIN users "
-                    "ON (users.user_id = access_requests.user_id) ")
+                    "ON (users.user_id = access_requests.user_id) "
+                    "ORDER BY classes.name")
 
-        # cur.execute("SELECT classes.name, users.name, access_requests.request_type "
-        #             "FROM access_requests, classes, users "
-        #             "WHERE classes.class_id = access_requests.class_id "
-        #             "AND users.user_id = access_requests.user_id")
+
         query = cur.fetchall()
 
-        titles = ['class_name', 'user_name', 'request']
+        titles = ['time', 'course_code', 'section', 'class_name', 'user_name', 'request']
 
         result = {"requests" : [dict(zip(titles, i)) for i in query]}
         cur.close()
