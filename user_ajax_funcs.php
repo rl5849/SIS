@@ -90,10 +90,10 @@ function unfavorite() {
     $unfavorite = file_get_contents("http://127.0.0.1:5002/UnfavoriteClass?class_id=" . $_POST['class_id'] . "&user_id=" .  $_POST['user_id']);
     $unfavorite = json_decode($unfavorite, true);
     if ($unfavorite == "SUCCESS"){
-        echo "Successfully Dropped class";
+        echo "Successfully Unfavorited class";
     }
     else{
-        echo "Failed to Drop class";
+        echo "Failed to Unfavorite class";
     }
 }
 function RequestSpecialAccess() {

@@ -184,7 +184,7 @@ include 'callouts.html';
 
                           <li>Credits: <?php echo ($class_info["class_info"][0]["credits"]) ?> </li>
                           <li>Enrolled: <?php echo ($class_info["class_info"][0]["num_enrolled"]) ?> / <?php echo ($class_info["class_info"][0]["capacity"]) ?>  </li> <!-- needs getPrereqs -->
-                          <li>Wait List: <?php echo count($wait_list) ?> / 0 </li> <!-- needs waitlist capacity -->
+                          <li>Wait List: <?php echo count($wait_list) ?>  </li> <!-- needs waitlist capacity -->
                           <!-- <li>...</li> -->
                       </ul>
                   </div>
@@ -263,7 +263,7 @@ include 'callouts.html';
                                     echo ("Major: " . $prereq["program_of_enrollment"] . "</li>");
                                     break;
                                 case 1:
-                                    echo ("Year Level: " . $prereq["Year Level"] . "</li>");
+                                    echo ("Year Level: " . $prereq["year_level"] . "</li>");
                                     break;
                                 default:
                                     echo ("</li>");
