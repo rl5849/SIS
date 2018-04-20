@@ -17,6 +17,6 @@
 
 
     </table>
-
+        <a href="access_report.php">Download a Report</a>
     </div>
 </div>
