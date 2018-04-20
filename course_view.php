@@ -67,15 +67,15 @@ include 'callouts.html';
         switch ($enrollment_status){
             case "ENROLLED":
                 $enrollment_status_msg = "Drop";
-                $enrollment_status = True;
+                $enrollment_status = 0;
                 break;
             case "WAITLIST":
                 $enrollment_status_msg = "Drop Waitlist";
-                $enrollment_status = True;
+                $enrollment_status = 0;
                 break;
             default:
                 $enrollment_status_msg = "Enroll";
-                $enrollment_status = False;
+                $enrollment_status = 1;
                 break;
         }
 
@@ -155,7 +155,7 @@ include 'callouts.html';
                     </p>
                     <p>
                     <form class="ajax" method="post">
-                        <input type="hidden" name="enroll" value="<?php echo !($enrollment_status) ?>">
+                        <input type="hidden" name="enroll" value="<?php echo $enrollment_status ?>">
                         <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
                         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                         <input type="submit" class="button expanded rit-orange"
