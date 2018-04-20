@@ -10,7 +10,19 @@
         $classes = $classes['requests'];
 
         foreach ($classes as $class) {
-            echo "<tr><td>" . $class['user_name'] . "</td><td>" . $class['class_name'] . "</td><td>" . $class['request'] . "</td></tr>";
+            switch($class['request']){
+                case 'hearing':
+                    $request = "Hearing";
+                    break;
+                case 'note_taking':
+                    $request = "Note Taking";
+                    break;
+                default:
+                    $request = "Test Time";
+                    break;
+
+            }
+            echo "<tr><td>" . $class['user_name'] . "</td><td>" . $class['course_code'] . "</td><td>" . $request . "</td></tr>";
         }
             ?>
 
