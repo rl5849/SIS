@@ -171,7 +171,8 @@ function get_student_favs() {
 
 function make_admin() {
     $result = file_get_contents("http://127.0.0.1:5002/MakeAdmin?user_id=" . $_POST['user_id']);
-    if($result == "\"SUCCESS\""){
+    $result = json_decode($result, true);
+    if($result == "SUCCESS"){
         echo "Successfully granted admin privileges";
     }
     else{

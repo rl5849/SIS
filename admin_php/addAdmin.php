@@ -29,8 +29,8 @@
             }
 
             echo "<tr name='user_listing' hidden> 
-                    <td>" . $user['name'] . "</td> 
                     <td>" . $user['username'] . "</td> 
+                    <td>" . $user['name'] . "</td> 
                     <td>" . $status . "</td> 
                     <td> 
                         <form class='text-center' method='post'>
@@ -43,5 +43,12 @@
         }?>
     </table>
 
-<!-- End new form -->
+    <script>
+        $('.text-center').on('click', function () {
+            $(this).attr('disabled','disabled');
+        })
+    </script>
+
+
+    <!-- End new form -->
 </div>
