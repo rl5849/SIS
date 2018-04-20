@@ -2231,5 +2231,45 @@ class GetStudentAccess(Resource):
 
 api.add_resource(GetStudentAccess, '/GetStudentAccess')
 
+"""
+Get a students requested access for a class
+"""
+class GetAccessRequests(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT classes.name, users.name, access_requests.request_type "
+                    "FROM access_requests "
+                    "INNER JOIN classes "
+                    "ON (classes.class_id = access_requests.class_id) "
+                    "INNER JOIN users "
+                    "ON (users.user_id = access_requests.user_id) ")
+
+        # cur.execute("SELECT classes.name, users.name, access_requests.request_type "
+        #             "FROM access_requests, classes, users "
+        #             "WHERE classes.class_id = access_requests.class_id "
+        #             "AND users.user_id = access_requests.user_id")
+        query = cur.fetchall()
+
+        titles = ['class_name', 'user_name', 'request']
+
+        result = {"requests" : [dict(zip(titles, i)) for i in query]}
+        cur.close()
+        return jsonify(result)
+
+api.add_resource(GetAccessRequests, '/GetAccessRequests')
+
+
+
 if __name__ == '__main__':
      app.run(port=5002)
