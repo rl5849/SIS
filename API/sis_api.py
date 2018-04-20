@@ -2022,7 +2022,7 @@ class GetStudentsClassesForSemester(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
+        cur.execute("SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number, professors.professor_name FROM classes  "
                     "RIGHT JOIN professors ON "
                     "(professors.professor_id = classes.professor_id) "
                     "INNER JOIN student_to_class "
@@ -2034,20 +2034,11 @@ class GetStudentsClassesForSemester(Resource):
 
         query = cur.fetchall()
 
-        cur.execute("SELECT class_id "
-                    "FROM favorites "
-                    "WHERE student_id = %s",
-                    [user_id])
 
-        favs = cur.fetchall()
-
-
-
-        column_names= ["course_id", "name", "section", "time", "room_number", "professor_name"]
+        column_names= ["class_id", "course_id", "name", "section", "time", "room_number", "professor_name"]
 
         result = {'classes': [dict(zip(
-            column_names, i)) for i in query],
-                  "favs": [j[0] for j in favs]}
+            column_names, i)) for i in query]}
         cur.close()
         return jsonify(result)
 
