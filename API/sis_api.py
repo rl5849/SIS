@@ -679,7 +679,9 @@ class CheckPrereq(Resource):
 
             # no field for year level, must be calculated,
             # TODO consider changing 'year_level' in prereqs to 'grad_year'
-            if year_level <= (5 - (grad_year - now.year)):
+            if grad_year == None:
+                result = {'meets_prereq' : False}
+            elif year_level <= (5 - (grad_year - now.year)):
                 result = {'meets_prereq' : True}
             else:
                 result = {'meets_prereq' : False}

@@ -155,7 +155,9 @@ include 'callouts.html';
                     </p>
                     <p>
                     <form class="ajax" method="post">
+                        <input type="hidden" name="action" value="enroll">
                         <input type="hidden" name="enroll" value="<?php echo $enrollment_status ?>">
+                        <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
                         <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
                         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                         <input type="submit" class="button expanded rit-orange"
