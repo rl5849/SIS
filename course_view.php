@@ -105,9 +105,10 @@ include 'callouts.html';
         if($is_student){
             $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
             $prerequisites = json_decode($prerequisites, true);
+            $prerequisites = $prerequisites["prereqs"];
 
             $meetsPrereq = array();
-            foreach ($prerequisites['prereqs'] as $prereq){
+            foreach ($prerequisites as $prereq){
                 $meetsPrereq[$prereq['prereq_id']] = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $user_id);
                 $meetsPrereq[$prereq['prereq_id']] = json_decode($meetsPrereq[$prereq['prereq_id']], true);
                 $meetsPrereq[$prereq['prereq_id']] = $meetsPrereq[$prereq['prereq_id']]["meets_prereq"];
@@ -241,7 +242,7 @@ include 'callouts.html';
               <ul class="profile-list prereqs">
                 <?php
                     //assembles a list of prerequisites for the class
-                    if (sizeof($prerequisites["prereqs"]) > 0){
+                    if (sizeof($prerequisites) > 0){
                         foreach ($prerequisites as $prereq ){
                             if(!($is_prof["is_prof"] || $is_admin["is_admin"])){ 
                                 //only display icons for students
