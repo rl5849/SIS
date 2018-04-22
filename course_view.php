@@ -318,9 +318,9 @@ include 'callouts.html';
                                   //Add each enrolled student to teh table with each field
                                     ?>
 									<tr>
-										<td><img src =<?php echo $curr_stud["profile_pic"] ?>></td>
-										<td><?php echo $curr_stud["name"] ?></td>
-										<td><?php echo $curr_stud["major"] ?></td>
+										<td><img src =<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>></td>
+										<td><?php echo $curr_stud["student_info"][0]["name"] ?></td>
+										<td><?php echo $curr_stud["student_info"][0]["major"] ?></td>
 										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 										<td>
 											<i class="fi-check enrolled-check"></i>
@@ -346,9 +346,9 @@ include 'callouts.html';
 								  $curr_stud = json_decode($curr_stud,true);
 								  ?>
 									<tr>
-										<td src =<?php echo $curr_stud["profile_pic"] ?>></td>
-										<td><?php echo $curr_stud["name"] ?></td>
-										<td><?php echo $curr_stud["major"] ?></td>
+										<td src =<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>></td>
+										<td><?php echo $curr_stud["student_info"][0]["name"] ?></td>
+										<td><?php echo $curr_stud["student_info"][0]["major"] ?></td>
 										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 											<td>
 												<i class="fi-minus waitlisted-minus"></i>
