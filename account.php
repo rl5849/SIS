@@ -142,7 +142,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               }
                               ?></td>
                       </tr>
-                      <?php if (!$is_prof && !$is_admin) { ?>
+                      <?php if (!$is_prof["is_prof"] && !$is_admin["is_admin"]) { ?>
                       <tr>
                           <td>DoB</td>
                           <td><?php
