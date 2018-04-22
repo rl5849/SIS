@@ -312,7 +312,7 @@ include 'callouts.html';
                               <?php
                               // TODO generate dynamically w/ php
                               // TODO add functionality for submitting grades using ajax
-                              foreach ($enrolled_students["enrolled"] as $enroll_stud){
+                              foreach ($enrolled_students['enrolled'] as $enroll_stud){
 								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?user_id=".$enroll_stud["user_id"]);
 								  $curr_stud = json_decode($curr_stud,true);
                                   //Add each enrolled student to teh table with each field
