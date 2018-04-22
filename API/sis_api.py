@@ -368,7 +368,16 @@ class GetStudentInfo(Resource):
         cur.execute("SELECT * FROM students "
                     "WHERE student_id = %s",
                     [student_id])
+
         query = cur.fetchall()
+
+        cur.execute("SELECT major_name FROM majors "
+                    "INNER JOIN students ON (majors.major_id = students.major)"
+                    "WHERE student_id = %s",
+                    [student_id])
+
+        major = cur.fetchall()
+
         # Get variable names
         cur.execute(
             "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'students'")
@@ -376,8 +385,17 @@ class GetStudentInfo(Resource):
         column_names = cur.fetchall()
         column_names_clean = [x[0] for x in column_names]
 
+
+        if major:
+            major = major[0][0]
+        else:
+            major = None
+
+
+
         result = {'student_info': [dict(zip(
-            column_names_clean, i)) for i in query]}
+            column_names_clean, i)) for i in query],
+                  'major': major}
 
         cur.close()
         return jsonify(result)
@@ -2110,6 +2128,38 @@ class GetCourseList(Resource):
 
 
 api.add_resource(GetCourseList, '/GetCourseList')
+
+
+"""
+Get majors
+"""
+class GetMajors(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        parser = reqparse.RequestParser()
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT * FROM majors")
+        query = cur.fetchall()
+
+        column_names= ["major_id", "major_name"]
+
+        result = {'majors': [dict(zip(
+            column_names, i)) for i in query]}
+        cur.close()
+        return jsonify(result)
+
+
+api.add_resource(GetMajors, '/GetMajors')
 
 
 """
