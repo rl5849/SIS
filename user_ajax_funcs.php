@@ -37,22 +37,24 @@ if (isset($_POST["action"])){
 
 function enroll() {
     #check prereqs
-    $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
+    $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $_POST["course_id"]);
     $prerequisites = json_decode($prerequisites, true);
+    $prerequisites = $prerequisites['prereqs'];
 
-    foreach ($prerequisites['prereqs'][0] as $prereq){
-        $meetsPrereq = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $user_id);
+    foreach ($prerequisites as $prereq){
+        $meetsPrereq = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $_POST['user_id']);
         $meetsPrereq = json_decode($meetsPrereq, true);
-        $meetsPrereq = $meetsPrereq[$prereq['prereq_id']]["meets_prereq"];
+        $meetsPrereq = $meetsPrereq["meets_prereq"];
         if ($meetsPrereq == False){
             echo "Some prerequisites for this course have not been met. Failed to Enroll in class";
+            return;
         }
     }
 
     $enroll = file_get_contents("http://127.0.0.1:5002/EnrollStudent?class_id=" . $_POST['class_id'] . "&user_id=" . $_POST['user_id']);
     $enroll = json_decode($enroll, true);
     if ($enroll == "SUCCESS"){
-        echo "<script>showMessage(\"success\", \"Successfully Enrolled in class\");</script>";
+        echo "Successfully Enrolled in class";
     }
     else if ($enroll == "WAITLISTED"){
         echo "Class is full. Successfully added to waitlist";
@@ -67,10 +69,10 @@ function unenroll() {
     $unenroll = file_get_contents("http://127.0.0.1:5002/DropStudent?class_id=" . $_POST['class_id'] . "&user_id=" . $_POST['user_id']);
     $unenroll = json_decode($unenroll, true);
     if ($unenroll == "SUCCESS"){
-        echo "success\", \"Successfully Dropped class";
+        echo "Successfully dropped class";
     }
     else{
-        echo "Failed to Drop class";
+        echo "Failed to drop class";
     }
 }
 

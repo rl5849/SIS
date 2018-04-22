@@ -69,7 +69,7 @@ include 'callouts.html';
                 $enrollment_status_msg = "Drop";
                 $enrollment_status = 0;
                 break;
-            case "WAITLIST":
+            case "WAITLISTED":
                 $enrollment_status_msg = "Drop Waitlist";
                 $enrollment_status = 0;
                 break;
@@ -105,9 +105,10 @@ include 'callouts.html';
         if($is_student){
             $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
             $prerequisites = json_decode($prerequisites, true);
+            $prerequisites = $prerequisites["prereqs"];
 
             $meetsPrereq = array();
-            foreach ($prerequisites['prereqs'] as $prereq){
+            foreach ($prerequisites as $prereq){
                 $meetsPrereq[$prereq['prereq_id']] = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $user_id);
                 $meetsPrereq[$prereq['prereq_id']] = json_decode($meetsPrereq[$prereq['prereq_id']], true);
                 $meetsPrereq[$prereq['prereq_id']] = $meetsPrereq[$prereq['prereq_id']]["meets_prereq"];
@@ -155,7 +156,9 @@ include 'callouts.html';
                     </p>
                     <p>
                     <form class="ajax" method="post">
+                        <input type="hidden" name="action" value="enroll">
                         <input type="hidden" name="enroll" value="<?php echo $enrollment_status ?>">
+                        <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
                         <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
                         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                         <input type="submit" class="button expanded rit-orange"
@@ -239,9 +242,9 @@ include 'callouts.html';
               <ul class="profile-list prereqs">
                 <?php
                     //assembles a list of prerequisites for the class
-                    if (sizeof($prerequisites["prereqs"]) > 0){
+                    if (sizeof($prerequisites) > 0){
                         foreach ($prerequisites as $prereq ){
-                            if(!($is_prof["is_prof"] || $is_admin["is_admin"])){ 
+                            if($is_student){ 
                                 //only display icons for students
                                 if ($meetsPrereq[$prereq["prereq_id"]] == True){
                                     $class = "fi-check prereq-fulfilled";
@@ -309,8 +312,8 @@ include 'callouts.html';
                               <?php
                               // TODO generate dynamically w/ php
                               // TODO add functionality for submitting grades using ajax
-                              foreach ($enrolled_students["enrolled"] as $enroll_stud){
-								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?user_id=".$enroll_stud["user_id"]);
+                              foreach ($enrolled_students['enrolled'] as $enroll_stud){
+								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$enroll_stud["user_id"]);
 								  $curr_stud = json_decode($curr_stud,true);
                                   //Add each enrolled student to teh table with each field
                                     ?>
@@ -349,7 +352,7 @@ include 'callouts.html';
 										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 											<td>
 												<i class="fi-minus waitlisted-minus"></i>
-												Waitlisted (<?php echo $enroll_stud["position"] ?>)
+												Waitlisted (<?php echo ($enroll_stud["position"] +1) ?>)
 											</td>
 										<?php } ?>
 										<?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
