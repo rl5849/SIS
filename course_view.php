@@ -244,7 +244,7 @@ include 'callouts.html';
                     //assembles a list of prerequisites for the class
                     if (sizeof($prerequisites) > 0){
                         foreach ($prerequisites as $prereq ){
-                            if(!($is_prof["is_prof"] || $is_admin["is_admin"])){ 
+                            if($is_student){ 
                                 //only display icons for students
                                 if ($meetsPrereq[$prereq["prereq_id"]] == True){
                                     $class = "fi-check prereq-fulfilled";
