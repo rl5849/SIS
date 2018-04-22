@@ -313,14 +313,14 @@ include 'callouts.html';
                               // TODO generate dynamically w/ php
                               // TODO add functionality for submitting grades using ajax
                               foreach ($enrolled_students['enrolled'] as $enroll_stud){
-								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$enroll_stud["user_id"]);
+								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?id=".$enroll_stud["user_id"]);
 								  $curr_stud = json_decode($curr_stud,true);
                                   //Add each enrolled student to teh table with each field
                                     ?>
 									<tr>
-										<td><img src =<?php echo $curr_stud["profile_pic"] ?>></td>
-										<td><?php echo $curr_stud["name"] ?></td>
-										<td><?php echo $curr_stud["major"] ?></td>
+										<td><img src =<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>></td>
+										<td><?php echo $curr_stud["student_info"][0]["name"] ?></td>
+										<td><?php echo $curr_stud["student_info"][0]["major"] ?></td>
 										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 										<td>
 											<i class="fi-check enrolled-check"></i>
@@ -342,13 +342,13 @@ include 'callouts.html';
                               
 							  <?php } ?>
 							  <?php foreach ($enrolled_students["waitlisted"] as $enroll_stud){
-								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?user_id=".$enroll_stud["user_id"]);
+								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?id=".$enroll_stud["user_id"]);
 								  $curr_stud = json_decode($curr_stud,true);
 								  ?>
 									<tr>
-										<td src =<?php echo $curr_stud["profile_pic"] ?>></td>
-										<td><?php echo $curr_stud["name"] ?></td>
-										<td><?php echo $curr_stud["major"] ?></td>
+										<td src =<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>></td>
+										<td><?php echo $curr_stud["student_info"][0]["name"] ?></td>
+										<td><?php echo $curr_stud["student_info"][0]["major"] ?></td>
 										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 											<td>
 												<i class="fi-minus waitlisted-minus"></i>
