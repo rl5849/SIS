@@ -69,7 +69,7 @@ function unenroll() {
     $unenroll = file_get_contents("http://127.0.0.1:5002/DropStudent?class_id=" . $_POST['class_id'] . "&user_id=" . $_POST['user_id']);
     $unenroll = json_decode($unenroll, true);
     if ($unenroll == "SUCCESS"){
-        echo "<script>showMessage(\"success\", \"Successfully dropped class\");</script>";
+        echo "Successfully dropped class";
     }
     else{
         echo "Failed to drop class";
