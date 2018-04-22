@@ -65,6 +65,8 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?id=".$student_id);
     $student_info = json_decode($student_info, true);
 
+    $student_major = $student_info['major'];
+
     //used to check if a professor type
     $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$student_id);
     $is_prof = json_decode($is_prof, true);
@@ -175,9 +177,31 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                       <tr>
                           <td>Major</td>
                           <td> <?php
-                              $major = $student_info["student_info"][0]["major"];
+
+
                               if ($is_editing) {
-                                  echo "<input name='major' placeholder='ex. Software Engineering' value='".$major."'>";
+
+                                  $html = "<select>";
+                                  if(!$student_major){
+                                      $html = $html . "<option>Choose...</option>";
+                                  }
+
+                                  $majors = file_get_contents("http://127.0.0.1:5002/GetMajors");
+                                  $majors = json_decode($majors, true)["majors"];
+
+                                  foreach ($majors as $major){
+                                      $current_txt = "";
+                                      if($major['major_name'] == $student_major){
+                                          $current_txt = "selected";
+                                      }
+
+                                      $html = $html.  "<option name='major' value='".$major['major_id'] ."' " . $current_txt . " >" . $major['major_name'] . "</option>";
+                                  }
+                                  $html = $html . "</select>";
+
+                                  echo $html;
+
+
                               } else {
 
                                   if ($major == "") {
@@ -194,7 +218,8 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               if ($is_editing) {
                                   echo "<input name='gpa' placeholder='ex. 3.2' value='".$gpa."'>";
                               } else {
-
+                                  $gpa = file_get_contents("http://127.0.0.1:5002/GetGPA?user_id=" . $student_id);
+                                  $gpa = json_decode($gpa, true)["gpa"];
                                   if ($gpa == "") {
                                       echo "N/A";
                                   } else {
@@ -227,15 +252,17 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
             </ul>
         </form>
       </div>
-          <?php if(!$is_editing) {?>
+          <?php
+          $semesters = file_get_contents("http://127.0.0.1:5002/GetSemesters");
+          $semesters = json_decode($semesters, true)["semesters"];
+          if(!$is_editing) {?>
       <div class="large-2 medium-2 small-3 cell">
         <ul class="profile-list">
             <p><a href="https://www.linkedin.com" class="button expanded rit-orange">LinkedIn</a></p>
         </ul>
       </div>
         <?php
-        $semesters = file_get_contents("http://127.0.0.1:5002/GetSemesters");
-        $semesters = json_decode($semesters, true)["semesters"];
+
         ?>
     </div>
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">
