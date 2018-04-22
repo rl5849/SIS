@@ -69,7 +69,7 @@ include 'callouts.html';
                 $enrollment_status_msg = "Drop";
                 $enrollment_status = 0;
                 break;
-            case "WAITLIST":
+            case "WAITLISTED":
                 $enrollment_status_msg = "Drop Waitlist";
                 $enrollment_status = 0;
                 break;
