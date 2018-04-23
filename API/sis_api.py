@@ -365,18 +365,15 @@ class GetStudentInfo(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT * FROM students "
+        cur.execute("SELECT students.*, majors.major_name FROM students "
+                    "RIGHT JOIN majors ON (majors.major_id = students.major) "
                     "WHERE student_id = %s",
                     [student_id])
 
         query = cur.fetchall()
 
-        cur.execute("SELECT major_name FROM majors "
-                    "INNER JOIN students ON (majors.major_id = students.major)"
-                    "WHERE student_id = %s",
-                    [student_id])
 
-        major = cur.fetchall()
+
 
         # Get variable names
         cur.execute(
@@ -384,18 +381,12 @@ class GetStudentInfo(Resource):
 
         column_names = cur.fetchall()
         column_names_clean = [x[0] for x in column_names]
-
-
-        if major:
-            major = major[0][0]
-        else:
-            major = None
-
+        column_names_clean.append('major_name')
 
 
         result = {'student_info': [dict(zip(
-            column_names_clean, i)) for i in query],
-                  'major': major}
+            column_names_clean, i)) for i in query]
+                  }
 
         cur.close()
         return jsonify(result)
