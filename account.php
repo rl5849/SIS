@@ -63,9 +63,11 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
     $current_semester = json_decode($current_semester, true)["current_semester"];
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?id=".$student_id);
-    $student_info = json_decode($student_info, true);
+    $student_info = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $student_info), true);
 
-    $student_major = $student_info['major'];
+
+
+
 
     //used to check if a professor type
     $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$student_id);
@@ -178,20 +180,16 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                           <td>Major</td>
                           <td> <?php
 
-
+                              $majors = file_get_contents("http://127.0.0.1:5002/GetMajors");
+                              $majors = json_decode($majors, true)["majors"];
                               if ($is_editing) {
-
                                   $html = "<select>";
-                                  if(!$student_major){
+                                  if(!$student_info["student_info"][0]["major"]){
                                       $html = $html . "<option>Choose...</option>";
                                   }
-
-                                  $majors = file_get_contents("http://127.0.0.1:5002/GetMajors");
-                                  $majors = json_decode($majors, true)["majors"];
-
                                   foreach ($majors as $major){
                                       $current_txt = "";
-                                      if($major['major_name'] == $student_major){
+                                      if($major['major_id'] == $student_info["student_info"][0]["major"]){
                                           $current_txt = "selected";
                                       }
 
@@ -204,10 +202,10 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
 
                               } else {
 
-                                  if ($major == "") {
+                                  if ($student_info["student_info"][0]["major_name"] == "") {
                                       echo "N/A";
                                   } else {
-                                      echo $major;
+                                       echo $student_info["student_info"][0]["major_name"];
                                   }
 
                               }
