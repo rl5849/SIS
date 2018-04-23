@@ -62,7 +62,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <?php
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
     $current_semester = json_decode($current_semester, true)["current_semester"];
-    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?id=".$student_id);
+    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
     $student_info = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $student_info), true);
 
 
