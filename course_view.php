@@ -320,8 +320,8 @@ include 'callouts.html';
                                     ?>
 									<tr>
 										<td><img src =<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>></td>
-										<td><?php echo $curr_stud["student_info"][0]["name"] ?></td>
-										<td><?php echo $curr_stud["major"]?></td>
+										<td><?php echo $curr_stud["student_info"][0]["student_name"] ?></td>
+										<td><?php echo $curr_stud["student_info"][0]["major"] ?></td>
 										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 										<td>
 											<i class="fi-check enrolled-check"></i>
@@ -339,8 +339,6 @@ include 'callouts.html';
                                       </form>
 										<?php } ?>
 									</tr>
-									
-                              
 							  <?php } ?>
 							  <?php foreach ($enrolled_students["waitlisted"] as $enroll_stud){
 								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$enroll_stud["user_id"]);
@@ -348,7 +346,7 @@ include 'callouts.html';
 								  ?>
 									<tr>
 										<td src =<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>></td>
-										<td><?php echo $curr_stud["student_info"][0]["name"] ?></td>
+										<td><?php echo $curr_stud["student_info"][0]["student_name"] ?></td>
 										<td><?php echo $curr_stud["student_info"][0]["major"] ?></td>
 										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 											<td>
@@ -361,58 +359,8 @@ include 'callouts.html';
 										<?php } ?>
 									</tr>
 							  <?php } ?>
-								  
-								 
-                              <tr>
-                                  <td><img src="https://ia.media-imdb.com/images/M/MV5BOTYxY2Y1NmQtNGY3Yi00OWEzLTgxY2UtZDgxYmM4YWQwODQ4XkEyXkFqcGdeQXVyNTM3MDMyMDQ@._V1_.jpg" alt="Dan Krutz"></td>
-                                  <td>Dan Krutz</td>
-                                  <td>Software Engineering</td>
-                                  <td>
-                                      <i class="fi-check enrolled-check"></i>
-                                      Enrolled
-                                  </td>
-                                  <td>
-                                      <!-- TODO remove; The only difference between this form and the other one are that this form has no value for the 'grade' field, and the button text-->
-                                      <form action="post">
-                                          <input class="grade-number" type="number" name="grade" min=0 max=100 placeholder="0">
-                                          <p class="grade-total" style="">/100</p>
-                                          <input type="hidden" name="submit" value="submit_grade">
-                                          <input class="button expanded submit-button" type="submit" value="Submit Grade">
-                                      </form>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><img src="https://ia.media-imdb.com/images/M/MV5BODVjMWI3MDItNGZmYy00YTM4LWFiNjMtYjUzN2NhZWEwZmY5XkEyXkFqcGdeQXVyMTEzNzczMA@@._V1_.jpg" alt="Andy Meneely"></td>
-                                  <td>Andy Meneely</td>
-                                  <td>Software Engineering</td>
-                                  <td>
-                                      <!-- TODO remove; Make sure you use the right icon associated with enrollment status -->
-                                      <i class="fi-check enrolled-check"></i>
-                                      Enrolled
-                                  </td>
-                                  <td>
-                                      <form action="post">
-                                          <input class="grade-number" type="number" name="grade" min=0 max=100 placeholder="0" value="5">
-                                          <p class="grade-total" style="">/100</p>
-                                          <input type="hidden" name="submit" value="submit_grade">
-                                          <input class="button expanded submit-button" type="submit" value="Re-Grade">
-                                      </form>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><img src="https://ia.media-imdb.com/images/M/MV5BMjE2MzQ0Mjg5MV5BMl5BanBnXkFtZTgwODkyMjUxMTI@._V1_SY1000_CR0,0,678,1000_AL_.jpg" alt="Larry Kiser"></td>
-                                  <td>Larry Kiser</td>
-                                  <td>Software Engineering</td>
-                                  <td>
-                                      <i class="fi-minus waitlisted-minus"></i>
-                                      Waitlisted (1)
-                                  </td>
-                                  <td>Not Enrolled</td>
-                              </tr>
                           </table>
                       </div>
-
-         
                   </div>
               </div>
         <?php // } ?>
