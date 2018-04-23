@@ -46,7 +46,8 @@ include 'callouts.html';
             $class_id = $_POST["class_id"];
         }
         else{
-            $class_id = 1;
+            echo "<meta http-equiv=\"refresh\" content=\"0;URL=course_list.php\" />";
+            exit();
         }
 
         $enrollment_status = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" .$class_id . "&user_id=" . $user_id);
@@ -383,18 +384,24 @@ include 'callouts.html';
             success: function (data) {
                 if (data.includes("Success")) {
                     showMessage("success", data);
-                    $(load_class_table());
-
+                    //$(load_class_table());
                 }
                 else {
                     showMessage("failure", data);
-
                 }
             },
             error: function (msg) {
                 console.log(msg.responseText);
             }
         });
+
+        if ($(this).val() == 'Favorite') {
+            $(this).val('Unfavorite');
+        }
+        else if ($(this).val() == 'Unfavorite') {
+            $(this).val('Favorite');
+        }
+
     });
 
 
