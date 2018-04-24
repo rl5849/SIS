@@ -10,7 +10,6 @@ else{
 //used to check if a professor type
 $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
 $is_prof = json_decode($is_prof, true);
-
 $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
 $is_admin = json_decode($is_admin, true);
 

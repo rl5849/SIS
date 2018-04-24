@@ -1175,6 +1175,41 @@ class SetGPA(Resource):
 api.add_resource(SetGPA, '/SetGPA')
 
 """
+Calculates and returns students GPA
+"""
+class GetGPA(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    #TODO: Make POST request
+
+    def get(self):
+
+        # Get student id
+        parser = reqparse.RequestParser()
+        parser.add_argument('student_id', type=int)
+        student_id = parser.parse_args().get("student_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                     passwd=self.config.get('database', 'password'),
+                     host=self.config.get('database', 'host'),
+                     db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        #gets and sets student GPA
+        #not sure how this responds if a student has no classes
+        cur.execute("SELECT AVG(grade)"
+                    "FROM past_student_to_class_grade "
+                    "WHERE student_id = %s",
+                    [student_id])
+
+        result = cur.fetchall()
+        return jsonify(result)
+
+api.add_resource(GetGPA, '/GetGPA')
+
+"""
 Modifies the attributes of a class
 
 TODO: HIGH : implement this
