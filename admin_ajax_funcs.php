@@ -160,6 +160,11 @@ function prof_approval() {
 }
 
 function get_student_classes_by_semester() {
+    if(!isset($_POST['semester_id'])){
+        echo [];
+        return;
+    }
+
     $list = file_get_contents("http://127.0.0.1:5002/GetStudentsClassesForSemester?user_id=" . $_POST['user_id'] . "&semester_id=" . $_POST['semester_id']);
     echo $list;
 }
