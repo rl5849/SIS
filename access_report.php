@@ -15,7 +15,7 @@ $current_semester = json_decode($current_semester, true)["current_semester"];
 $pdf->Cell(0, 20, "Student Access Requests for Current Semester", 0, 0, 'C');
 
 
-$html = "<br><br><br><table border=\"1\"><tr><td>Class</td><td width='70px'>Code</td><td width='60px'>Section</td><td>time</td><td>Student</td><td>Request</td></tr>";
+$html = "<br><br><br><table border=\"1\"><tr><td>Class</td><td width='88px'>Code</td><td width='60px'>Section</td><td>time</td><td>Student</td><td>Request</td></tr>";
 
 foreach ($classes as $class) {
     switch($class['request']){
@@ -31,7 +31,7 @@ foreach ($classes as $class) {
 
     }
 
-    $html = $html . "<tr><td>" . substr($class['class_name'], 0, 20) . "</td><td width='70px'>" . $class['course_code'] . "</td><td width='60px'>" . $class['section'] . "</td><td>" . $class['time'] . "</td><td>" . $class['user_name'] . "</td><td>" . $request . "</td></tr>";
+    $html = $html . "<tr><td>" . substr($class['class_name'], 0, 20) . "</td><td width='88px'>" . $class['course_code'] . "</td><td width='60px'>" . $class['section'] . "</td><td>" . $class['time'] . "</td><td>" . $class['user_name'] . "</td><td>" . $request . "</td></tr>";
 
 }
 $html = $html . "</table></div>";
