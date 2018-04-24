@@ -180,9 +180,10 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                           <td>Major</td>
                           <td> <?php
 
-                              $majors = file_get_contents("http://127.0.0.1:5002/GetMajors");
-                              $majors = json_decode($majors, true)["majors"];
+
                               if ($is_editing) {
+                                  $majors = file_get_contents("http://127.0.0.1:5002/GetMajors");
+                                  $majors = json_decode($majors, true)["majors"];
                                   $html = "<select>";
                                   if(!$student_info["student_info"][0]["major"]){
                                       $html = $html . "<option>Choose...</option>";

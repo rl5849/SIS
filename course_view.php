@@ -145,27 +145,8 @@ include 'callouts.html';
               <?php //Only show buttons if they are logged in
                 if ($user_id) {
                     ?>
-                    <p>
-                    <form class="ajax" method="post">
-                        <input type="hidden" name="action" value="favorite">
-                        <input type="hidden" name="favorite" value="<?php echo($favorite_status) ?>">
-                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
-                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                        <input type="submit" class="button expanded rit-orange"
-                               value="<?php echo $favorite_status_msg; ?>">
-                    </form>
-                    </p>
-                    <p>
-                    <form class="ajax" method="post">
-                        <input type="hidden" name="action" value="enroll">
-                        <input type="hidden" name="enroll" value="<?php echo $enrollment_status ?>">
-                        <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
-                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
-                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                        <input type="submit" class="button expanded rit-orange"
-                               value="<?php echo $enrollment_status_msg; ?>">
-                    </form>
-                    </p>
+                    <input type="button" class="button expanded rit-orange favorite" value="<?php echo $favorite_status_msg; ?>">
+                    <input type="submit" class="button expanded rit-orange enroll" value="<?php echo $enrollment_status_msg; ?>">
                     <?php
                 }
               ?>
@@ -291,7 +272,7 @@ include 'callouts.html';
           <?php
 			$is_enroll = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" . $class_id . "user_id=" . $user_id);
 			$is_enroll = json_decode($is_enroll, true);
-			if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True) || () ){ 
+			if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){
 			?>
 
               <div class="large-12 medium-12 small-12 cell">
@@ -373,18 +354,16 @@ include 'callouts.html';
     </div>
 
 <script>
+    //Ajax for forms
     $(".ajax").on('submit', function (e) {
         e.preventDefault();
         $.ajax({
             type: 'POST',
             data: $(this).serialize(),
-            // dataType : 'json',
-            // contentType: "application/x-www-form-urlencoded",
             url: 'user_ajax_funcs.php',
             success: function (data) {
                 if (data.includes("Success")) {
                     showMessage("success", data);
-                    //$(load_class_table());
                 }
                 else {
                     showMessage("failure", data);
@@ -394,12 +373,79 @@ include 'callouts.html';
                 console.log(msg.responseText);
             }
         });
+    });
 
-        if ($(this).val() == 'Favorite') {
-            $(this).val('Unfavorite');
+    //Ajax for favorite
+    $('.favorite').on('click', function () {
+        var action = "";
+        if ($(this).attr('value') ==  'Favorite'){
+            action = 0;//0 means you're going to favorite the class
+        }else { // else text is Unfavorite
+            action = 1;
         }
-        else if ($(this).val() == 'Unfavorite') {
-            $(this).val('Favorite');
+        //Make the request
+        var success = $.ajax({
+            type: 'POST',
+            data: {'action': 'favorite', 'user_id' : "<?php echo $user_id;?>", 'class_id' : <?php echo $class_id;?>, 'favorite' : action},
+            url: 'user_ajax_funcs.php',
+            success: function (data) {
+                if (data.includes("Success")) {
+                    showMessage("success", data);
+                    return true;
+                }
+                else {
+                    showMessage("failure", data);
+                    return false;
+                }
+            },
+            error: function (msg) {
+                console.log(msg.responseText);
+                return false;
+            }
+        });
+        if (success) {
+            if ($(this).attr('value') == 'Favorite') {
+                $(this).attr('value', 'Unfavorite');
+            } else {
+                $(this).attr('value', 'Favorite');
+            }
+        }
+    });
+
+    //Ajax for enroll
+    $('.enroll').on('click', function () {
+        var action = "";
+        if ($(this).attr('value') ==  'Enroll'){
+            action = 1;
+        }else { // else text is Unfavorite
+            action = 0;//0 means you're going to unenroll in the class
+        }
+        //Make the request
+        var success = $.ajax({
+            type: 'POST',
+            data: {'action': 'enroll', 'user_id' : "<?php echo $user_id;?>", 'class_id' : <?php echo $class_id;?>, 'enroll' : action, 'course_id' : <?php echo $course_id?>},
+            url: 'user_ajax_funcs.php',
+            success: function (data) {
+                if (data.includes("Success")) {
+                    showMessage("success", data);
+                    return true;
+                }
+                else {
+                    showMessage("failure", data);
+                    return false;
+                }
+            },
+            error: function (msg) {
+                console.log(msg.responseText);
+                return false;
+            }
+        });
+        if (success){
+            if ($(this).attr('value') ==  'Enroll'){
+                $(this).attr('value', 'Drop');
+            }else {
+                $(this).attr('value', 'Enroll');
+            }
         }
 
     });
