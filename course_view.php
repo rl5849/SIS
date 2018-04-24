@@ -243,10 +243,13 @@ include 'callouts.html';
 
                             switch ($prereq["type"]){
                                 case 0:
-                                    echo ("Major: " . $prereq["program_of_enrollment"] . "</li>");
+                                    echo ("Major: " . $prereq["major_name"] . "</li>");
                                     break;
                                 case 1:
                                     echo ("Year Level: " . $prereq["year_level"] . "</li>");
+                                    break;
+                                case 2:
+                                    echo ("Must have taken and passed " . $prereq["prereq_course"] . "</li>");
                                     break;
                                 default:
                                     echo ("</li>");
