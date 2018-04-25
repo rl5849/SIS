@@ -17,8 +17,6 @@ if($user_id){
     $is_admin = json_decode($is_admin, true);
 }
 
-
-
 $is_student = (!$is_admin["is_admin"] && !$is_prof["is_prof"] && $user_id);
 
 // Load Nav bar and callouts
@@ -312,7 +310,7 @@ include 'callouts.html';
                                   //Add each enrolled student to teh table with each field
                                     ?>
 									<tr>
-										<td><img src =<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>></td>
+										<td><img src ='<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>' onerror="this.src='images/user_profile_placeholder.png'"></td>
 										<td><?php echo $curr_stud["student_info"][0]["student_name"] ?></td>
 										<td><?php echo $curr_stud["student_info"][0]["major"] ?></td>
 										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>

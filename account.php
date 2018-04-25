@@ -80,33 +80,11 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
       <div class="large-1 medium-2 small-3 cell">
         <div class="profile-picture-wrapper">
             <img class="profile-picture"
-                 src="<?php
-                function showProfilePicIf200($profile_picture) {
-                    error_reporting(0);
-                    $placeholder = "images/user_profile_placeholder.png";
-                    if ( $profile_picture == null ) { // If not set
-                        echo $placeholder;
-                        $shown = 0;
-                    } else if ( get_headers($profile_picture)) { // if loads from URL
-                        echo $profile_picture;
-                        $shown = 1;
-                    } else { // set but didn't load
-                        echo $placeholder;
-                        $shown = -1;
-                    }
-                    error_reporting(E_STRICT);
-                    return $shown;
-                }
-
+                src="<?php
                 $profile_picture = $student_info["student_info"][0]["profile_pic"];
-
-                $shown = showProfilePicIf200($profile_picture);
-                echo '" alt="Profile Picture">';
-                if ($shown == -1) {
-                    echo "<div class='descriptor' id='load-fail-descriptor'>Image could not be loaded.</div>";
-                    echo "<i class='fi-page load-fail' onmouseover='showLoadFail()' onmouseout='hideLoadFail()'></i>";
-                }
+                echo $profile_picture;
                 ?>
+                " alt="Profile picture failed to load.">
         </div>
       </div>
       <div class="large-6 medium-6 small-8 cell">
