@@ -255,11 +255,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
           $semesters = file_get_contents("http://127.0.0.1:5002/GetSemesters");
           $semesters = json_decode($semesters, true)["semesters"];
           if(!$is_editing) {?>
-      <div class="large-2 medium-2 small-3 cell">
-        <ul class="profile-list">
-            <p><a href="https://www.linkedin.com" class="button expanded rit-orange">LinkedIn</a></p>
-        </ul>
-      </div>
+
         <?php
 
         ?>
@@ -290,6 +286,8 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                         <th align="left">Time</th>
                         <th align="left">Instructor</th>
                         <th align="left">Room</th>
+                        <th align="left">Grade</th>
+
                     </tr>
                       <tbody id="classes">
                       <!--                              Javascript builds table here-->
@@ -326,12 +324,18 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                   $.each(result, function(index, val){
                       for(var i=0; i < val.length; i++){
                           var item = val[i];
+                          var grade = '-';
+
+                          if(item.grade != null){
+                              grade = item.grade;
+                          }
                           buffer+="<tr>\
                                     <td><a href='course_view.php?class_id=" + item.class_id + "'>" + item.name + "</a></td>\
                                     <td>" + item.section + "</td> \
                                     <td>" + item.time + "</td> \
                                     <td>" + item.professor_name + "</td> \
                                     <td>" + item.room_number + "</td> \
+                                    <td>" + grade + "</td>\
                                  </tr>";
                       }
                       $("#classes").empty();
