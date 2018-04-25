@@ -3,16 +3,19 @@ session_start();
 if (isset($_SESSION['user_id'])){
     $user_id = $_SESSION['user_id'];
 }
-else{
-    $user_id = NIL;
+else {
+    $user_id = NULL;
+    $is_admin = false;
+    $is_prof = false;
 }
 
 //used to check if a professor type
-$is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
-$is_prof = json_decode($is_prof, true);
-
-$is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
-$is_admin = json_decode($is_admin, true);
+if($user_id){
+    $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
+    $is_prof = json_decode($is_prof, true);
+    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
+    $is_admin = json_decode($is_admin, true);
+}
 
 $is_student = (!$is_admin["is_admin"] && !$is_prof["is_prof"] && $user_id);
 
@@ -46,7 +49,8 @@ include 'callouts.html';
             $class_id = $_POST["class_id"];
         }
         else{
-            $class_id = 1;
+            echo "<meta http-equiv=\"refresh\" content=\"0;URL=course_list.php\" />";
+            exit();
         }
 
         $enrollment_status = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" .$class_id . "&user_id=" . $user_id);
@@ -69,7 +73,7 @@ include 'callouts.html';
                 $enrollment_status_msg = "Drop";
                 $enrollment_status = 0;
                 break;
-            case "WAITLIST":
+            case "WAITLISTED":
                 $enrollment_status_msg = "Drop Waitlist";
                 $enrollment_status = 0;
                 break;
@@ -105,9 +109,10 @@ include 'callouts.html';
         if($is_student){
             $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
             $prerequisites = json_decode($prerequisites, true);
+            $prerequisites = $prerequisites["prereqs"];
 
             $meetsPrereq = array();
-            foreach ($prerequisites['prereqs'] as $prereq){
+            foreach ($prerequisites as $prereq){
                 $meetsPrereq[$prereq['prereq_id']] = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $user_id);
                 $meetsPrereq[$prereq['prereq_id']] = json_decode($meetsPrereq[$prereq['prereq_id']], true);
                 $meetsPrereq[$prereq['prereq_id']] = $meetsPrereq[$prereq['prereq_id']]["meets_prereq"];
@@ -143,25 +148,8 @@ include 'callouts.html';
               <?php //Only show buttons if they are logged in
                 if ($user_id) {
                     ?>
-                    <p>
-                    <form class="ajax" method="post">
-                        <input type="hidden" name="action" value="favorite">
-                        <input type="hidden" name="favorite" value="<?php echo($favorite_status) ?>">
-                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
-                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                        <input type="submit" class="button expanded rit-orange"
-                               value="<?php echo $favorite_status_msg; ?>">
-                    </form>
-                    </p>
-                    <p>
-                    <form class="ajax" method="post">
-                        <input type="hidden" name="enroll" value="<?php echo $enrollment_status ?>">
-                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
-                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                        <input type="submit" class="button expanded rit-orange"
-                               value="<?php echo $enrollment_status_msg; ?>">
-                    </form>
-                    </p>
+                    <input type="button" class="button expanded rit-orange favorite" value="<?php echo $favorite_status_msg; ?>">
+                    <input type="submit" class="button expanded rit-orange enroll" value="<?php echo $enrollment_status_msg; ?>">
                     <?php
                 }
               ?>
@@ -191,7 +179,7 @@ include 'callouts.html';
               </div>
           </div>
 
-          <?php if ($is_student) { ?>
+          <?php if ($is_student && $user_id) { ?>
 
           <div class="large-4 medium-4 small-4 cell">
               <div class="card">
@@ -239,9 +227,9 @@ include 'callouts.html';
               <ul class="profile-list prereqs">
                 <?php
                     //assembles a list of prerequisites for the class
-                    if (sizeof($prerequisites["prereqs"]) > 0){
+                    if (sizeof($prerequisites) > 0){
                         foreach ($prerequisites as $prereq ){
-                            if(!($is_prof["is_prof"] || $is_admin["is_admin"])){ 
+                            if($is_student){ 
                                 //only display icons for students
                                 if ($meetsPrereq[$prereq["prereq_id"]] == True){
                                     $class = "fi-check prereq-fulfilled";
@@ -259,10 +247,13 @@ include 'callouts.html';
 
                             switch ($prereq["type"]){
                                 case 0:
-                                    echo ("Major: " . $prereq["program_of_enrollment"] . "</li>");
+                                    echo ("Major: " . $prereq["major_name"] . "</li>");
                                     break;
                                 case 1:
                                     echo ("Year Level: " . $prereq["year_level"] . "</li>");
+                                    break;
+                                case 2:
+                                    echo ("Must have taken and passed " . $prereq["prereq_course"] . "</li>");
                                     break;
                                 default:
                                     echo ("</li>");
@@ -284,7 +275,11 @@ include 'callouts.html';
 
           <?php // TODO make this only display for the professor associated with the class ?>
 
-          <?php // if($is_prof["is_prof"] == True && $is_admin["is_admin"] == True){ ?>
+          <?php
+			$is_enroll = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" . $class_id . "&user_id=" . $user_id);
+			$is_enroll = json_decode($is_enroll, true);
+			if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True) || ($is_enroll["enrollment_status"] == "ENROLLED")){
+			?>
 
               <div class="large-12 medium-12 small-12 cell">
                   <div class="card">
@@ -309,15 +304,15 @@ include 'callouts.html';
                               <?php
                               // TODO generate dynamically w/ php
                               // TODO add functionality for submitting grades using ajax
-                              foreach ($enrolled_students["enrolled"] as $enroll_stud){
-								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?user_id=".$enroll_stud["user_id"]);
+                              foreach ($enrolled_students['enrolled'] as $enroll_stud){
+								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$enroll_stud["user_id"]);
 								  $curr_stud = json_decode($curr_stud,true);
                                   //Add each enrolled student to teh table with each field
                                     ?>
 									<tr>
-										<td><img src =<?php echo $curr_stud["profile_pic"] ?>></td>
-										<td><?php echo $curr_stud["name"] ?></td>
-										<td><?php echo $curr_stud["major"] ?></td>
+										<td><img src ='<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>' onerror="this.src='images/user_profile_placeholder.png'"></td>
+										<td><?php echo $curr_stud["student_info"][0]["student_name"] ?></td>
+										<td><?php echo $curr_stud["student_info"][0]["major"] ?></td>
 										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 										<td>
 											<i class="fi-check enrolled-check"></i>
@@ -335,21 +330,19 @@ include 'callouts.html';
                                       </form>
 										<?php } ?>
 									</tr>
-									
-                              
 							  <?php } ?>
 							  <?php foreach ($enrolled_students["waitlisted"] as $enroll_stud){
-								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?user_id=".$enroll_stud["user_id"]);
+								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$enroll_stud["user_id"]);
 								  $curr_stud = json_decode($curr_stud,true);
 								  ?>
 									<tr>
-										<td src =<?php echo $curr_stud["profile_pic"] ?>></td>
-										<td><?php echo $curr_stud["name"] ?></td>
-										<td><?php echo $curr_stud["major"] ?></td>
+										<td src =<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>></td>
+										<td><?php echo $curr_stud["student_info"][0]["student_name"] ?></td>
+										<td><?php echo $curr_stud["student_info"][0]["major"] ?></td>
 										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 											<td>
 												<i class="fi-minus waitlisted-minus"></i>
-												Waitlisted (<?php echo $enroll_stud["position"] ?>)
+												Waitlisted (<?php echo ($enroll_stud["position"] +1) ?>)
 											</td>
 										<?php } ?>
 										<?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
@@ -357,89 +350,110 @@ include 'callouts.html';
 										<?php } ?>
 									</tr>
 							  <?php } ?>
-								  
-								 
-                              <tr>
-                                  <td><img src="https://ia.media-imdb.com/images/M/MV5BOTYxY2Y1NmQtNGY3Yi00OWEzLTgxY2UtZDgxYmM4YWQwODQ4XkEyXkFqcGdeQXVyNTM3MDMyMDQ@._V1_.jpg" alt="Dan Krutz"></td>
-                                  <td>Dan Krutz</td>
-                                  <td>Software Engineering</td>
-                                  <td>
-                                      <i class="fi-check enrolled-check"></i>
-                                      Enrolled
-                                  </td>
-                                  <td>
-                                      <!-- TODO remove; The only difference between this form and the other one are that this form has no value for the 'grade' field, and the button text-->
-                                      <form action="post">
-                                          <input class="grade-number" type="number" name="grade" min=0 max=100 placeholder="0">
-                                          <p class="grade-total" style="">/100</p>
-                                          <input type="hidden" name="submit" value="submit_grade">
-                                          <input class="button expanded submit-button" type="submit" value="Submit Grade">
-                                      </form>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><img src="https://ia.media-imdb.com/images/M/MV5BODVjMWI3MDItNGZmYy00YTM4LWFiNjMtYjUzN2NhZWEwZmY5XkEyXkFqcGdeQXVyMTEzNzczMA@@._V1_.jpg" alt="Andy Meneely"></td>
-                                  <td>Andy Meneely</td>
-                                  <td>Software Engineering</td>
-                                  <td>
-                                      <!-- TODO remove; Make sure you use the right icon associated with enrollment status -->
-                                      <i class="fi-check enrolled-check"></i>
-                                      Enrolled
-                                  </td>
-                                  <td>
-                                      <form action="post">
-                                          <input class="grade-number" type="number" name="grade" min=0 max=100 placeholder="0" value="5">
-                                          <p class="grade-total" style="">/100</p>
-                                          <input type="hidden" name="submit" value="submit_grade">
-                                          <input class="button expanded submit-button" type="submit" value="Re-Grade">
-                                      </form>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><img src="https://ia.media-imdb.com/images/M/MV5BMjE2MzQ0Mjg5MV5BMl5BanBnXkFtZTgwODkyMjUxMTI@._V1_SY1000_CR0,0,678,1000_AL_.jpg" alt="Larry Kiser"></td>
-                                  <td>Larry Kiser</td>
-                                  <td>Software Engineering</td>
-                                  <td>
-                                      <i class="fi-minus waitlisted-minus"></i>
-                                      Waitlisted (1)
-                                  </td>
-                                  <td>Not Enrolled</td>
-                              </tr>
                           </table>
                       </div>
-
-         
                   </div>
               </div>
-        <?php // } ?>
+        <?php  } ?>
       </div>
       
     </div>
 
 <script>
+    //Ajax for forms
     $(".ajax").on('submit', function (e) {
         e.preventDefault();
         $.ajax({
             type: 'POST',
             data: $(this).serialize(),
-            // dataType : 'json',
-            // contentType: "application/x-www-form-urlencoded",
             url: 'user_ajax_funcs.php',
             success: function (data) {
                 if (data.includes("Success")) {
                     showMessage("success", data);
-                    $(load_class_table());
-
                 }
                 else {
                     showMessage("failure", data);
-
                 }
             },
             error: function (msg) {
                 console.log(msg.responseText);
             }
         });
+    });
+
+    //Ajax for favorite
+    $('.favorite').on('click', function () {
+        var action = "";
+        if ($(this).attr('value') ==  'Favorite'){
+            action = 0;//0 means you're going to favorite the class
+        }else { // else text is Unfavorite
+            action = 1;
+        }
+        //Make the request
+        var success = $.ajax({
+            type: 'POST',
+            data: {'action': 'favorite', 'user_id' : "<?php echo $user_id;?>", 'class_id' : <?php echo $class_id;?>, 'favorite' : action},
+            url: 'user_ajax_funcs.php',
+            success: function (data) {
+                if (data.includes("Success")) {
+                    showMessage("success", data);
+                    return true;
+                }
+                else {
+                    showMessage("failure", data);
+                    return false;
+                }
+            },
+            error: function (msg) {
+                console.log(msg.responseText);
+                return false;
+            }
+        });
+        if (success) {
+            if ($(this).attr('value') == 'Favorite') {
+                $(this).attr('value', 'Unfavorite');
+            } else {
+                $(this).attr('value', 'Favorite');
+            }
+        }
+    });
+
+    //Ajax for enroll
+    $('.enroll').on('click', function () {
+        var action = "";
+        if ($(this).attr('value') ==  'Enroll'){
+            action = 1;
+        }else { // else text is Unfavorite
+            action = 0;//0 means you're going to unenroll in the class
+        }
+        //Make the request
+        var success = $.ajax({
+            type: 'POST',
+            data: {'action': 'enroll', 'user_id' : "<?php echo $user_id;?>", 'class_id' : <?php echo $class_id;?>, 'enroll' : action, 'course_id' : <?php echo $course_id?>},
+            url: 'user_ajax_funcs.php',
+            success: function (data) {
+                if (data.includes("Success")) {
+                    showMessage("success", data);
+                    return true;
+                }
+                else {
+                    showMessage("failure", data);
+                    return false;
+                }
+            },
+            error: function (msg) {
+                console.log(msg.responseText);
+                return false;
+            }
+        });
+        if (success){
+            if ($(this).attr('value') ==  'Enroll'){
+                $(this).attr('value', 'Drop');
+            }else {
+                $(this).attr('value', 'Enroll');
+            }
+        }
+
     });
 
 

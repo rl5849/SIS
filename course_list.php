@@ -3,19 +3,22 @@ session_start();
 if (isset($_SESSION['user_id'])){
     $user_id = $_SESSION['user_id'];
 }
-else{
-    $user_id = NIL;
+else {
+    $user_id = NULL;
+    $is_admin = false;
+    $is_prof = false;
 }
 
-$is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
-$is_prof = json_decode($is_prof, true);
-
-$is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
-$is_admin = json_decode($is_admin, true);
-
+//used to check if a professor type
+if($user_id){
+    $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
+    $is_prof = json_decode($is_prof, true);
+    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
+    $is_admin = json_decode($is_admin, true);
+}
 $is_student = (!$is_admin["is_admin"] && !$is_prof["is_prof"] && $user_id);
 
- ?>
+?>
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
@@ -47,7 +50,7 @@ $is_student = (!$is_admin["is_admin"] && !$is_prof["is_prof"] && $user_id);
 
           <table class="hover" style="margin-top:2%;">
               <tr>
-                  <?php if ($is_student) { ?>
+                  <?php if ($is_student && $user_id) { ?>
                   <th align="left">Fav.</th>
                   <?php } ?>
                   <th align="left">Course</th>
@@ -106,43 +109,42 @@ $is_student = (!$is_admin["is_admin"] && !$is_prof["is_prof"] && $user_id);
     <script>
         $('.fi-heart').on('click', function () {
             var action = "";
-            var orig = "";
             if ($(this).hasClass('favorited')){
-                console.log("Clicked was favorited, unfavoriting");
-                orig = "favorited";
                 action = 1;
             }else {
-                console.log("Clicked was unfavorited, favoriting");
                 action = 0; //0 means you're going to favorite the class
-                orig = 'unfavorite';
             }
 
             //Make the request
-            $.ajax({
+            var success = $.ajax({
                 type: 'POST',
                 data: {'action': 'favorite', 'user_id' : "<?php echo $user_id;?>", 'class_id' : $(this).attr('value'), 'favorite' : action},
                 url: 'user_ajax_funcs.php',
                 success: function (data) {
                     if (data.includes("Success")) {
                         //Do nothing here
+                        return true;
                     }
                     else {
                         showMessage("failure", data);
+                        return false;
                     }
                 },
                 error: function (msg) {
                     console.log(msg.responseText);
+                    return false;
                 }
             });
-            if ($(this).hasClass('favorited')) {
-                $(this).removeClass('favorited');
-                $(this).addClass('unfavorited');
+            if (success){
+                if ($(this).hasClass('favorited')) {
+                    $(this).removeClass('favorited');
+                    $(this).addClass('unfavorited');
+                }
+                else {
+                    $(this).removeClass('unfavorited');
+                    $(this).addClass('favorited');
+                }
             }
-            else {
-                $(this).removeClass('unfavorited');
-                $(this).addClass('favorited');
-            }
-
         });
 
       instantiateFilter("filter", "class_listing", false);

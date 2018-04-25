@@ -75,10 +75,12 @@ class AddPrereqs(Resource):
         parser.add_argument('type')
         parser.add_argument('program')
         parser.add_argument('year_level')
+        parser.add_argument('prereq_course')
         course_id = parser.parse_args().get("course_id")
         prereq_type = parser.parse_args().get("type")
         program = parser.parse_args().get("program")
         year_level = parser.parse_args().get("year_level")
+        prereq_course = parser.parse_args().get("prereq_course")
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
@@ -88,9 +90,9 @@ class AddPrereqs(Resource):
 
         # insert new prerequisite into table
         cur.execute("INSERT INTO prereqs "
-                    "(type, program_of_enrollment, year_level) "
-                    "VALUES (%s, %s, %s) ",
-                    [prereq_type, program, year_level])
+                    "(type, program_of_enrollment, year_level, course_id) "
+                    "VALUES (%s, %s, %s, %s) ",
+                    [prereq_type, program, year_level, prereq_course])
 
         # link prereq to course
         cur.execute("INSERT INTO course_to_prereqs "
@@ -365,19 +367,28 @@ class GetStudentInfo(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT * FROM students "
+        cur.execute("SELECT students.*, majors.major_name FROM students "
+                    "RIGHT JOIN majors ON (majors.major_id = students.major) "
                     "WHERE student_id = %s",
                     [student_id])
+
         query = cur.fetchall()
+
+
+
+
         # Get variable names
         cur.execute(
             "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'sis_data' AND table_name = 'students'")
 
         column_names = cur.fetchall()
         column_names_clean = [x[0] for x in column_names]
+        column_names_clean.append('major_name')
+
 
         result = {'student_info': [dict(zip(
-            column_names_clean, i)) for i in query]}
+            column_names_clean, i)) for i in query]
+                  }
 
         cur.close()
         return jsonify(result)
@@ -601,16 +612,23 @@ class GetPrereqs(Resource):
         cur.execute("SELECT p.prereq_id, "
                     "       p.type, "
                     "       p.program_of_enrollment, "
-                    "       p.year_level "
+                    "       m.major_name, "
+                    "       p.year_level, "
+                    "       p.course_id, " 
+                    "       c.course_code "
                     "FROM prereqs p "
                     "JOIN course_to_prereqs cp ON "
                     "cp.prereq_id = p.prereq_id "
+                    "LEFT JOIN majors m ON "
+                    "m.major_id = p.program_of_enrollment "
+                    "LEFT JOIN courses c ON "
+                    "c.course_id = p.course_id " 
                     "WHERE cp.course_id = %s ",
                     [course_id])
         query = cur.fetchall()
         # Get variable names
 
-        column_names = ["prereq_id", "type", "program_of_enrollment", "year_level"]
+        column_names = ["prereq_id", "type", "program_of_enrollment", "major_name", "year_level", "prereq_course_id", "prereq_course"]
 
         result = {'prereqs': [dict(zip(
             column_names, i)) for i in query]}
@@ -654,13 +672,14 @@ class CheckPrereq(Resource):
         if prereq_type == 0: #program of enrollment
             #check if student is enrolled in the correct program
             program = query[0][2]
-            cur.execute("SELECT major "
+            cur.execute("SELECT Count(*) "
                         "FROM students "
-                        "WHERE student_id = %s",
-                        [student_id])
+                        "WHERE student_id = %s "
+                        "AND major= %s ",
+                        [student_id, program])
             
             query = cur.fetchall()
-            if program == query[0][0]:
+            if query[0][0] > 0:
                 result = {'meets_prereq' : True}
             else:
                 result = {'meets_prereq' : False}
@@ -672,14 +691,35 @@ class CheckPrereq(Resource):
                         "FROM students "
                         "WHERE student_id = %s",
                         [student_id])
-            
             query = cur.fetchall()
             grad_year = query[0][0]
             now = datetime.datetime.now()
 
             # no field for year level, must be calculated,
             # TODO consider changing 'year_level' in prereqs to 'grad_year'
-            if year_level <= (5 - (grad_year - now.year)):
+            if grad_year == None:
+                result = {'meets_prereq' : False}
+            elif year_level <= (5 - (grad_year - now.year)):
+                result = {'meets_prereq' : True}
+            else:
+                result = {'meets_prereq' : False}
+
+        elif prereq_type == 2: #prerequisite course
+            #check got a 65 or above in the prereq course
+            grade_req = 65
+            prereq_course = query[0][4]
+            cur.execute("SELECT count(*) "
+                        "FROM student_to_class "
+                        "JOIN classes "
+                        "ON classes.class_id = student_to_class.class_id "
+                        "WHERE student_to_class.student_id = %s "
+                        "AND classes.course_id = %s "
+                        "AND student_to_class.grade >= %s "
+                        "AND classes.semester_id < (SELECT MAX(id) FROM semesters)",
+                        [student_id, prereq_course, grade_req])
+            
+            query = cur.fetchall()
+            if (query[0][0] > 0):
                 result = {'meets_prereq' : True}
             else:
                 result = {'meets_prereq' : False}
@@ -1110,29 +1150,13 @@ class CheckFavoriteStatus(Resource):
 api.add_resource(CheckFavoriteStatus, '/CheckFavoriteStatus')
 
 
-"""
-Gets a grade for a class and a student
-
-TODO: MEDIUM : Change to number value, implement in PHP
-"""
-class GetGrade(Resource):
-    config = ConfigParser.ConfigParser()
-    config.read('./config.ini')
-    
-    def get(self):
-        #cur.close()
-        return jsonify(
-                        grade="A",
-                      )
-
-api.add_resource(GetGrade, '/GetGrade')
 
 #TODO : MEDIUM : add assign grade
 
 """
-Calculates and stores students GPA in db
+Calculates and returns students GPA
 """
-class SetGPA(Resource):
+class GetGPA(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -1152,25 +1176,49 @@ class SetGPA(Resource):
 
         cur = db.cursor()
 
-        #gets and sets student GPA
-        #not sure how this responds if a student has no classes
-        cur.execute("UPDATE students "
-                    "SET GPA = AVG((SELECT grade "
-                    "FROM past_student_to_class_grade "
-                    "WHERE past_student_to_class_grade.student_id = "
-                    "      students.student_id))",
+        #gets students current gpa. Returns null if student has no grades
+        cur.execute("SELECT AVG(grade) "
+                    "FROM student_to_class "
+                    "WHERE student_id = %s "
+                    "AND grade IS NOT NULL ",
                     [user_id])
 
-        try:
-            db.commit()
-        except MySQLdb.IntegrityError:
-            cur.close()
-            return jsonify(FAILURE_MESSAGE)
-
+        result = cur.fetchall()
+        gpa=result[0][0]
         cur.close()
-        return jsonify(SUCCESS_MESSAGE)
 
-api.add_resource(SetGPA, '/SetGPA')
+        #convert grade to GPA
+        if gpa == None:
+             gpa = "-"
+        elif gpa >= 93:
+            gpa = "4.0"
+        elif gpa >= 90:
+            gpa = "3.7"
+        elif gpa >= 87:
+            gpa = "3.3"
+        elif gpa >= 83:
+            gpa = "3.0"
+        elif gpa >= 80:
+            gpa = "2.7"
+        elif gpa >= 77:
+            gpa = "2.3"
+        elif gpa >= 73:
+            gpa = "2.0"
+        elif gpa >= 70:
+            gpa = "1.7"
+        elif gpa >= 67:
+            gpa = "1.3"
+        elif gpa >= 67:
+            gpa = "1.3"
+        elif gpa >= 67:
+            gpa = "1.3"
+        elif gpa >= 65:
+            gpa = "1.0"
+        elif gpa < 65:
+            gpa = "0.0"
+        return jsonify(gpa)
+
+api.add_resource(GetGPA, '/GetGPA')
 
 """
 Modifies the attributes of a class
@@ -2108,6 +2156,38 @@ class GetCourseList(Resource):
 
 
 api.add_resource(GetCourseList, '/GetCourseList')
+
+
+"""
+Get majors
+"""
+class GetMajors(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        parser = reqparse.RequestParser()
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("SELECT * FROM majors")
+        query = cur.fetchall()
+
+        column_names= ["major_id", "major_name"]
+
+        result = {'majors': [dict(zip(
+            column_names, i)) for i in query]}
+        cur.close()
+        return jsonify(result)
+
+
+api.add_resource(GetMajors, '/GetMajors')
 
 
 """

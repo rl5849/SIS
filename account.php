@@ -62,8 +62,8 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     <?php
     $current_semester = file_get_contents("http://127.0.0.1:5002/GetCurrentSemester");
     $current_semester = json_decode($current_semester, true)["current_semester"];
-    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?id=".$student_id);
-    $student_info = json_decode($student_info, true);
+    $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
+    $student_info = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $student_info), true);
 
     //used to check if a professor type
     $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$student_id);
@@ -80,33 +80,11 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
       <div class="large-1 medium-2 small-3 cell">
         <div class="profile-picture-wrapper">
             <img class="profile-picture"
-                 src="<?php
-                function showProfilePicIf200($profile_picture) {
-                    error_reporting(0);
-                    $placeholder = "images/user_profile_placeholder.png";
-                    if ( $profile_picture == null ) { // If not set
-                        echo $placeholder;
-                        $shown = 0;
-                    } else if ( get_headers($profile_picture)) { // if loads from URL
-                        echo $profile_picture;
-                        $shown = 1;
-                    } else { // set but didn't load
-                        echo $placeholder;
-                        $shown = -1;
-                    }
-                    error_reporting(E_STRICT);
-                    return $shown;
-                }
-
+                src="<?php
                 $profile_picture = $student_info["student_info"][0]["profile_pic"];
-
-                $shown = showProfilePicIf200($profile_picture);
-                echo '" alt="Profile Picture">';
-                if ($shown == -1) {
-                    echo "<div class='descriptor' id='load-fail-descriptor'>Image could not be loaded.</div>";
-                    echo "<i class='fi-page load-fail' onmouseover='showLoadFail()' onmouseout='hideLoadFail()'></i>";
-                }
+                echo $profile_picture;
                 ?>
+                " alt="Profile picture failed to load.">
         </div>
       </div>
       <div class="large-6 medium-6 small-8 cell">
@@ -142,14 +120,14 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               }
                               ?></td>
                       </tr>
-                      <?php if (!$is_prof && !$is_admin) { ?>
+                      <?php if (!$is_prof["is_prof"] && !$is_admin["is_admin"]) { ?>
                       <tr>
                           <td>DoB</td>
                           <td><?php
                               $date = strtotime($student_info["student_info"][0]["date_of_birth"]);
                               $date = date("M d, Y", $date);
                               if ($is_editing) {
-                                  echo "<input name='dob' placeholder='ex. 5-15-1980' value='".$date."'>";
+                                  echo "<input name='dob' placeholder='ex. 5-15-1980' value='" . $date . "'>";
                               } else {
                                   if ($date == "") {
                                       echo "N/A";
@@ -162,7 +140,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                           <td><?php
                               $grad_year = $student_info["student_info"][0]["graduation_year"];
                               if ($is_editing) {
-                                  echo "<input name='grad-year' placeholder='ex. 2020' value='".$grad_year."'>";
+                                  echo "<input name='grad-year' placeholder='ex. 2020' value='" . $grad_year . "'>";
                               } else {
                                   if ($grad_year == "") {
                                       echo "N/A";
@@ -175,15 +153,34 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                       <tr>
                           <td>Major</td>
                           <td> <?php
-                              $major = $student_info["student_info"][0]["major"];
+
+
                               if ($is_editing) {
-                                  echo "<input name='major' placeholder='ex. Software Engineering' value='".$major."'>";
+                                  $majors = file_get_contents("http://127.0.0.1:5002/GetMajors");
+                                  $majors = json_decode($majors, true)["majors"];
+                                  $html = "<select>";
+                                  if (!$student_info["student_info"][0]["major"]) {
+                                      $html = $html . "<option>Choose...</option>";
+                                  }
+                                  foreach ($majors as $major) {
+                                      $current_txt = "";
+                                      if ($major['major_id'] == $student_info["student_info"][0]["major"]) {
+                                          $current_txt = "selected";
+                                      }
+
+                                      $html = $html . "<option name='major' value='" . $major['major_id'] . "' " . $current_txt . " >" . $major['major_name'] . "</option>";
+                                  }
+                                  $html = $html . "</select>";
+
+                                  echo $html;
+
+
                               } else {
 
-                                  if ($major == "") {
+                                  if ($student_info["student_info"][0]["major_name"] == "") {
                                       echo "N/A";
                                   } else {
-                                      echo $major;
+                                      echo $student_info["student_info"][0]["major_name"];
                                   }
 
                               }
@@ -192,15 +189,18 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                           <td><?php
                               $gpa = $student_info["student_info"][0]["GPA"];
                               if ($is_editing) {
-                                  echo "<input name='gpa' placeholder='ex. 3.2' value='".$gpa."'>";
+                                  echo "<input name='gpa' placeholder='ex. 3.2' value='" . $gpa . "'>";
                               } else {
-
+                                  $gpa = file_get_contents("http://127.0.0.1:5002/GetGPA?user_id=" . $student_id);
+                                  $gpa = json_decode($gpa, true)["gpa"];
                                   if ($gpa == "") {
                                       echo "N/A";
                                   } else {
                                       echo $gpa;
                                   }
                               }
+
+                              } // End $is_prof and $is_admin check
                               ?></td>
                       </tr>
                       <?php if ($is_editing) { ?>
@@ -210,10 +210,12 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               <input name='profile-pic' placeholder='Enter a URL' value='<?php echo $profile_picture; ?>'>
                           </td>
                           <td></td>
+                          <?php if (!$is_prof["is_prof"] && !$is_admin["is_admin"]) { ?>
                           <td><input class='button expanded rit-orange' type="submit" name="prof-approval" value="Request Professor Approval"></td>
+                          <?php } ?>
                       </tr>
-                      <?php } // End $is_editing check
-                            } // End $is_prof and $is_admin check?>
+                      <?php } // End $is_editing check ?>
+
                   </table>
                   <?php
                   if ($is_editing) {
@@ -227,22 +229,20 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
             </ul>
         </form>
       </div>
-          <?php if(!$is_editing) {?>
-      <div class="large-2 medium-2 small-3 cell">
-        <ul class="profile-list">
-            <p><a href="https://www.linkedin.com" class="button expanded rit-orange">LinkedIn</a></p>
-        </ul>
-      </div>
+          <?php
+          $semesters = file_get_contents("http://127.0.0.1:5002/GetSemesters");
+          $semesters = json_decode($semesters, true)["semesters"];
+          if(!$is_editing) {?>
+
         <?php
-        $semesters = file_get_contents("http://127.0.0.1:5002/GetSemesters");
-        $semesters = json_decode($semesters, true)["semesters"];
+
         ?>
     </div>
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">
           <div class="large-12 medium-12 small-12 columns">
               <ul class="horizontal tabs" data-tabs id="course-tabs">
               <?php
-              if(!$is_prof && !$is_admin) {
+              if(!$is_prof["is_prof"] && !$is_admin["is_admin"]){
               ?>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
 
@@ -253,7 +253,6 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                 <li class="tabs-title"><a href="#panel1v">Earlier</a></li>
               </ul>
           </div>
-
           <div class="large-12 medium-12 small-12 cell">
             <div class="tabs-content" data-tabs-content="course-tabs">
               <div class="tabs-panel is-active" id="panel1v">
@@ -264,6 +263,8 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                         <th align="left">Time</th>
                         <th align="left">Instructor</th>
                         <th align="left">Room</th>
+                        <th align="left">Grade</th>
+
                     </tr>
                       <tbody id="classes">
                       <!--                              Javascript builds table here-->
@@ -300,12 +301,18 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                   $.each(result, function(index, val){
                       for(var i=0; i < val.length; i++){
                           var item = val[i];
+                          var grade = '-';
+
+                          if(item.grade != null){
+                              grade = item.grade;
+                          }
                           buffer+="<tr>\
                                     <td><a href='course_view.php?class_id=" + item.class_id + "'>" + item.name + "</a></td>\
                                     <td>" + item.section + "</td> \
                                     <td>" + item.time + "</td> \
                                     <td>" + item.professor_name + "</td> \
                                     <td>" + item.room_number + "</td> \
+                                    <td>" + grade + "</td>\
                                  </tr>";
                       }
                       $("#classes").empty();
