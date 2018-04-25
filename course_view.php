@@ -3,15 +3,21 @@ session_start();
 if (isset($_SESSION['user_id'])){
     $user_id = $_SESSION['user_id'];
 }
-else{
-    $user_id = NIL;
+else {
+    $user_id = NULL;
+    $is_admin = false;
+    $is_prof = false;
 }
 
 //used to check if a professor type
-$is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
-$is_prof = json_decode($is_prof, true);
-$is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
-$is_admin = json_decode($is_admin, true);
+if($user_id){
+    $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
+    $is_prof = json_decode($is_prof, true);
+    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
+    $is_admin = json_decode($is_admin, true);
+}
+
+
 
 $is_student = (!$is_admin["is_admin"] && !$is_prof["is_prof"] && $user_id);
 
@@ -175,7 +181,7 @@ include 'callouts.html';
               </div>
           </div>
 
-          <?php if ($is_student) { ?>
+          <?php if ($is_student && $user_id) { ?>
 
           <div class="large-4 medium-4 small-4 cell">
               <div class="card">

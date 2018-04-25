@@ -65,10 +65,6 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $student_info = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$student_id);
     $student_info = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $student_info), true);
 
-
-
-
-
     //used to check if a professor type
     $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$student_id);
     $is_prof = json_decode($is_prof, true);
@@ -264,7 +260,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
           <div class="large-12 medium-12 small-12 columns">
               <ul class="horizontal tabs" data-tabs id="course-tabs">
               <?php
-              if(!$is_prof["is_prof"] && !$is_admin["is_admin"]) {
+              if(!$is_prof["is_prof"] && !$is_admin["is_admin"]){
               ?>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
 
@@ -275,7 +271,6 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                 <li class="tabs-title"><a href="#panel1v">Earlier</a></li>
               </ul>
           </div>
-
           <div class="large-12 medium-12 small-12 cell">
             <div class="tabs-content" data-tabs-content="course-tabs">
               <div class="tabs-panel is-active" id="panel1v">

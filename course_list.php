@@ -3,19 +3,22 @@ session_start();
 if (isset($_SESSION['user_id'])){
     $user_id = $_SESSION['user_id'];
 }
-else{
-    $user_id = NIL;
+else {
+    $user_id = NULL;
+    $is_admin = false;
+    $is_prof = false;
 }
 
-$is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
-$is_prof = json_decode($is_prof, true);
-
-$is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
-$is_admin = json_decode($is_admin, true);
-
+//used to check if a professor type
+if($user_id){
+    $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
+    $is_prof = json_decode($is_prof, true);
+    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
+    $is_admin = json_decode($is_admin, true);
+}
 $is_student = (!$is_admin["is_admin"] && !$is_prof["is_prof"] && $user_id);
 
- ?>
+?>
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
@@ -47,7 +50,7 @@ $is_student = (!$is_admin["is_admin"] && !$is_prof["is_prof"] && $user_id);
 
           <table class="hover" style="margin-top:2%;">
               <tr>
-                  <?php if ($is_student) { ?>
+                  <?php if ($is_student && $user_id) { ?>
                   <th align="left">Fav.</th>
                   <?php } ?>
                   <th align="left">Course</th>
