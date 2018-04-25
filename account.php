@@ -127,7 +127,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               $date = strtotime($student_info["student_info"][0]["date_of_birth"]);
                               $date = date("M d, Y", $date);
                               if ($is_editing) {
-                                  echo "<input name='dob' placeholder='ex. 5-15-1980' value='".$date."'>";
+                                  echo "<input name='dob' placeholder='ex. 5-15-1980' value='" . $date . "'>";
                               } else {
                                   if ($date == "") {
                                       echo "N/A";
@@ -140,7 +140,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                           <td><?php
                               $grad_year = $student_info["student_info"][0]["graduation_year"];
                               if ($is_editing) {
-                                  echo "<input name='grad-year' placeholder='ex. 2020' value='".$grad_year."'>";
+                                  echo "<input name='grad-year' placeholder='ex. 2020' value='" . $grad_year . "'>";
                               } else {
                                   if ($grad_year == "") {
                                       echo "N/A";
@@ -159,16 +159,16 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                                   $majors = file_get_contents("http://127.0.0.1:5002/GetMajors");
                                   $majors = json_decode($majors, true)["majors"];
                                   $html = "<select>";
-                                  if(!$student_info["student_info"][0]["major"]){
+                                  if (!$student_info["student_info"][0]["major"]) {
                                       $html = $html . "<option>Choose...</option>";
                                   }
-                                  foreach ($majors as $major){
+                                  foreach ($majors as $major) {
                                       $current_txt = "";
-                                      if($major['major_id'] == $student_info["student_info"][0]["major"]){
+                                      if ($major['major_id'] == $student_info["student_info"][0]["major"]) {
                                           $current_txt = "selected";
                                       }
 
-                                      $html = $html.  "<option name='major' value='".$major['major_id'] ."' " . $current_txt . " >" . $major['major_name'] . "</option>";
+                                      $html = $html . "<option name='major' value='" . $major['major_id'] . "' " . $current_txt . " >" . $major['major_name'] . "</option>";
                                   }
                                   $html = $html . "</select>";
 
@@ -180,7 +180,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                                   if ($student_info["student_info"][0]["major_name"] == "") {
                                       echo "N/A";
                                   } else {
-                                       echo $student_info["student_info"][0]["major_name"];
+                                      echo $student_info["student_info"][0]["major_name"];
                                   }
 
                               }
@@ -189,7 +189,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                           <td><?php
                               $gpa = $student_info["student_info"][0]["GPA"];
                               if ($is_editing) {
-                                  echo "<input name='gpa' placeholder='ex. 3.2' value='".$gpa."'>";
+                                  echo "<input name='gpa' placeholder='ex. 3.2' value='" . $gpa . "'>";
                               } else {
                                   $gpa = file_get_contents("http://127.0.0.1:5002/GetGPA?user_id=" . $student_id);
                                   $gpa = json_decode($gpa, true)["gpa"];
@@ -199,6 +199,8 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                                       echo $gpa;
                                   }
                               }
+
+                              } // End $is_prof and $is_admin check
                               ?></td>
                       </tr>
                       <?php if ($is_editing) { ?>
@@ -208,10 +210,12 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               <input name='profile-pic' placeholder='Enter a URL' value='<?php echo $profile_picture; ?>'>
                           </td>
                           <td></td>
+                          <?php if (!$is_prof["is_prof"] && !$is_admin["is_admin"]) { ?>
                           <td><input class='button expanded rit-orange' type="submit" name="prof-approval" value="Request Professor Approval"></td>
+                          <?php } ?>
                       </tr>
-                      <?php } // End $is_editing check
-                            } // End $is_prof and $is_admin check?>
+                      <?php } // End $is_editing check ?>
+
                   </table>
                   <?php
                   if ($is_editing) {
