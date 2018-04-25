@@ -710,11 +710,12 @@ class CheckPrereq(Resource):
             prereq_course = query[0][4]
             cur.execute("SELECT count(*) "
                         "FROM student_to_class "
-                        "JOIN past_classes "
-                        "ON past_classes.class_id = student_to_class.class_id "
+                        "JOIN classes "
+                        "ON classes.class_id = student_to_class.class_id "
                         "WHERE student_to_class.student_id = %s "
-                        "AND past_classes.course_id = %s "
-                        "AND student_to_class.grade >= %s ",
+                        "AND classes.course_id = %s "
+                        "AND student_to_class.grade >= %s "
+                        "AND classes.semester_id < (SELECT MAX(id) FROM semesters)",
                         [student_id, prereq_course, grade_req])
             
             query = cur.fetchall()
