@@ -8,7 +8,15 @@ if (isset($_GET["editprofile"]) && $_GET["editprofile"] == "true") {
 }
 
 if(isset($_SESSION['user_id'])){
-    $student_id = $_SESSION['user_id'];
+    $now = time(); // Checking the time now when home page starts.
+    if ($now > $_SESSION['expire']) {
+        session_destroy();
+        echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
+    }
+    else{
+        $student_id = $_SESSION['user_id'];
+    }
+
 }else{
     echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
     exit();
@@ -189,18 +197,15 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               ?></td>
                           <td>GPA</td>
                           <td><?php
+
                               $gpa = $student_info["student_info"][0]["GPA"];
-                              if ($is_editing) {
-                                  echo "<input name='gpa' placeholder='ex. 3.2' value='" . $gpa . "'>";
+
+                              if ($gpa == "") {
+                                  echo "N/A";
                               } else {
-                                  $gpa = file_get_contents("http://127.0.0.1:5002/GetGPA?user_id=" . $student_id);
-                                  $gpa = json_decode($gpa, true)["gpa"];
-                                  if ($gpa == "") {
-                                      echo "N/A";
-                                  } else {
-                                      echo $gpa;
-                                  }
+                                  echo $gpa;
                               }
+
 
                               } // End $is_prof and $is_admin check
                               ?></td>
@@ -242,23 +247,26 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     </div>
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">
           <div class="large-12 medium-12 small-12 columns">
-              <ul class="horizontal tabs" data-tabs id="course-tabs">
               <?php
               if(!$is_prof["is_prof"] && !$is_admin["is_admin"]){
               ?>
+			  <ul class="horizontal tabs" data-tabs id="course-tabs">
+              
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
 
-              <?php } ?>
+              
                 <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[2][0]?>);"><?php echo $semesters[2][1]?></a></li>
                 <li class="tabs-title"><a href="#panel1v">Earlier</a></li>
               </ul>
+			  <?php } ?>
           </div>
           <div class="large-12 medium-12 small-12 cell">
             <div class="tabs-content" data-tabs-content="course-tabs">
               <div class="tabs-panel is-active" id="panel1v">
-                  <table class="hover">
+                  <?php	if($is_admin["is_admin"] != true){	?>
+				  <table class="hover">
                     <tr>
                         <th align="left">Course</th>
                         <th align="left">Section</th>
@@ -273,6 +281,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
 
                       </tbody>
                 </table>
+				  <?php } ?>
                   <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
               </div>
             </div>

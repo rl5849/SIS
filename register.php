@@ -31,8 +31,35 @@ else {
     if ($user_exists == "True") {
         echo "<script>window.onload = function() {showMessage('failure', 'A user account with that username already exists.');};</script>";
     } else {
-        // Get salt from config file
         $myfile = fopen("LinkedIn/config.ini", "r") or die("Unable to open file!");
+        $readfile = fread($myfile,filesize("LinkedIn/config.ini"));
+        $arr = explode("\n", $readfile);
+        $captcha = explode("=", $arr[3])[1];
+        rewind($myfile);
+
+       //check captcha
+        $url = 'https://www.google.com/recaptcha/api/siteverify';
+        $data = array('secret' => $captcha, 'response' => $_POST['g-recaptcha-response']);
+
+        // use key 'http' even if you send the request to https://...
+        $options = array(
+            'http' => array(
+                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method'  => 'POST',
+                'content' => http_build_query($data)
+            )
+        );
+        $context  = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        $result = json_decode($result, true);
+
+        if ($result['success'] != true) {
+            echo "You're a bot!";
+            return;
+        }
+
+
+        // Get salt from config file
         $readfile = fread($myfile,filesize("LinkedIn/config.ini"));
         $arr = explode("\n", $readfile);
         $salt = explode("=", $arr[2])[1];
@@ -58,6 +85,9 @@ else {
             if ($results->message == "SUCCESS") {
                 session_start();
                 $_SESSION["user_id"] = $results->user_id;
+                $_SESSION['start'] = time(); // Taking now logged in time.
+                // Ending a session in 30 minutes from the starting time.
+                $_SESSION['expire'] = $_SESSION['start'] + (30 * 60);
                 header("Location: account.php?editprofile=true&fromregister=true");
             }
         }
@@ -73,6 +103,7 @@ else {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIS - Login</title>
     <link rel="stylesheet" href="css/app.css">
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
 
@@ -112,6 +143,9 @@ else {
                             <label for="password_confirm">Password Confirmation</label>
                             <input pattern="^(?=.*[A-Z])(?=.*[0-9]).{5,}$" type="password" name="password_confirm" id="password_confirm" placeholder="Confirm Password" required>
                         </div>
+
+                        <div class="g-recaptcha" data-sitekey="6LfYx1UUAAAAADUfxmugrKx1nIZHw8Cx8EQmcNY8"></div>
+
                         <input type="submit" class="button expanded rit-orange" value="Create Account">
                     </form>
                     <!-- End new form -->

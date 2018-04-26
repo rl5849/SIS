@@ -88,6 +88,29 @@ Gets information about a student.
 ```
 
 <!-- End Get Student Info -->
+<!-- Start Get Student's Classes for Semester -->
+<a name="GetStudentsClassesForSemester"/>
+
+### Get Student's Classes for Semester
+
+Gets a student's classes for a given semester
+
+#### Endpoint
+
+`/GetStudentsClassesForSemester`
+
+#### Parameters
+
+`user_id` : The ID of the student.
+`semester_id` : The ID of the semester.
+
+#### Return
+TODO
+```
+```
+
+<!-- End Get Student Info -->
+
 <!-- Start Add Student -->
 
 <a name="AddStudent"/>
