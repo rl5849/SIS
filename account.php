@@ -256,7 +256,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
           <div class="large-12 medium-12 small-12 cell">
             <div class="tabs-content" data-tabs-content="course-tabs">
               <div class="tabs-panel is-active" id="panel1v">
-                  <?php	if(is_admin["is_admin"] != true){	?>
+                  <?php	if($is_admin["is_admin"] != true){	?>
 				  <table class="hover">
                     <tr>
                         <th align="left">Course</th>

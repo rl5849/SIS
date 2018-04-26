@@ -180,11 +180,14 @@ include 'callouts.html';
 
               <?php //Only show buttons if they are logged in
                 if ($user_id) {
-                    ?>
+                    if(($is_admin["is_admin"] != true) && ($is_prof["is_prof"] != true)){
+					?>
+					
                     <input type="button" class="button expanded rit-orange favorite" value="<?php echo $favorite_status_msg; ?>">
                     <input type="submit" class="button expanded rit-orange enroll" value="<?php echo $enrollment_status_msg; ?>">
                     <?php
                 }
+				}
               ?>
             </li>
           </ul>
