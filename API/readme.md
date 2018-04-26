@@ -2,51 +2,73 @@
 
 ## Table of Contents
 
-#### [User/Student](#UserStudent)
-1. [Get Student](#GetStudent)
-2. [Add Student](#AddStudent)
-3. [Modify Profile](#ModifyProfile)
-4. [Modify Professor](#ModifyProfessor)
-5. [Request Professor Approval](#ReqProfApproval)
-6. [Get Professors](#GetProfs)
-7. [Get Professor By ID](#GetProfByID)
-8. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
+### [**User/Student**](#UserStudent)
 
-#### [Courses/Classes](#CoursesClasses)
-1. [Get Course(s)](#GetCourses)
-2. [Get Class(es)](#GetClasses)
-3. [Modify Course](#ModifyCourse)
-4. [Modify Class](#ModifyClass)
-5. [Get Student's Classes](#GetStudClasses)
-6. [Enroll Student](#EnrollStudent)
-7. [Drop Student](#DropStudent)
-8. [Get Favorite Classes](#GetFavoriteClasses)
-9. [Favorite Class](#FavoriteClass)
-10. [Unfavorite Class](#UnfavoriteClass)
-11. [Get Grade](#GetGrade)
-12. [Get Waitlist By Class](#WaitlistByClass)
-13. [Get Current Semester](#GetCurrentSemester)
+1. [Get Student](#GetStudentInfo)
+2. [Get Student's Classes For Semester](#GetStudentsClassesForSemester) Needs Implementation
+3. [Add User](#AddUser) Needs Implementation
+4. [Check if User Exists](#UserExists) Needs Implementation
+5. [Modify Profile](#ModProfile)
+6. [Request Professor Approval](#RequestProfessorApproval)
+7. [Delete Professor Request](#DeleteProfRequest) Needs Implementation
+8. [Get Professor Requests](#GetProfessorRequests) Needs Implementation
+9. [Approve Professor Request](#ApproveProfRequest) Needs Implementation
+10. [Get Professors](#GetProfs)
+11. [Get Professor By ID](#GetProfessorByID)
+12. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
+13. [Get User ID from Login](#GetUserIDFromLogin) Needs Implementation
+14. [Check if Admin](#CheckIfAdmin) Needs Implementation
+15. [Create Login](#CreateLogin) Needs Implementation
+
+### [**Courses/Classes**](#CoursesClasses)
+
+1. [Get Course List](#GetCourseList) Needs Implementation
+2. [Get Course(s)](#GetCourses)
+3. [Get Class(es)](#GetClasses)
+4. [Get Course Info](#GetCourseInfo) Needs Implementation
+5. [Get Class Info](#GetClassInfo) Needs Implementation
+6. [Modify Course](#ModCourse)
+7. [Modify Class](#ModClass)
+8. [Add Class](#AddClass) Needs Implementation
+9. [Add Course](#AddCourse) Needs Implementation
+10. [Delete Class](#DeleteClass) Needs Implementation
+11. [Get Student's Classes](#GetStudentsClasses)
+12. [Get Students By Class ID](#GetStudentsByClassId) Needs Implementation
+13. [Enroll Student](#EnrollStudent)
+14. [Ennroll Students From Waitlist](#EnrollFromWaitlist) Needs Implementation
+15. [Drop Student](#DropStudent)
+16. [Check Enrollment Status](#CheckEnrollmentStatus) Needs Implementation
+17. [Get Favorite Classes](#GetFavoritedClasses)
+18. [Check Favorite Status](#CheckFavoriteStatus) Needs Implementation
+19. [Favorite Class](#FavoriteClass)
+20. [Unfavorite Class](#UnfavoriteClass)
+21. [Get GPA](#GetGPA) Needs Implementation
+22. [Get Waitlist By Class](#WaitlistByClass)
+23. [Get Current Semester](#GetCurrentSemester)
+24. [Get Semesters](#GetSemesters) Needs Implementation
+25. [Add Semester](#AddSemester)
+26. [Request Special Access](#RequestSpecialAccess) Needs Implementation
 
 <a name="UserStudent"/>
 
 ## User/Student
 
 <!-- Start Get Student Info -->
-<a name="GetStudent"/>
+<a name="GetStudentInfo"/>
 
 ### Get Student
 
-Gets information about a student.
+Gets information about a student
 
-##### Endpoint
+#### Endpoint
 
 `/GetStudentInfo`
 
-##### Parameters
+#### Parameters
 
-`student_id` : The ID of the student.
+`student_id` : The ID of the student
 
-##### Return
+#### Return
 
 ```
 { student_info : [
@@ -54,7 +76,7 @@ Gets information about a student.
         profile_pic : url
         major : string
         gender : string
-        graduation_year : string 
+        graduation_year : string
         date_of_birth : string
         student_id : int
         student_name : string
@@ -63,106 +85,199 @@ Gets information about a student.
 ```
 
 <!-- End Get Student Info -->
-<!-- Start Add Student -->
+<!-- Start Get Student's Classes for Semester -->
+<a name="GetStudentsClassesForSemester"/>
 
-<a name="AddStudent"/>
+### Get Student's Classes for Semester
 
-### Add Student
+Gets a student's classes for a given semester
 
-Adds a student to the database
+#### Endpoint
 
-##### Endpoint
+`/GetStudentsClassesForSemester`
 
-`/AddStudent`
+#### Parameters
 
-##### Parameters
+`user_id` : The ID of the student
+`semester_id` : The ID of the semester
 
-`student_name` : The name of the student
+#### Return
+TODO
+```
+```
 
-`date_of_birth` : The student's date of birth (`yyyy-dd-MM`)
+<!-- End Get Student's Classes for Semester -->
+<!-- Start Add User-->
 
-`profile_pic` : A link to the student's profile picture
+<a name="AddUser"/>
 
-`gender` : The student's gender
+### Add User
 
-`graduation_year` : The student's graduation year
+Adds a user to the system
 
-##### Return
+#### Endpoint
+
+`/AddUser`
+
+#### Parameters
+
+`name` : The name of the user
+`linkedin_id` : LinkedIn ID of the user
+`profile_pic` : Link to profile picture of the user
+
+#### Return
 
 | Success            | Failure            |
 | ------------------ | ------------------ |
-| `'SUCCESS'`        | `'FAILURE'`        |
+| `'SUCCESS'`        | `'INSERT FAILED'`  |
 
-<!-- End Add Student -->
+<!-- End Add User -->
+<!-- Start User Exists-->
+
+<a name="UserExists"/>
+
+### User Exists
+
+Adds a user to the system
+
+#### Endpoint
+
+`/UserExists`
+
+#### Parameters
+
+`username` : username of user being checked
+
+#### Return
+
+```
+{ "exists" : boolean }
+```
+
+<!-- End User Exists -->
 <!-- Start Modify Profile -->
 
-<a name="ModifyProfile"/>
+<a name="ModProfile"/>
 
 ### Modify Profile
 
 Modifies information about the user's profile in the database
 
-##### Endpoint
+#### Endpoint
 
 `/ModProfile`
 
-##### Parameters
+#### Parameters
 
 None at the moment
 
-##### Return
+#### Return
 
 | Success            | Failure            |
 | ------------------ | ------------------ |
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Modify Profile -->
-<!-- Start Modify Professor -->
-
-<a name="ModifyProfessor"/>
-
-### Modify Professor
-
-Modifies information about the professor in the database
-
-##### Endpoint
-
-`/ModProfessor`
-
-##### Parameters
-
-None at the moment
-
-##### Return
-
-| Success            | Failure            |
-| ------------------ | ------------------ |
-| `'SUCCESS'`        | `'FAILURE'`        |
-
-<!-- End Modify Professor -->
 <!-- Start Request Prof Approval -->
 
-<a name="ReqProfApproval"/>
+<a name="RequestProfessorApproval"/>
 
 ### Request Professor Approval
 
 Flags the specified account as awaiting approval for becoming a professor
 
-##### Endpoint
+#### Endpoint
 
 `/RequestProfessorApproval`
 
-##### Parameters
+#### Parameters
 
 None at the moment
 
-##### Return
+#### Return
 
 | Success            | Failure            |
 | ------------------ | ------------------ |
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Request Prof Approval -->
+<!-- Start Delete Prof Request -->
+
+<a name="DeleteProfRequest"/>
+
+### Delete Professor Request
+
+Deletes the request for a specific professor
+
+#### Endpoint
+
+`/DeleteProfRequest`
+
+#### Parameters
+
+`user_id` : ID of user to professor request
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Delete Prof Request -->
+<!-- Start Get Prof Requests -->
+
+<a name="GetProfessorRequests"/>
+
+### Request Professor Approval
+
+Gets all current professor requests
+
+#### Endpoint
+
+`/GetProfessorRequests`
+
+#### Parameters
+
+None
+
+#### Return
+
+{ "requests" : [
+        [
+            "professor" : string
+            "course_code" : int
+        ],
+        .
+        .
+        .
+    ]
+}
+
+
+<!-- End Get Prof Request -->
+<!-- Start Approve Prof Request -->
+
+<a name="ApproveProfRequest"/>
+
+### Request Professor Approval
+
+Approves the request for a specific professor
+
+#### Approve Professor Request
+
+`/ApproveProfRequest`
+
+#### Parameters
+
+`user_id` : ID of professor to approve request
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Approve Prof Request -->
 <!-- Start GetProfs -->
 
 <a name="GetProfs"/>
@@ -171,24 +286,22 @@ None at the moment
 
 Gets a list of all of the professors in the system
 
-##### Endpoint
+#### Endpoint
 
 `/GetProfs`
 
-##### Parameters
+#### Parameters
 
 None at the moment
 
-##### Return
+#### Return
 
 ```
-{ profs : [
-    professor1,
-    professor2,
+{ "profs" : [
+    "professor" : string,
     .
     .
     .
-    professorN
     ]
 }
 ```
@@ -196,54 +309,124 @@ None at the moment
 <!-- End Request GetProfs -->
 <!-- Start Get Professor by ID -->
 
-
-<a name="GetProfByID"/>
+<a name="GetProfessorByID"/>
 
 ### Get Professor By ID
 
 Gets the professor name associated with the professor ID
 
-##### Endpoint
+#### Endpoint
 
 `/GetProfessorByID`
 
-##### Parameters
+#### Parameters
 
 `professor_id` : The ID of the professor
 
-##### Return
+#### Return
 
 ```
-{ professor_name : string }
+{ "professor_name" : string }
 ```
 
 <!-- End Get Professor by ID -->
-
 <!-- Start Get User Id from LinkedIn ID-->
-
 
 <a name="GetUserIDFromLinkedInID"/>
 
 ### Get User ID From LinlkedIn ID
 
-Gets a user id based on a provided LinkedIn authenticatiopn ID
+Gets a user ID based on a provided LinkedIn authenticatiopn ID
 
-##### Endpoint
+#### Endpoint
 
 `/GetUserIDFromLinkedInID`
 
-##### Parameters
+#### Parameters
 
-`linkedin_id` : The id passed from LinkedIn
+`linkedin_id` : The ID passed from LinkedIn
 
-##### Return
+#### Return
 
 ```
-{ 'user_id' : int }
+{ "user_id" : int }
 ```
 
 <!-- End Get Get User ID From LinkedIn ID-->
+<!-- Start Get User Id from Login-->
 
+<a name="GetUserIDFromLogin"/>
+
+### Get User ID From Login
+
+Gets a user ID based on provided login credentials
+
+#### Endpoint
+
+`/GetUserIDFromLogin`
+
+#### Parameters
+
+`user_name` : The user's user name
+`password` : The user's passwor
+
+#### Return
+
+```
+{ "user_id" : int }
+```
+
+<!-- End Get Get User ID From Login-->
+<!-- Start Check If Admin-->
+
+<a name="CheckIfAdmin"/>
+
+### Check if Admin
+
+Gets a user ID based on provided login credentials
+
+#### Endpoint
+
+`/CheckIfAdmin`
+
+#### Parameters
+
+`id` : The ID of the user to be checked
+
+#### Return
+
+```
+{ "is_admin" : boolean }
+```
+
+<!-- End Check If Admin-->
+<!-- Start Create Login-->
+
+<a name="CreateLogin"/>
+
+### Create Login
+
+Create user id with login credentials
+
+#### Endpoint
+
+`/CreateLogin`
+
+#### Parameters
+
+`username` : Account user name
+`password` : Account password
+
+#### Return
+
+```
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+| `'NEW USER ID'`    |
+```
+
+<!-- End Create Login-->
 <!-- Start Courses Classes -->
 <a name="CoursesClasses"/>
 
@@ -256,15 +439,15 @@ Gets a user id based on a provided LinkedIn authenticatiopn ID
 
 Get all courses that match a given criteria
 
-##### Endpoint
+#### Endpoint
 
 `/GetCourses`
 
-##### Parameters
+#### Parameters
 
 `course_id` : The ID of the course
 
-##### Return
+#### Return
 
 ```
 {
@@ -274,11 +457,9 @@ Get all courses that match a given criteria
             "course_description": string,
             "course_name": string
         },
-        
         .
         .
         .
-        
     ]
 }
 ```
@@ -292,15 +473,15 @@ Get all courses that match a given criteria
 
 Gets all classes that match a given criteria
 
-##### Endpoint
+#### Endpoint
 
 `/GetClasses`
 
-##### Parameters
+#### Parameters
 
 `class_id`
 
-##### Return
+#### Return
 
 ```
 {
@@ -317,7 +498,6 @@ Gets all classes that match a given criteria
             "time": string,
             "course_id": int
         },
-        
         .
         .
         .
@@ -328,21 +508,21 @@ Gets all classes that match a given criteria
 <!-- End Get Classes -->
 <!-- Start Modify Course -->
 
-<a name="ModifyCourse"/>
+<a name="ModCourse"/>
 
 ### Modify Course
 
 Changes information about the course in the database
 
-##### Endpoint
+#### Endpoint
 
 `/ModCourse`
 
-##### Parameters
+#### Parameters
 
 None at the moment
 
-##### Return
+#### Return
 
 | Success            | Failure            |
 | ------------------ | ------------------ |
@@ -351,21 +531,21 @@ None at the moment
 <!-- End Modify Course -->
 <!-- Start Modify Class -->
 
-<a name="ModifyClass"/>
+<a name="ModClass"/>
 
 ### Modify Class
 
 Changes information about the class in the database
 
-##### Endpoint
+#### Endpoint
 
 `/ModClass`
 
-##### Parameters
+#### Parameters
 
 None at the moment
 
-##### Return
+#### Return
 
 | Success            | Failure            |
 | ------------------ | ------------------ |
@@ -374,21 +554,21 @@ None at the moment
 <!-- End Modify Class -->
 <!-- Start Get Students Classes -->
 
-<a name="GetStudClasses"/>
+<a name="GetStudentsClasses"/>
 
 ### Get Student's Classes
 
 Gets all classes for a student.
 
-##### Endpoint
+#### Endpoint
 
 `/GetStudentsClasses`
 
-##### Parameters
+#### Parameters
 
 `student_id` : The ID of the student.
 
-##### Return
+#### Return
 
 ```
 { students_classes : [
@@ -411,16 +591,16 @@ Gets all classes for a student.
 
 Adds a student and class pair to the enrollment db
 
-##### Endpoint
+#### Endpoint
 
 `/EnrollStudent`
 
-##### Parameters
+#### Parameters
 
 `class_id` : The id of the class
 `user_id` : The uid of the student being enrolled
 
-##### Return
+#### Return
 
 | Success            | Failure            |
 | ------------------ | ------------------ |
@@ -435,15 +615,15 @@ Adds a student and class pair to the enrollment db
 
 Removed a student from the specified course
 
-##### Endpoint
+#### Endpoint
 
 `/DropStudent`
 
-##### Parameters
+#### Parameters
 
 None at the moment
 
-##### Return
+#### Return
 
 | Success            | Failure            |
 | ------------------ | ------------------ |
@@ -452,21 +632,21 @@ None at the moment
 <!-- End Drop Student -->
 <!-- Start Get Favorited Classes -->
 
-<a name="GetFavoriteClasses"/>
+<a name="GetFavoritedClasses"/>
 
 ### Get Student's Favorited Classes
 
 Gets all favorited classes for a student
 
-##### Endpoint
+#### Endpoint
 
 `/GetFavoritedClasses`
 
-##### Parameters
+#### Parameters
 
 `student_id` : The ID of the student.
 
-##### Return
+#### Return
 
 ```
 { favorited_classes : [
@@ -489,15 +669,15 @@ Gets all favorited classes for a student
 
 Adds a student and class pair to the favorite classes table
 
-##### Endpoint
+#### Endpoint
 
 `/FavoriteClass`
 
-##### Parameters
+#### Parameters
 
 None at the moment
 
-##### Return
+#### Return
 
 | Success            | Failure            |
 | ------------------ | ------------------ |
@@ -511,44 +691,21 @@ None at the moment
 
 Removed the student class pair from the favorite classes table
 
-##### Endpoint
+#### Endpoint
 
 `/UnfavoriteClass`
 
-##### Parameters
+#### Parameters
 
 None at the moment
 
-##### Return
+#### Return
 
 | Success            | Failure            |
 | ------------------ | ------------------ |
 | `'SUCCESS'`        | `'FAILURE'`        |
 
-
 <!-- End Unfavorite Class -->
-<!-- Start Get Grade -->
-<a name="GetGrade"/>
-
-### Get Grade
-
-Gets the grade for a student in a class
-
-##### Endpoint
-
-`/GetGrade`
-
-##### Parameters
-
-None at the moment
-
-##### Return
-
-```
-{ 'grade' : 'A' }
-```
-
-<!-- End Get Grade -->
 <!-- Start Waitlist By Class -->
 
 <a name="WaitlistByClass"/>
@@ -557,15 +714,15 @@ None at the moment
 
 Gets a waitlist for a given class
 
-##### Endpoint
+#### Endpoint
 
 `/WaitlistByClass`
 
-##### Parameters
+#### Parameters
 
 `class_id` : The ID of the class
 
-##### Return
+#### Return
 
 ```
 { waitlist : [
@@ -588,15 +745,15 @@ Gets a waitlist for a given class
 
 Gets the current semester of the system
 
-##### Endpoint
+#### Endpoint
 
 `/GetCurrentSemester`
 
-##### Parameters
+#### Parameters
 
 None
 
-##### Return
+#### Return
 
 ```
 {current_semester : string }

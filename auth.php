@@ -2,17 +2,6 @@
 // Start the linkedin session
 session_start();
 
-
-
-///
-// Getting user info
-// http://127.0.0.1:5002/GetUserIDFromLogin?username=admin&password=fc8252c8dc55839967c58b9ad755a59b61b67c13227ddae4bd3f78a38bf394f7
-//sha256 sum of the password 'admin'
-
-
-
-
-
 // Get the code from the linkedin query
 $code = $_GET["code"];
 
@@ -34,25 +23,10 @@ $params = array(
     'redirect_uri' => 'https://vm344p.se.rit.edu/SIS/auth.php'
 );
 
-/* Unused headers -- idk how to implement with these
-$options = array(
-    'http' => array(
-        'header'  => "Content-type: application/x-www-form-urlencoded",
-        'method'  => "POST"
-    )
-);
-$context  = stream_context_create($options);
-*/
-
 // Make a get request for the auth token
 $url = "https://www.linkedin.com/oauth/v2/accessToken?".http_build_query($params);
 $access_token_request = file_get_contents($url, true);
 $access_token = json_decode($access_token_request);
-
-// Add auth token to the session
-//$_SESSION['access_token'] = $access_token->access_token; // guard this!
-//$_SESSION['expires_in']   = $access_token->expires_in; // relative time (in seconds)
-//$_SESSION['expires_at']   = time() + $_SESSION['expires_in']; // absolute time
 
 // Prepare parameters to query for user info from linkedin
 $params = array(
@@ -104,15 +78,16 @@ if ($user_id == NULL) {
 
 $_SESSION["user_id"] = $user_id;
 
-//var_dump($response);
+// Set admin status if needed
+$is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
+$is_admin = json_decode($is_admin, true);
+$_SESSION["is_admin"] = $is_admin["is_admin"];
 
-/*
-echo $fName."<br/>";
-echo $lName."<br/>";
-echo $id."<br/>";
-echo "<img src='".$profilePic."'>";
-*/
-// Reroute user to account page TODO get working
+$_SESSION['start'] = time(); // Taking now logged in time.
+// Ending a session in 30 minutes from the starting time.
+$_SESSION['expire'] = $_SESSION['start'] + (30 * 60);
+
+// Reroute user to account page
 $accountPage = "account.php";
 header('Location: '.$accountPage);
 ?>

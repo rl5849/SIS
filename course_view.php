@@ -3,10 +3,25 @@ session_start();
 if (isset($_SESSION['user_id'])){
     $user_id = $_SESSION['user_id'];
 }
-else{
-    $user_id = NIL;
+else {
+    $user_id = NULL;
+    $is_admin = false;
+    $is_prof = false;
 }
 
+//used to check if a professor type
+if($user_id){
+    $is_prof = file_get_contents("http://127.0.0.1:5002/CheckIfProfessor?id=".$user_id);
+    $is_prof = json_decode($is_prof, true);
+    $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$user_id);
+    $is_admin = json_decode($is_admin, true);
+}
+
+$is_student = (!$is_admin["is_admin"] && !$is_prof["is_prof"] && $user_id);
+
+// Load Nav bar and callouts
+include 'nav.php';
+include 'callouts.html';
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -16,6 +31,7 @@ else{
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIS - Course List</title>
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/foundation-icons.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
   <body>
@@ -33,98 +49,18 @@ else{
             $class_id = $_POST["class_id"];
         }
         else{
-            $class_id = 1;
-        }
-
-        //PHP FUNCTIONS FOR ENROLL AND FAVORITE
-        if (isset($_POST["enroll"])){
-
-            if ($_POST["enroll"] == 0){
-                unenroll($_POST["user_id"], $class_id);
-
-            }
-            else{
-                enroll($_POST["user_id"], $class_id);
-            }
-            unset($_POST["enroll"]);
-
-        }
-        if (isset($_POST["favorite"])){
-
-            if ($_POST["favorite"] == 0){
-                favorite($_POST["user_id"], $class_id);
-
-            }
-            else{
-                unfavorite($_POST["user_id"], $class_id);
-            }
-            unset($_POST["favorite"]);
-        }
-
-        function enroll($user_id, $local_class_id) {
-            $enroll = file_get_contents("http://127.0.0.1:5002/EnrollStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
-            $enroll = json_decode($enroll, true);
-            if ($enroll == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully Enrolled in class\");</script>";
-            }
-            else{
-                echo "<script>showMessage(\"failure\", \"Failed to Enroll in class\");</script>";
-            }
-        }
-
-
-        function unenroll($user_id, $local_class_id) {
-            $unenroll = file_get_contents("http://127.0.0.1:5002/DropStudent?class_id=" . $local_class_id . "&user_id=" . $user_id);
-            $unenroll = json_decode($unenroll, true);
-            if ($unenroll == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully Dropped class\");</script>";
-            }
-            else{
-                echo "<script>showMessage(\"failure\", \"Failed to Drop class\");</script>";
-            }
-        }
-
-        function favorite($user_id, $local_class_id) {
-            $favorite = file_get_contents("http://127.0.0.1:5002/FavoriteClass?class_id=" . $local_class_id . "&user_id=" . $user_id);
-            $favorite = json_decode($favorite, true);
-            if ($favorite == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully Favorited class\");</script>";
-            }
-            else{
-                echo "<script>showMessage(\"failure\", \"Failed to Favorite class\");</script>";
-            }
-        }
-
-
-        function unfavorite($user_id, $local_class_id) {
-            $unfavorite = file_get_contents("http://127.0.0.1:5002/UnfavoriteClass?class_id=" . $local_class_id . "&user_id=" . $user_id);
-            $unfavorite = json_decode($unfavorite, true);
-            if ($unfavorite == "SUCCESS"){
-                echo "<script>showMessage(\"success\", \"Successfully Dropped class\");</script>";
-            }
-            else{
-                echo "<script>showMessage(\"failure\", \"Failed to Drop class\");</script>";
-            }
+            echo "<meta http-equiv=\"refresh\" content=\"0;URL=course_list.php\" />";
+            exit();
         }
 
         $enrollment_status = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" .$class_id . "&user_id=" . $user_id);
         $enrollment_status = json_decode($enrollment_status, true);
         $enrollment_status = $enrollment_status["enrollment_status"];
-        $enrollment_status = $enrollment_status === 'True'? true: false;
 
         $favorite_status = file_get_contents("http://127.0.0.1:5002/CheckFavoriteStatus?class_id=" .$class_id . "&user_id=" . $user_id);
         $favorite_status = json_decode($favorite_status, true);
         $favorite_status = $favorite_status["favorite_status"];
         $favorite_status = $favorite_status === 'True'? true: false;
-
-
-
-        if ($enrollment_status == "True"){
-            $enrollment_status_msg = "Drop";
-        }else{
-            $enrollment_status_msg = "Enroll";
-        }
-
         if ($favorite_status == "True"){
             $favorite_status_msg = "Unfavorite";
         }else{
@@ -132,7 +68,23 @@ else{
         }
 
 
-        $class_info = file_get_contents("http://127.0.0.1:5002/GetClassInfo?class_id=" .$class_id);
+        switch ($enrollment_status){
+            case "ENROLLED":
+                $enrollment_status_msg = "Drop";
+                $enrollment_status = 0;
+                break;
+            case "WAITLISTED":
+                $enrollment_status_msg = "Drop Waitlist";
+                $enrollment_status = 0;
+                break;
+            default:
+                $enrollment_status_msg = "Enroll";
+                $enrollment_status = 1;
+                break;
+        }
+
+
+        $class_info = file_get_contents("http://127.0.0.1:5002/GetClassInfo?class_id=" . $class_id);
         $class_info = json_decode($class_info, true);
 
         $course_id = $class_info["class_info"][0]["course_id"];
@@ -147,53 +99,95 @@ else{
         $wait_list = file_get_contents("http://127.0.0.1:5002/WaitlistByClass?class_id=" . $class_info["class_info"][0]["class_id"]);
         $wait_list = json_decode($wait_list, true);
 
+        $user_requested_access = file_get_contents("http://127.0.0.1:5002/GetStudentAccess?class_id=" . $class_info["class_info"][0]["class_id"] . "&user_id=" . $user_id);
+        $user_requested_access = json_decode($user_requested_access, true);
+        $user_requested_access = $user_requested_access['requests'];
+
+        $enrolled_students = file_get_contents("http://127.0.0.1:5002/GetStudentsByClassId?class_id=" . $class_id);
+        $enrolled_students = json_decode($enrolled_students, true);
+
+        if($is_student){
+            $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
+            $prerequisites = json_decode($prerequisites, true);
+            $prerequisites = $prerequisites["prereqs"];
+
+            $meetsPrereq = array();
+            foreach ($prerequisites as $prereq){
+                $meetsPrereq[$prereq['prereq_id']] = file_get_contents("http://127.0.0.1:5002/CheckPrereq?prereq_id=" . $prereq['prereq_id'] . "&student_id=" . $user_id);
+                $meetsPrereq[$prereq['prereq_id']] = json_decode($meetsPrereq[$prereq['prereq_id']], true);
+                $meetsPrereq[$prereq['prereq_id']] = $meetsPrereq[$prereq['prereq_id']]["meets_prereq"];
+                if ($meetsPrereq[$prereq['prereq_id']] == False){
+                    $meetsAllPrereqs = False;
+                }
+            }
+        }
+
     ?>
 
 	</div>
     <div class="grid-container">
 	  
       <div class="grid-x grid-padding-x" style="padding-top:2%;">
-        
-        <div class="large-4 medium-4 small-4 cell">
-          <ul class="profile-list">
-            <li>Course Name: <?php echo ($course_info["course_info"][0]["course_name"])?></li>
-            <li>Course Code: <?php echo ($class_info["class_info"][0]["room_number"]) ?> </li> <!-- course code not in db, use course ID?-->
-          </ul>
-        </div>
-        <div class="large-6 medium-6 small-5 cell">
-          <ul class="profile-list">
-            <li>Room Number: <?php echo ($class_info["class_info"][0]["room_number"]) ?></li>
-            <li>Time: <?php echo ($class_info["class_info"][0]["time"]) ?></li> <!-- needs getclassinfo -->
-            <li>Professor Name: <?php echo ($prof_info["professor_name"]) ?></li>
-          </ul>
+
+        <div class="large-10 medium-10 small-9 cell">
+            <table>
+                <tr>
+                    <td>
+                        Course Name:
+                    </td>
+                    <td>
+                        <?php echo ($course_info["course_info"][0]["course_name"])?>
+                    </td>
+                    <td>
+                        Room Number:
+                    </td>
+                    <td>
+                        <?php echo ($class_info["class_info"][0]["room_number"]) ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Course Code:
+                    </td>
+                    <td>
+                        <?php echo ($class_info["class_info"][0]["room_number"]) ?> <!-- course code not in db, use course ID?-->
+                    </td>
+                    <td>
+                        Time:
+                    </td>
+                    <td>
+                        <?php echo ($class_info["class_info"][0]["time"]) ?> <!-- needs getclassinfo -->
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+                        Professor Name:
+                    </td>
+                    <td>
+                        <?php echo ($prof_info["professor_name"]) ?>
+                    </td>
+                </tr>
+            </table>
         </div>
         <div class="large-2 medium-2 small-3 cell">
           <ul class="profile-list">
 
               <?php //Only show buttons if they are logged in
                 if ($user_id) {
-                    ?>
-                    <p>
-                    <form method="post">
-                        <input type="hidden" name="favorite" value="<?php echo($favorite_status) ?>">
-                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
-                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                        <input type="submit" class="button expanded rit-orange"
-                               value="<?php echo $favorite_status_msg; ?>">
-                    </form>
-                    </p>
-
-                    <p>
-                    <form method="post">
-                        <input type="hidden" name="enroll" value="<?php echo !($enrollment_status) ?>">
-                        <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
-                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                        <input type="submit" class="button expanded rit-orange"
-                               value="<?php echo $enrollment_status_msg; ?>">
-                    </form>
-                    </p>
+                    if(($is_admin["is_admin"] != true) && ($is_prof["is_prof"] != true)){
+					?>
+					
+                    <input type="button" class="button expanded rit-orange favorite" value="<?php echo $favorite_status_msg; ?>">
+                    <input type="submit" class="button expanded rit-orange enroll" value="<?php echo $enrollment_status_msg; ?>">
                     <?php
                 }
+				}
               ?>
             </li>
           </ul>
@@ -204,22 +198,52 @@ else{
       <div class="grid-x grid-padding-x" style="padding-top:2%;">
         
         <div class="large-4 medium-4 small-4 cell">
-          <div class="card">
-            <div class="card-divider">
-              Info
-            </div>
-            <div class="card-section">
-              <ul class="profile-list">
+              <div class="card">
+                  <div class="card-divider">
+                      Info
+                  </div>
+                  <div class="card-section">
+                      <ul class="profile-list">
 
 
-                <li>Credits: <?php echo ($class_info["class_info"][0]["credits"]) ?> </li>
-                <li>Enrolled: <?php echo ($class_info["class_info"][0]["num_enrolled"]) ?> / <?php echo ($class_info["class_info"][0]["capacity"]) ?>  </li> <!-- needs getPrereqs -->
-                <li>Wait List: <?php echo count($wait_list) ?> / 0 </li>
-                <!-- <li>...</li> -->
-              </ul>
-            </div>
+                          <li>Credits: <?php echo ($class_info["class_info"][0]["credits"]) ?> </li>
+                          <li>Enrolled: <?php echo ($class_info["class_info"][0]["num_enrolled"]) ?> / <?php echo ($class_info["class_info"][0]["capacity"]) ?>  </li> <!-- needs getPrereqs -->
+                          <li>Wait List: <?php echo count($wait_list) ?>  </li> <!-- needs waitlist capacity -->
+                          <!-- <li>...</li> -->
+                      </ul>
+                  </div>
+              </div>
           </div>
-        </div>
+
+          <?php if ($is_student && $user_id) { ?>
+
+          <div class="large-4 medium-4 small-4 cell">
+              <div class="card">
+                  <div class="card-divider">
+                      Special Access Required
+                  </div>
+                  <div class="card-section">
+                      <form class="ajax" method="post">
+                          <input type="hidden" name="action" value="RequestSpecialAccess">
+                          <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
+                          <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+
+                          <input class="access" onclick="unchecknone()" type="checkbox" name="hearing" <?php if(in_array('hearing', $user_requested_access)){echo "checked";} ?>>
+                          <label>Hearing</label><br>
+
+                          <input class="access" onclick="unchecknone()" type="checkbox" name="note_taking" <?php if(in_array('note_taking', $user_requested_access)){echo "checked";} ?>>
+                          <label>Note Taker</label><br>
+                          <input class="access" onclick="unchecknone()" type="checkbox" name="test_time" <?php if(in_array('test_time', $user_requested_access)){echo "checked";} ?>>
+                          <label>Test Time</label><br>
+                          <input id="none" onclick="uncheckaccess()" type="checkbox" name="none" <?php if([] == $user_requested_access){echo "checked";} ?>>
+                          <label>None</label><br>
+                          <input type="submit" class="button expanded rit-orange" value="Request Special Access">
+                      </form>
+                  </div>
+              </div>
+          </div>
+          <?php } ?>
+
         <div class="large-4 medium-4 small-4 cell">
           <div class="card">
             <div class="card-divider">
@@ -236,31 +260,263 @@ else{
               Prerequisites
             </div>
             <div class="card-section">
-              <ul class="profile-list">
-                <li>3rd Year status</li>
-                <li>Major: Software Engineering</li>
-                <li>Must be pretty cool</li>
+              <ul class="profile-list prereqs">
+                <?php
+                    //assembles a list of prerequisites for the class
+                    if (sizeof($prerequisites) > 0){
+                        foreach ($prerequisites as $prereq ){
+                            if($is_student){ 
+                                //only display icons for students
+                                if ($meetsPrereq[$prereq["prereq_id"]] == True){
+                                    $class = "fi-check prereq-fulfilled";
+                                }
+                                elseif ($meetsPrereq[$prereq["prereq_id"]] == False){
+                                    $class = "fi-x prereq-unfulfilled";
+                                }
+                                else{
+                                    $class = "fi-minus prereq-unknown";
+                                }
+                                echo("<li><i class='$class'></i>");
+                            }else{
+                                echo("<li>");
+                            }
+
+                            switch ($prereq["type"]){
+                                case 0:
+                                    echo ("Major: " . $prereq["major_name"] . "</li>");
+                                    break;
+                                case 1:
+                                    echo ("Year Level: " . $prereq["year_level"] . "</li>");
+                                    break;
+                                case 2:
+                                    echo ("Must have taken and passed " . $prereq["prereq_course"] . "</li>");
+                                    break;
+                                default:
+                                    echo ("</li>");
+                            }
+                        }
+                    }
+                    else{
+                        echo("<li>No Prerequisites</li>");
+                    }
+                ?>
+                <!-- <li><i class="fi-check prereq-fulfilled"></i>3rd Year Standing</li>
+                <li><i class="fi-x prereq-unfulfilled"></i>Major: Software Engineering</li>
+                <li><i class="fi-minus prereq-unknown"></i>Must be pretty cool</li> -->
                 <!-- <li>...</li> -->
               </ul>
             </div>
           </div>
         </div>
-        
+
+          <?php // TODO make this only display for the professor associated with the class ?>
+
+          <?php
+			//$is_enroll = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" . $class_id . "&user_id=" . $user_id);
+			//$is_enroll = json_decode($is_enroll, true);
+			if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True) || ($enrollment_status == 1)){
+			?>
+
+              <div class="large-12 medium-12 small-12 cell">
+                  <div class="card">
+                      <div class="card-divider">
+                          Enrolled Students
+                      </div>
+                      <div class="card-section">
+                          <table class="student-table hover">
+						
+                              <tr>
+                                  <th><!-- Intentionally blank for picture --></th>
+                                  <th align="left">Name</th>
+                                  <th align="left">Major</th>
+								  <?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
+									<th align="left">Status</th>
+								  <?php } ?>
+								  <?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
+                                  <th align="left">Grade</th>
+								  <?php } ?>
+                              </tr>
+
+                              <?php
+                              // TODO generate dynamically w/ php
+                              // TODO add functionality for submitting grades using ajax
+                              foreach ($enrolled_students['enrolled'] as $enroll_stud){
+								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$enroll_stud["user_id"]);
+								  $curr_stud = json_decode($curr_stud,true);
+                                  //Add each enrolled student to teh table with each field
+                                    ?>
+									<tr>
+										<td><img src ='<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>' onerror="this.src='images/user_profile_placeholder.png'"></td>
+										<td><?php echo $curr_stud["student_info"][0]["student_name"] ?></td>
+										<td><?php echo ($curr_stud["student_info"][0]["major_name"] ? $curr_stud["student_info"][0]["major_name"] : "Not Specified");  ?></td>
+										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
+										<td>
+											<i class="fi-check enrolled-check"></i>
+											Enrolled
+										</td>
+										<?php } ?>
+										<?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
+										  <td>
+											<form action="post">
+											<input class="grade-number" type="number" name="grade" min=0 max=100 placeholder= "0" value=<?php echo $curr_stud["grade"] ?>>
+											<p class="grade-total" style="">/100</p>
+											<input type="hidden" name="submit" value="submit_grade">
+											<input class="button expanded submit-button" type="submit" value="Submit Grade">
+										  </td>
+                                      </form>
+										<?php } ?>
+									</tr>
+							  <?php } ?>
+							  <?php foreach ($enrolled_students["waitlisted"] as $enroll_stud){
+								  $curr_stud = file_get_contents("http://127.0.0.1:5002/GetStudentInfo?student_id=".$enroll_stud["user_id"]);
+								  $curr_stud = json_decode($curr_stud,true);
+								  ?>
+									<tr>
+										<td src =<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>></td>
+										<td><?php echo $curr_stud["student_info"][0]["student_name"] ?></td>
+										<td><?php echo $curr_stud["student_info"][0]["major"] ?></td>
+										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
+											<td>
+												<i class="fi-minus waitlisted-minus"></i>
+												Waitlisted (<?php echo ($enroll_stud["position"] +1) ?>)
+											</td>
+										<?php } ?>
+										<?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
+											<td>Not Enrolled</td>
+										<?php } ?>
+									</tr>
+							  <?php } ?>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+        <?php  } ?>
       </div>
       
     </div>
 
+<script>
+    //Ajax for forms
+    $(".ajax").on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            data: $(this).serialize(),
+            url: 'user_ajax_funcs.php',
+            success: function (data) {
+                if (data.includes("Success")) {
+                    showMessage("success", data);
+                }
+                else {
+                    showMessage("failure", data);
+                }
+            },
+            error: function (msg) {
+                console.log(msg.responseText);
+            }
+        });
+    });
 
+    //Ajax for favorite
+    $('.favorite').on('click', function () {
+        var action = "";
+        if ($(this).attr('value') ==  'Favorite'){
+            action = 0;//0 means you're going to favorite the class
+        }else { // else text is Unfavorite
+            action = 1;
+        }
+        //Make the request
+        var success = $.ajax({
+            type: 'POST',
+            data: {'action': 'favorite', 'user_id' : "<?php echo $user_id;?>", 'class_id' : <?php echo $class_id;?>, 'favorite' : action},
+            url: 'user_ajax_funcs.php',
+            success: function (data) {
+                if (data.includes("Success")) {
+                    showMessage("success", data);
+                    return true;
+                }
+                else {
+                    showMessage("failure", data);
+                    return false;
+                }
+            },
+            error: function (msg) {
+                console.log(msg.responseText);
+                return false;
+            }
+        });
+        if (success) {
+            if ($(this).attr('value') == 'Favorite') {
+                $(this).attr('value', 'Unfavorite');
+            } else {
+                $(this).attr('value', 'Favorite');
+            }
+        }
+    });
+
+    //Ajax for enroll
+    $('.enroll').on('click', function () {
+        var action = "";
+        if ($(this).attr('value') ==  'Enroll'){
+            action = 1;
+        }else { // else text is Unfavorite
+            action = 0;//0 means you're going to unenroll in the class
+        }
+        //Make the request
+        var success = $.ajax({
+            type: 'POST',
+            data: {'action': 'enroll', 'user_id' : "<?php echo $user_id;?>", 'class_id' : <?php echo $class_id;?>, 'enroll' : action, 'course_id' : <?php echo $course_id?>},
+            url: 'user_ajax_funcs.php',
+            success: function (data) {
+                if (data.includes("Success")) {
+                    showMessage("success", data);
+                    return true;
+                }
+                else {
+                    showMessage("failure", data);
+                    return false;
+                }
+            },
+            error: function (msg) {
+                console.log(msg.responseText);
+                return false;
+            }
+        });
+        if (success){
+            if ($(this).attr('value') ==  'Enroll'){
+                $(this).attr('value', 'Drop');
+            }else {
+                $(this).attr('value', 'Enroll');
+            }
+        }
+
+    });
+
+
+    function uncheckaccess() {
+        // if (this.checked) {
+        $(document).ready(function () {
+            $('.access').each(function (i, item) {
+                $(item).attr('checked', false);
+                console.log("Unselecting" + $(item).id)
+                //$(item).checked = false;
+            });
+        });
+    }
+
+    function unchecknone() {
+        $(document).ready(function () {
+            document.getElementById('none').checked = false;
+        });
+
+    }
+
+</script>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/what-input/dist/what-input.js"></script>
     <script src="bower_components/foundation-sites/dist/js/foundation.js"></script>
     <script src="bower_components/motion-ui/dist/motion-ui.js"></script>
     <script src="js/app.js"></script>
-    
-    <script>
-      makeNav();
-      makeCallouts();
-     </script>
   </body>
 </html>

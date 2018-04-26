@@ -4,6 +4,6 @@ npm-debug.log
 API/config.ini
 API/sis_api.pyc
 tests/htmlcov/*
+tests/.coverage
 .idea/*
 LinkedIn/config.ini
-tests/

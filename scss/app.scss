@@ -215,4 +215,77 @@ html,body {
   border-radius: 3px;
 }
 
+.student-table {
+  tr {
+    height: 100px;
+  }
+  img {
+    max-height: 75px;
+    max-width: 75px;
+  }
+  .grade-number {
+    display:inline;
+    width:25%;
+    margin:0;
+  }
+  .grade-total {
+    display:inline;
+    width:10%;
+    margin-top:0;
+  }
+  .submit-button {
+    display:inline;
+    width:50%;
+    margin-top:12px;
+    margin-left:4%
+  }
+  .enrolled-check {
+    color: green;
+  }
+  .waitlisted-minus {
+    color: GoldenRod;
+  }
 
+}
+
+.profile-picture-wrapper {
+  position: relative;
+
+  .profile-picture {
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+  .load-fail {
+    color: red;
+    top: 0;
+    left: 5px;
+    position: absolute;
+  }
+
+  .descriptor {
+    position: absolute;
+    top: 0;
+    left: 15px;
+    background: lightgray;
+    color: black;
+    display: none;
+    border: 1px solid red;
+    padding: 5px;
+  }
+}
+
+.prereqs {
+  .prereq-fulfilled {
+    color: green;
+    padding-right: 5px;
+  }
+  .prereq-unfulfilled {
+    color: red;
+    padding-right: 5px;
+  }
+  .prereq-unknown {
+    color: GoldenRod;
+    padding-right: 4px;
+  }
+}
