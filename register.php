@@ -50,12 +50,12 @@ else {
         );
         $context  = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
-        if ($result === FALSE) { /* Handle error */ }
+        $result = json_decode($result, true);
 
-        var_dump($result);
-
-
-
+        if ($result['success'] == false) {
+            echo "You're a bot!";
+            return;
+        }
 
 
         // Get salt from config file
@@ -141,6 +141,7 @@ else {
                         </div>
 
                         <div class="g-recaptcha" data-sitekey="6LfYx1UUAAAAADUfxmugrKx1nIZHw8Cx8EQmcNY8"></div>
+
                         <input type="submit" class="button expanded rit-orange" value="Create Account">
                     </form>
                     <!-- End new form -->
