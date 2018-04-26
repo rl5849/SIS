@@ -48,8 +48,8 @@ class TestGetCourses(SetupGetCourses):
 
 	def test_course_name(self):
 		course = self.courses[1].get("course_name")
-		self.assertEqual(course, "Web Eng.",
-						 "Expected 'Web Eng.', Found '" + str(course) + "'")
+		self.assertEqual(course, "Web Engineering",
+						 "Expected 'Web Engineering', Found '" + str(course) + "'")
 
 	def test_course_description(self):
 		desc = self.courses[1].get("course_description")
@@ -96,8 +96,8 @@ class TestGetCourseInfo(SetupGetCourseInfo):
 
 	def test_course_name(self):
 		name = self.course.get("course_name")
-		self.assertEqual(name, "Web Eng.",
-						 "Expected 'Web Eng.', Found '" + str(name) + "'")
+		self.assertEqual(name, "Web Engineering",
+						 "Expected 'Web Engineering', Found '" + str(name) + "'")
 
 class TestAddCourse(unittest.TestCase):
 
