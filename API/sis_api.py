@@ -373,9 +373,14 @@ class GetStudentInfo(Resource):
                     "WHERE student_id = %s",
                     [student_id])
 
-        query = cur.fetchall()
+        response = cur.fetchall()
 
-
+        #date_of_birth_field is displaying with a UTC time
+        #it needs to be converted back to a date
+        query = []
+        query.append(list(response[0]))
+        if query[0][2]:
+            query[0][2] =  query[0][2].strftime('%B %d, %Y')
 
 
         # Get variable names
@@ -851,6 +856,7 @@ api.add_resource(EnrollStudent, '/EnrollStudent')
 Removes a student from a course
 """
 class DropStudent(Resource):
+    #TODO enroll from waitlist
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -1158,6 +1164,7 @@ api.add_resource(CheckFavoriteStatus, '/CheckFavoriteStatus')
 Calculates and returns students GPA
 """
 class GetGPA(Resource):
+    #todo - setgpa, avg grades after 0-4 scale
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -1186,7 +1193,6 @@ class GetGPA(Resource):
 
         result = cur.fetchall()
         gpa=result[0][0]
-        cur.close()
 
         #convert grade to GPA
         if gpa == None:
@@ -1309,9 +1315,10 @@ class ModProfile(Resource):
         args["date_of_birth"] = parser.parse_args().get("date_of_birth")
 
         #parse date of birth into mysql friendly format
+        #TODO 1 day behind
         if args["date_of_birth"]:
             try:
-                args["date_of_birth"] = parse(args["date_of_birth"]).strftime("%Y-%m-%d")    
+                args["date_of_birth"] = parse(args["date_of_birth"]).strftime("%Y-%m-%d")
             #if the date is invalid, dont change date of birth
             except ValueError:
                 args["date_of_birth"] = None

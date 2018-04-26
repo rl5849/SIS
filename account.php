@@ -22,6 +22,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $dob = htmlspecialchars($_POST["dob"], ENT_QUOTES, 'UTF-8');
     $gradYear = htmlspecialchars($_POST["grad-year"], ENT_QUOTES, 'UTF-8');
     $userType = $_POST["user-type"];
+    $major = $_POST["major"];
     $profilePic = htmlspecialchars($_POST["profile-pic"], ENT_QUOTES, 'UTF-8');
 
     $profile_data = array (
@@ -31,6 +32,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
             'grad_year' => $gradYear,
             'user_type' => $userType,
             'profile_pic' => $profilePic,
+            'major' => $major,
     );
 
     $results = file_get_contents("http://127.0.0.1:5002/ModProfile?".http_build_query($profile_data));
@@ -158,7 +160,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               if ($is_editing) {
                                   $majors = file_get_contents("http://127.0.0.1:5002/GetMajors");
                                   $majors = json_decode($majors, true)["majors"];
-                                  $html = "<select>";
+                                  $html = "<select name='major'>";
                                   if (!$student_info["student_info"][0]["major"]) {
                                       $html = $html . "<option>Choose...</option>";
                                   }
@@ -168,7 +170,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                                           $current_txt = "selected";
                                       }
 
-                                      $html = $html . "<option name='major' value='" . $major['major_id'] . "' " . $current_txt . " >" . $major['major_name'] . "</option>";
+                                      $html = $html . "<option value='" . $major['major_id'] . "' " . $current_txt . " >" . $major['major_name'] . "</option>";
                                   }
                                   $html = $html . "</select>";
 
