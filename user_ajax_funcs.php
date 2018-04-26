@@ -74,6 +74,9 @@ function unenroll() {
     else{
         echo "Failed to drop class";
     }
+
+    //call enroll from waitlist to move up other students
+    file_get_contents("http://127.0.0.1:5002/EnrollFromWaitlist");
 }
 
 function favorite() {
