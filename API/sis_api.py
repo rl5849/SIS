@@ -1310,7 +1310,11 @@ class ModProfile(Resource):
 
         #parse date of birth into mysql friendly format
         if args["date_of_birth"]:
-            args["date_of_birth"] = parse(args["date_of_birth"]).strftime("%Y-%m-%d")
+            try:
+                args["date_of_birth"] = parse(args["date_of_birth"]).strftime("%Y-%m-%d")    
+            #if the date is invalid, dont change date of birth
+            except ValueError:
+                args["date_of_birth"] = None
 
         args["profile_pic"] = parser.parse_args().get("profile_pic")
 
