@@ -1287,8 +1287,6 @@ api.add_resource(ModCourse, '/ModCourse')
 
 """
 Modifies the attributes of a profile
-
-TODO: add php call to update account
 """
 class ModProfile(Resource):
 
