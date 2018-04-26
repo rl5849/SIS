@@ -6,19 +6,19 @@
 
 1. [Get Student](#GetStudentInfo)
 2. [Get Student's Classes For Semester](#GetStudentsClassesForSemester) Needs Implementation
-4. [Add User](#AddUser) Needs Implementation
-5. [Check if User Exists](#UserExists) Needs Implementation
-6. [Modify Profile](#ModProfile)
-7. [Request Professor Approval](#RequestProfessorApproval)
-8. [Delete Professor Request](#DeleteProfRequest) Needs Implemenation
-9. [Get Professor Requests](#GetProfessorRequests) Needs Implementation
-10. [Approve Professor Request](#ApproveProfRequest) Needs Implementation
-11. [Get Professors](#GetProfs)
-12. [Get Professor By ID](#GetProfessorByID)
-13. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
-14. [Get User ID from Login](#GetUserIDFromLogin) Needs Implementation
-15. [Check if Admin](#CheckIfAdmin) Needs Implementation
-16. [Create Login](#CreateLogin) Needs Implementation
+3. [Add User](#AddUser) Needs Implementation
+4. [Check if User Exists](#UserExists) Needs Implementation
+5. [Modify Profile](#ModProfile)
+6. [Request Professor Approval](#RequestProfessorApproval)
+7. [Delete Professor Request](#DeleteProfRequest) Needs Implementation
+8. [Get Professor Requests](#GetProfessorRequests) Needs Implementation
+9. [Approve Professor Request](#ApproveProfRequest) Needs Implementation
+10. [Get Professors](#GetProfs)
+11. [Get Professor By ID](#GetProfessorByID)
+12. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
+13. [Get User ID from Login](#GetUserIDFromLogin) Needs Implementation
+14. [Check if Admin](#CheckIfAdmin) Needs Implementation
+15. [Create Login](#CreateLogin) Needs Implementation
 
 ### [**Courses/Classes**](#CoursesClasses)
 
@@ -58,7 +58,7 @@
 
 ### Get Student
 
-Gets information about a student.
+Gets information about a student
 
 #### Endpoint
 
@@ -66,7 +66,7 @@ Gets information about a student.
 
 #### Parameters
 
-`student_id` : The ID of the student.
+`student_id` : The ID of the student
 
 #### Return
 
@@ -98,15 +98,63 @@ Gets a student's classes for a given semester
 
 #### Parameters
 
-`user_id` : The ID of the student.
-`semester_id` : The ID of the semester.
+`user_id` : The ID of the student
+`semester_id` : The ID of the semester
 
 #### Return
 TODO
 ```
 ```
 
-<!-- End Get Student Info -->
+<!-- End Get Student's Classes for Semester -->
+<!-- Start Add User-->
+
+<a name="AddUser"/>
+
+### Add User
+
+Adds a user to the system
+
+#### Endpoint
+
+`/AddUser`
+
+#### Parameters
+
+`name` : The name of the user
+`linkedin_id` : LinkedIn ID of the user
+`profile_pic` : Link to profile picture of the user
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'INSERT FAILED'`  |
+
+<!-- End Add User -->
+<!-- Start User Exists-->
+
+<a name="UserExists"/>
+
+### User Exists
+
+Adds a user to the system
+
+#### Endpoint
+
+`/UserExists`
+
+#### Parameters
+
+`username` : username of user being checked
+
+#### Return
+
+```
+{ "exists" : boolean }
+```
+
+<!-- End User Exists -->
 <!-- Start Modify Profile -->
 
 <a name="ModProfile"/>
@@ -153,6 +201,83 @@ None at the moment
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Request Prof Approval -->
+<!-- Start Delete Prof Request -->
+
+<a name="DeleteProfRequest"/>
+
+### Delete Professor Request
+
+Deletes the request for a specific professor
+
+#### Endpoint
+
+`/DeleteProfRequest`
+
+#### Parameters
+
+`user_id` : ID of user to professor request
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Delete Prof Request -->
+<!-- Start Get Prof Requests -->
+
+<a name="GetProfessorRequests"/>
+
+### Request Professor Approval
+
+Gets all current professor requests
+
+#### Endpoint
+
+`/GetProfessorRequests`
+
+#### Parameters
+
+None
+
+#### Return
+
+{ "requests" : [
+        [
+            "professor" : string
+            "course_code" : int
+        ],
+        .
+        .
+        .
+    ]
+}
+
+
+<!-- End Get Prof Request -->
+<!-- Start Approve Prof Request -->
+
+<a name="ApproveProfRequest"/>
+
+### Request Professor Approval
+
+Approves the request for a specific professor
+
+#### Approve Professor Request
+
+`/ApproveProfRequest`
+
+#### Parameters
+
+`user_id` : ID of professor to approve request
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Approve Prof Request -->
 <!-- Start GetProfs -->
 
 <a name="GetProfs"/>
@@ -172,13 +297,11 @@ None at the moment
 #### Return
 
 ```
-{ profs : [
-    professor1,
-    professor2,
+{ "profs" : [
+    "professor" : string,
     .
     .
     .
-    professorN
     ]
 }
 ```
@@ -203,18 +326,17 @@ Gets the professor name associated with the professor ID
 #### Return
 
 ```
-{ professor_name : string }
+{ "professor_name" : string }
 ```
 
 <!-- End Get Professor by ID -->
-
 <!-- Start Get User Id from LinkedIn ID-->
 
 <a name="GetUserIDFromLinkedInID"/>
 
 ### Get User ID From LinlkedIn ID
 
-Gets a user id based on a provided LinkedIn authenticatiopn ID
+Gets a user ID based on a provided LinkedIn authenticatiopn ID
 
 #### Endpoint
 
@@ -222,16 +344,89 @@ Gets a user id based on a provided LinkedIn authenticatiopn ID
 
 #### Parameters
 
-`linkedin_id` : The id passed from LinkedIn
+`linkedin_id` : The ID passed from LinkedIn
 
 #### Return
 
 ```
-{ 'user_id' : int }
+{ "user_id" : int }
 ```
 
 <!-- End Get Get User ID From LinkedIn ID-->
+<!-- Start Get User Id from Login-->
 
+<a name="GetUserIDFromLogin"/>
+
+### Get User ID From Login
+
+Gets a user ID based on provided login credentials
+
+#### Endpoint
+
+`/GetUserIDFromLogin`
+
+#### Parameters
+
+`user_name` : The user's user name
+`password` : The user's passwor
+
+#### Return
+
+```
+{ "user_id" : int }
+```
+
+<!-- End Get Get User ID From Login-->
+<!-- Start Check If Admin-->
+
+<a name="CheckIfAdmin"/>
+
+### Check if Admin
+
+Gets a user ID based on provided login credentials
+
+#### Endpoint
+
+`/CheckIfAdmin`
+
+#### Parameters
+
+`id` : The ID of the user to be checked
+
+#### Return
+
+```
+{ "is_admin" : boolean }
+```
+
+<!-- End Check If Admin-->
+<!-- Start Create Login-->
+
+<a name="CreateLogin"/>
+
+### Create Login
+
+Create user id with login credentials
+
+#### Endpoint
+
+`/CreateLogin`
+
+#### Parameters
+
+`username` : Account user name
+`password` : Account password
+
+#### Return
+
+```
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+| `'NEW USER ID'`    |
+```
+
+<!-- End Create Login-->
 <!-- Start Courses Classes -->
 <a name="CoursesClasses"/>
 

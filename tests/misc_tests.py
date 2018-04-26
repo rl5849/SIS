@@ -8,7 +8,7 @@ import sis_api as api
 class TestCheckOutput(unittest.TestCase):
 
 	def test_output(self):
-		url = "http://127.0.0.1:5002/GetStudentsClassesForSemester?user_id=1&semester_id=10"
+		url = "http://127.0.0.1:5002/CheckIfAdmin?id=1"
 		response = urllib2.urlopen(url)
 		data = json.load(response)
 		status = data.get("enrollment_status")
