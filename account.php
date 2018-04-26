@@ -82,6 +82,8 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$student_id);
     $is_admin = json_decode($is_admin, true);
 
+    $gpaSet = file_get_contents("http://127.0.0.1:5002/SetGPA?user_id=".$student_id);
+
     ?>
 
 	<div class="grid-container">
@@ -200,7 +202,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
 
                               $gpa = $student_info["student_info"][0]["GPA"];
 
-                              if ($gpa == "") {
+                              if ($gpa == "" ) {
                                   echo "N/A";
                               } else {
                                   echo $gpa;

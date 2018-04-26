@@ -1163,7 +1163,7 @@ api.add_resource(CheckFavoriteStatus, '/CheckFavoriteStatus')
 """
 Calculates and returns students GPA
 """
-class GetGPA(Resource):
+class SetGPA(Resource):
     #todo - setgpa, avg grades after 0-4 scale
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
@@ -1185,47 +1185,70 @@ class GetGPA(Resource):
         cur = db.cursor()
 
         #gets students current gpa. Returns null if student has no grades
-        cur.execute("SELECT AVG(grade) "
+        cur.execute("SELECT grade "
                     "FROM student_to_class "
                     "WHERE student_id = %s "
                     "AND grade IS NOT NULL ",
                     [user_id])
 
-        result = cur.fetchall()
-        gpa=result[0][0]
-
+        response = cur.fetchall()
+        result = 0
+        total = 0
+        for grade in response:
+            gpa = grade[0]
         #convert grade to GPA
-        if gpa == None:
-             gpa = "-"
-        elif gpa >= 93:
-            gpa = "4.0"
-        elif gpa >= 90:
-            gpa = "3.7"
-        elif gpa >= 87:
-            gpa = "3.3"
-        elif gpa >= 83:
-            gpa = "3.0"
-        elif gpa >= 80:
-            gpa = "2.7"
-        elif gpa >= 77:
-            gpa = "2.3"
-        elif gpa >= 73:
-            gpa = "2.0"
-        elif gpa >= 70:
-            gpa = "1.7"
-        elif gpa >= 67:
-            gpa = "1.3"
-        elif gpa >= 67:
-            gpa = "1.3"
-        elif gpa >= 67:
-            gpa = "1.3"
-        elif gpa >= 65:
-            gpa = "1.0"
-        elif gpa < 65:
-            gpa = "0.0"
-        return jsonify(gpa)
+            if gpa == None:
+                gpa = None
+            elif gpa >= 93:
+                gpa = 4.0
+            elif gpa >= 90:
+                gpa = 3.7
+            elif gpa >= 87:
+                gpa = 3.3
+            elif gpa >= 83:
+                gpa = 3.0
+            elif gpa >= 80:
+                gpa = 2.7
+            elif gpa >= 77:
+                gpa = 2.3
+            elif gpa >= 73:
+                gpa = 2.0
+            elif gpa >= 70:
+                gpa = 1.7
+            elif gpa >= 67:
+                gpa = 1.3
+            elif gpa >= 67:
+                gpa = 1.3
+            elif gpa >= 67:
+                gpa = 1.3
+            elif gpa >= 65:
+                gpa = 1.0
+            elif gpa < 65:
+                gpa = 0.0
 
-api.add_resource(GetGPA, '/GetGPA')
+            if gpa:
+                result += gpa
+                total += 1
+        
+        if total > 0:
+            result = result/total
+        else:
+            result = None
+            
+        cur.execute("UPDATE students "
+            "SET GPA=%s "
+            "WHERE student_id = %s ",
+            [result, user_id])
+        
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+        finally:
+            cur.close()
+        return jsonify(SUCCESS_MESSAGE)
+
+api.add_resource(SetGPA, '/SetGPA')
 
 """
 Modifies the attributes of a class
