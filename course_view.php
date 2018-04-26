@@ -128,19 +128,52 @@ include 'callouts.html';
     <div class="grid-container">
 	  
       <div class="grid-x grid-padding-x" style="padding-top:2%;">
-        
-        <div class="large-4 medium-4 small-4 cell">
-          <ul class="profile-list">
-            <li>Course Name: <?php echo ($course_info["course_info"][0]["course_name"])?></li>
-            <li>Course Code: <?php echo ($class_info["class_info"][0]["room_number"]) ?> </li> <!-- course code not in db, use course ID?-->
-          </ul>
-        </div>
-        <div class="large-6 medium-6 small-5 cell">
-          <ul class="profile-list">
-            <li>Room Number: <?php echo ($class_info["class_info"][0]["room_number"]) ?></li>
-            <li>Time: <?php echo ($class_info["class_info"][0]["time"]) ?></li> <!-- needs getclassinfo -->
-            <li>Professor Name: <?php echo ($prof_info["professor_name"]) ?></li>
-          </ul>
+
+        <div class="large-10 medium-10 small-9 cell">
+            <table>
+                <tr>
+                    <td>
+                        Course Name:
+                    </td>
+                    <td>
+                        <?php echo ($course_info["course_info"][0]["course_name"])?>
+                    </td>
+                    <td>
+                        Room Number:
+                    </td>
+                    <td>
+                        <?php echo ($class_info["class_info"][0]["room_number"]) ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Course Code:
+                    </td>
+                    <td>
+                        <?php echo ($class_info["class_info"][0]["room_number"]) ?> <!-- course code not in db, use course ID?-->
+                    </td>
+                    <td>
+                        Time:
+                    </td>
+                    <td>
+                        <?php echo ($class_info["class_info"][0]["time"]) ?> <!-- needs getclassinfo -->
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+                        Professor Name:
+                    </td>
+                    <td>
+                        <?php echo ($prof_info["professor_name"]) ?>
+                    </td>
+                </tr>
+            </table>
         </div>
         <div class="large-2 medium-2 small-3 cell">
           <ul class="profile-list">
