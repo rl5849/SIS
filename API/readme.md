@@ -6,21 +6,19 @@
 
 1. [Get Student](#GetStudentInfo)
 2. [Get Student's Classes For Semester](#GetStudentsClassesForSemester) Needs Implementation
-3. [Add Student](#AddStudent)
 4. [Add User](#AddUser) Needs Implementation
 5. [Check if User Exists](#UserExists) Needs Implementation
 6. [Modify Profile](#ModProfile)
-7. [Modify Professor](#ModProfessor)
-8. [Request Professor Approval](#RequestProfessorApproval)
-9. [Delete Professor Request](#DeleteProfRequest) Needs Implemenation
-10. [Get Professor Requests](#GetProfessorRequests) Needs Implementation
-11. [Approve Professor Request](#ApproveProfRequest) Needs Implementation
-12. [Get Professors](#GetProfs)
-13. [Get Professor By ID](#GetProfessorByID)
-14. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
-15. [Get User ID from Login](#GetUserIDFromLogin) Needs Implementation
-16. [Check if Admin](#CheckIfAdmin) Needs Implementation
-17. [Create Login](#CreateLogin) Needs Implementation
+7. [Request Professor Approval](#RequestProfessorApproval)
+8. [Delete Professor Request](#DeleteProfRequest) Needs Implemenation
+9. [Get Professor Requests](#GetProfessorRequests) Needs Implementation
+10. [Approve Professor Request](#ApproveProfRequest) Needs Implementation
+11. [Get Professors](#GetProfs)
+12. [Get Professor By ID](#GetProfessorByID)
+13. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
+14. [Get User ID from Login](#GetUserIDFromLogin) Needs Implementation
+15. [Check if Admin](#CheckIfAdmin) Needs Implementation
+16. [Create Login](#CreateLogin) Needs Implementation
 
 ### [**Courses/Classes**](#CoursesClasses)
 
@@ -44,13 +42,12 @@
 18. [Check Favorite Status](#CheckFavoriteStatus) Needs Implementation
 19. [Favorite Class](#FavoriteClass)
 20. [Unfavorite Class](#UnfavoriteClass)
-21. [Get Grade](#GetGrade)
-22. [Set GPA](#SetGPA) Needs Implementation
-23. [Get Waitlist By Class](#WaitlistByClass)
-24. [Get Current Semester](#GetCurrentSemester)
-25. [Get Semesters](#GetSemesters) Needs Implementation
-26. [Add Semester](#AddSemester)
-27. [Request Special Access](#RequestSpecialAccess) Needs Implementation
+21. [Get GPA](#GetGPA) Needs Implementation
+22. [Get Waitlist By Class](#WaitlistByClass)
+23. [Get Current Semester](#GetCurrentSemester)
+24. [Get Semesters](#GetSemesters) Needs Implementation
+25. [Add Semester](#AddSemester)
+26. [Request Special Access](#RequestSpecialAccess) Needs Implementation
 
 <a name="UserStudent"/>
 
@@ -110,38 +107,6 @@ TODO
 ```
 
 <!-- End Get Student Info -->
-
-<!-- Start Add Student -->
-
-<a name="AddStudent"/>
-
-### Add Student
-
-Adds a student to the database
-
-#### Endpoint
-
-`/AddStudent`
-
-#### Parameters
-
-`student_name` : The name of the student
-
-`date_of_birth` : The student's date of birth (`yyyy-dd-MM`)
-
-`profile_pic` : A link to the student's profile picture
-
-`gender` : The student's gender
-
-`graduation_year` : The student's graduation year
-
-#### Return
-
-| Success            | Failure            |
-| ------------------ | ------------------ |
-| `'SUCCESS'`        | `'FAILURE'`        |
-
-<!-- End Add Student -->
 <!-- Start Modify Profile -->
 
 <a name="ModProfile"/>
@@ -165,29 +130,6 @@ None at the moment
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Modify Profile -->
-<!-- Start Modify Professor -->
-
-<a name="ModProfessor"/>
-
-### Modify Professor
-
-Modifies information about the professor in the database
-
-#### Endpoint
-
-`/ModProfessor`
-
-#### Parameters
-
-None at the moment
-
-#### Return
-
-| Success            | Failure            |
-| ------------------ | ------------------ |
-| `'SUCCESS'`        | `'FAILURE'`        |
-
-<!-- End Modify Professor -->
 <!-- Start Request Prof Approval -->
 
 <a name="RequestProfessorApproval"/>
@@ -569,28 +511,6 @@ None at the moment
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Unfavorite Class -->
-<!-- Start Get Grade -->
-<a name="GetGrade"/>
-
-### Get Grade
-
-Gets the grade for a student in a class
-
-#### Endpoint
-
-`/GetGrade`
-
-#### Parameters
-
-None at the moment
-
-#### Return
-
-```
-{ 'grade' : 'A' }
-```
-
-<!-- End Get Grade -->
 <!-- Start Waitlist By Class -->
 
 <a name="WaitlistByClass"/>
