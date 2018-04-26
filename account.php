@@ -8,7 +8,15 @@ if (isset($_GET["editprofile"]) && $_GET["editprofile"] == "true") {
 }
 
 if(isset($_SESSION['user_id'])){
-    $student_id = $_SESSION['user_id'];
+    $now = time(); // Checking the time now when home page starts.
+    if ($now > $_SESSION['expire']) {
+        session_destroy();
+        echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
+    }
+    else{
+        $student_id = $_SESSION['user_id'];
+    }
+
 }else{
     echo "<meta http-equiv=\"refresh\" content=\"0;URL=login.php\" />";
     exit();
@@ -187,18 +195,15 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               ?></td>
                           <td>GPA</td>
                           <td><?php
+
                               $gpa = $student_info["student_info"][0]["GPA"];
-                              if ($is_editing) {
-                                  echo "<input name='gpa' placeholder='ex. 3.2' value='" . $gpa . "'>";
+
+                              if ($gpa == "") {
+                                  echo "N/A";
                               } else {
-                                  $gpa = file_get_contents("http://127.0.0.1:5002/GetGPA?user_id=" . $student_id);
-                                  $gpa = json_decode($gpa, true)["gpa"];
-                                  if ($gpa == "") {
-                                      echo "N/A";
-                                  } else {
-                                      echo $gpa;
-                                  }
+                                  echo $gpa;
                               }
+
 
                               } // End $is_prof and $is_admin check
                               ?></td>
