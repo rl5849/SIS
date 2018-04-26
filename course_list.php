@@ -148,6 +148,10 @@ $is_student = (!$is_admin["is_admin"] && !$is_prof["is_prof"] && $user_id);
         });
 
       instantiateFilter("filter", "class_listing", false);
+      window.ready(function () {
+          var event = new Event('input');
+          $("#filter").dispatchEvent(event);
+      });
      </script>
   </body>
 </html>
