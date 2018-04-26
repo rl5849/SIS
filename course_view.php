@@ -180,11 +180,14 @@ include 'callouts.html';
 
               <?php //Only show buttons if they are logged in
                 if ($user_id) {
-                    ?>
+                    if(($is_admin["is_admin"] != true) && ($is_prof["is_prof"] != true)){
+					?>
+					
                     <input type="button" class="button expanded rit-orange favorite" value="<?php echo $favorite_status_msg; ?>">
                     <input type="submit" class="button expanded rit-orange enroll" value="<?php echo $enrollment_status_msg; ?>">
                     <?php
                 }
+				}
               ?>
             </li>
           </ul>
@@ -309,9 +312,9 @@ include 'callouts.html';
           <?php // TODO make this only display for the professor associated with the class ?>
 
           <?php
-			$is_enroll = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" . $class_id . "&user_id=" . $user_id);
-			$is_enroll = json_decode($is_enroll, true);
-			if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True) || ($is_enroll["enrollment_status"] == "ENROLLED")){
+			//$is_enroll = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" . $class_id . "&user_id=" . $user_id);
+			//$is_enroll = json_decode($is_enroll, true);
+			if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True) || ($enrollment_status == 1)){
 			?>
 
               <div class="large-12 medium-12 small-12 cell">
@@ -358,7 +361,7 @@ include 'callouts.html';
 											<input class="grade-number" type="number" name="grade" min=0 max=100 placeholder= "0" value=<?php echo $curr_stud["grade"] ?>>
 											<p class="grade-total" style="">/100</p>
 											<input type="hidden" name="submit" value="submit_grade">
-											<input class="button expanded submit-button" type="submit" value="Re-Grade">
+											<input class="button expanded submit-button" type="submit" value="Submit Grade">
 										  </td>
                                       </form>
 										<?php } ?>

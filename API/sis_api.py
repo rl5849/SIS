@@ -4,6 +4,7 @@ import ConfigParser, os
 from flask_restful import Resource, Api, reqparse
 from flask import jsonify
 import datetime
+from dateutil.parser import parse
 
 app = Flask(__name__)
 api = Api(app)
@@ -1306,6 +1307,15 @@ class ModProfile(Resource):
             return jsonify(FAILURE_MESSAGE)
 
         args["date_of_birth"] = parser.parse_args().get("date_of_birth")
+
+        #parse date of birth into mysql friendly format
+        if args["date_of_birth"]:
+            try:
+                args["date_of_birth"] = parse(args["date_of_birth"]).strftime("%Y-%m-%d")    
+            #if the date is invalid, dont change date of birth
+            except ValueError:
+                args["date_of_birth"] = None
+
         args["profile_pic"] = parser.parse_args().get("profile_pic")
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),

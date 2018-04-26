@@ -67,7 +67,6 @@
                         <input name="password" type="password" placeholder="Password">
                     </label>
                     <p><button type="submit" class="button expanded" value="Log in">Login</button></p>
-                    <p class="text-center"><a class="login-link-text" href="#">Forgot your password?</a></p>
                     <p class="text-center"><a class="login-link-text" href="register.php">Register</a></p>
                     <p class="text-center"><a class="login-link-text" href="course_list.php">View Public Course List</a></p>
                 </form>
