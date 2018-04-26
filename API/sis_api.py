@@ -762,8 +762,6 @@ class EnrollStudent(Resource):
 
         cur = db.cursor()
 
-        #TODO check if student meets prereqs
-
         #check if student is already enrolled
         cur.execute("SELECT COUNT(*) FROM student_to_class "
             "WHERE student_id = %s "
@@ -856,7 +854,6 @@ api.add_resource(EnrollStudent, '/EnrollStudent')
 Removes a student from a course
 """
 class DropStudent(Resource):
-    #TODO enroll from waitlist
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -1164,7 +1161,6 @@ api.add_resource(CheckFavoriteStatus, '/CheckFavoriteStatus')
 Calculates and returns students GPA
 """
 class SetGPA(Resource):
-    #todo - setgpa, avg grades after 0-4 scale
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -1336,7 +1332,6 @@ class ModProfile(Resource):
         args["date_of_birth"] = parser.parse_args().get("date_of_birth")
 
         #parse date of birth into mysql friendly format
-        #TODO 1 day behind
         if args["date_of_birth"]:
             try:
                 args["date_of_birth"] = parse(args["date_of_birth"]).strftime("%Y-%m-%d")
