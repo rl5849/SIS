@@ -35,12 +35,13 @@ else {
         $readfile = fread($myfile,filesize("LinkedIn/config.ini"));
         $arr = explode("\n", $readfile);
         $captcha = explode("=", $arr[3])[1];
+        rewind($myfile);
 
        //check captcha
         $url = 'https://www.google.com/recaptcha/api/siteverify';
         $data = array('secret' => $captcha, 'response' => $_POST['g-recaptcha-response']);
 
-// use key 'http' even if you send the request to https://...
+        // use key 'http' even if you send the request to https://...
         $options = array(
             'http' => array(
                 'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
@@ -52,7 +53,7 @@ else {
         $result = file_get_contents($url, false, $context);
         $result = json_decode($result, true);
 
-        if ($result['success'] == false) {
+        if ($result['success'] != true) {
             echo "You're a bot!";
             return;
         }
