@@ -137,7 +137,7 @@ function get_prof_requests() {
 
 function prof_approval() {
     if ($_POST['decision'] == "Approve"){
-        $result = file_get_contents("http://127.0.0.1:5002/ApproveProfStatus?user_id=" . $_POST['user_id']);
+        $result = file_get_contents("http://127.0.0.1:5002/ApproveProfRequest?user_id=" . $_POST['user_id']);
         $result = json_decode($result, true);
         if($result == "SUCCESS"){
             echo "Professor status approval successful";
