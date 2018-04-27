@@ -18,7 +18,13 @@
 12. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
 13. [Get User ID from Login](#GetUserIDFromLogin) Needs Implementation
 14. [Check if Admin](#CheckIfAdmin) Needs Implementation
-15. [Create Login](#CreateLogin) Needs Implementation
+15. [Check if Professor](#CheckIfProfessor) Needs Implementation
+16. [Make Admin](#MakeAdmin) Needs Implementation
+17. [Create Login](#CreateLogin) Needs Implementation
+18. [Get Users](#GetUsers) Needs Implementation
+19. [Check Prerequisite](#CheckPrereq) Needs Implementation
+20. [Add Prerequisite](#AddPrereq) Needs Implementation
+21. [Delete Prerequisite](#DeletePrereq) Needs Implementation
 
 ### [**Courses/Classes**](#CoursesClasses)
 
@@ -47,8 +53,11 @@
 23. [Get Waitlist By Class](#WaitlistByClass)
 24. [Get Current Semester](#GetCurrentSemester)
 25. [Get Semesters](#GetSemesters) Needs Implementation
-26. [Add Semester](#AddSemester)
+26. [Add Semester](#AddSemester) Needs Implementation
 27. [Request Special Access](#RequestSpecialAccess) Needs Implementation
+28. [Get Access Requests](#GetAccessRequests) Needs Implementation
+29. [Get Student Access](#GetStudentAccess) Needs Implementation
+30. [Get Majors](#GetMajors) Needs Implementation
 
 <a name="UserStudent"/>
 
@@ -384,7 +393,7 @@ Gets a user ID based on provided login credentials
 
 ### Check if Admin
 
-Gets a user ID based on provided login credentials
+Checks if a user is an admin
 
 #### Endpoint
 
@@ -401,6 +410,52 @@ Gets a user ID based on provided login credentials
 ```
 
 <!-- End Check If Admin-->
+<!-- Start Check If Professor-->
+
+<a name="CheckIfProfessor"/>
+
+### Check if Professor
+
+Checks if a user is a professor
+
+#### Endpoint
+
+`/CheckIfProfessor`
+
+#### Parameters
+
+`id` : The ID of the user to be checked
+
+#### Return
+
+```
+{ "is_prof" : boolean }
+```
+
+<!-- End Check If Professor-->
+<!-- Start Make Admin-->
+
+<a name="MakeAdmin"/>
+
+### Make Admin
+
+Makes a user an admin
+
+#### Endpoint
+
+`/MakeAdmin`
+
+#### Parameters
+
+`id` : The ID of the user to be made admin
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Make Admin-->
 <!-- Start Create Login-->
 
 <a name="CreateLogin"/>
@@ -420,14 +475,159 @@ Create user id with login credentials
 
 #### Return
 
-```
 | Success            | Failure            |
 | ------------------ | ------------------ |
 | `'SUCCESS'`        | `'FAILURE'`        |
 | `'NEW USER ID'`    |
-```
 
 <!-- End Create Login-->
+<!-- Start Get Users-->
+
+<a name="GetUsers"/>
+
+### Get Users
+
+Gets all users currently in the system
+
+#### Endpoint
+
+`/GetUsers`
+
+#### Parameters
+
+None
+
+#### Return
+
+```
+{
+    "users": [
+        {
+            "username": string,
+            "user_status": int,
+            "user_id": int,
+            "name": string
+        },
+        .
+        .
+        .
+    ]
+}
+```
+
+<!-- End Get Users-->
+<!-- Start Get Prerequisites-->
+
+<a name="GetPrereqs"/>
+
+### Get Prerequisites
+
+Gets all prerequisites for a given course
+
+#### Endpoint
+
+`/GetPrereqs`
+
+#### Parameters
+
+`course_id` : ID of course to get prerequisites for
+
+#### Return
+
+```
+{
+    "prereqs": [
+        {
+            "program_of_enrollment": string,
+            "year_level": int,
+            "prereq_id": int,
+            "prereq_course": string,
+            "major_name": string,
+            "prereq_course_id": int,
+            "type": int
+        },
+        .
+        .
+        .
+    ]
+}
+```
+
+<!-- End Get Prerequisites-->
+<!-- Start Check Prerequisite-->
+
+<a name="CheckPrereq"/>
+
+### Check Prerequisite
+
+Checks if a student fulfills a specific prerequisite
+
+#### Endpoint
+
+`/CheckPrereq`
+
+#### Parameters
+
+`student_id` : ID of student to be checked  
+`prereq_id` : ID of prerequisite to be checked
+
+#### Return
+
+```
+{ "meets_prereq" : boolean }
+```
+
+<!-- End Check Prerequisite-->
+<!-- Start Add Prerequisites-->
+
+<a name="AddPrereqs"/>
+
+### Add Prerequisites
+
+Adds prerequisites to a course
+
+#### Endpoint
+
+`/AddPrereqs`
+
+#### Parameters
+  
+`course_id` : ID of course to add prerequisite to  
+`type` : Type of prerequisite  
+`program` : Program that prerequisite is for  
+`year_level` : Required year level  
+`prereq_course` : ID of prerequisite course
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`  |
+
+<!-- End Add Prerequisites-->
+<!-- Start Delete Prerequisite-->
+
+<a name="DeletePrereq"/>
+
+### Delete Prerequisite
+
+Checks if a student fulfills a specific prerequisite
+
+#### Endpoint
+
+`/DeletePrereq`
+
+#### Parameters
+  
+`prereq_id` : ID of prerequisite to be deleted
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`  |
+
+<!-- End Delete Prerequisite-->
 <!-- Start Courses Classes -->
 <a name="CoursesClasses"/>
 
@@ -853,8 +1053,7 @@ Adds a student and class pair to the enrollment db
 
 #### Parameters
 
-`class_id` : The id of the class
-
+`class_id` : The id of the class  
 `user_id` : The uid of the student being enrolled
 
 #### Return
@@ -864,6 +1063,29 @@ Adds a student and class pair to the enrollment db
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Enroll Student -->
+<!-- Start Enroll From Waitlist -->
+
+<a name="EnrollFromWaitlist"/>
+
+### Enroll From Waitlist
+
+Goes through each class and enrolls students from the waitlist if there are open spots
+
+#### Endpoint
+
+`/EnrollFromWaitlist`
+
+#### Parameters
+
+None
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Enroll From Waitlist -->
 <!-- Start Drop Student -->
 
 <a name="DropStudent"/>
@@ -887,6 +1109,30 @@ None at the moment
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Drop Student -->
+<!-- Start Check Enrollment Status -->
+
+<a name="CheckEnrollmentStatus"/>
+
+### Check Enrollment Status
+
+Checks if a user is enrolled in a class
+
+#### Endpoint
+
+`/CheckEnrollmentStatus`
+
+#### Parameters
+
+`user_id` : ID of the user to be checked  
+`class_id` : ID of the class to be checked
+
+#### Return
+
+```
+{ "enrollment_status" : string }
+```
+
+<!-- End Check Enrollment Status -->
 <!-- Start Get Favorited Classes -->
 
 <a name="GetFavoritedClasses"/>
@@ -916,6 +1162,30 @@ Gets all favorited classes for a student
 ```
 
 <!-- End Get Favorited Classes -->
+<!-- Start Check Favorite Status -->
+
+<a name="CheckFavoriteStatus"/>
+
+### Check Favorite Status
+
+Checks if a user has favorited a given class
+
+#### Endpoint
+
+`/CheckFavoriteStatus`
+
+#### Parameters
+
+`user_id` : ID of the user to be checked  
+`class_id` : ID of the class to be checked
+
+#### Return
+
+```
+{ "favorite_status" : boolean }
+```
+
+<!-- End Check Favorite Status -->
 <!-- Start Favorite Class -->
 
 <a name="FavoriteClass"/>
@@ -961,6 +1231,28 @@ None at the moment
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Unfavorite Class -->
+<!-- Start Set GPA -->
+<a name="SetGPA"/>
+
+### Set GPA
+
+Calculates a user's current GPA
+
+#### Endpoint
+
+`/SetGPA`
+
+#### Parameters
+
+`user_id` : ID of the user to be checked
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Set GPA -->
 <!-- Start Waitlist By Class -->
 
 <a name="WaitlistByClass"/>
@@ -1015,3 +1307,188 @@ None
 ```
 
 <!-- End Get Current Semester -->
+<!-- Start Get Semesters -->
+
+<a name="GetSemesters"/>
+
+### Get Semesters
+
+Gets all the semesters in the system
+
+#### Endpoint
+
+`/GetSemesters`
+
+#### Parameters
+
+None
+
+#### Return
+
+```
+{
+    "semesters": [
+        [
+            "semester_ID" : int,
+            "semester_code" : string
+        ],
+        .
+        .
+        .
+    ]
+}
+```
+
+<!-- End Get Semesters -->
+<!-- Start Add Semester -->
+
+<a name="AddSemester"/>
+
+### Add Semester
+
+Adds a new semester to the system
+
+#### Endpoint
+
+`/AddSemester`
+
+#### Parameters
+
+`semester_code` : Name of the semester (i.e. "Spring 2018")
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Add Semester -->
+<!-- Start Request Special Access -->
+
+<a name="RequestSpecialAccess"/>
+
+### Request Special Access
+
+Allows a user to request special access for a class, such as notetaking or interpreting
+
+#### Endpoint
+
+`/RequestSpecialAccess`
+
+#### Parameters
+
+`class_id` : ID of class for request  
+`user_id` : ID of user making request
+`requests` : What the nature of the request is
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Request Special Access -->
+<!-- Start Get Access Requests -->
+
+<a name="GetAccessRequests"/>
+
+### Get Access Requests
+
+Gets all special access requests currently in the system
+
+#### Endpoint
+
+`/GetAccessRequests`
+
+#### Parameters
+
+None
+
+#### Return
+
+{
+    "requests": [
+        {
+            "class_name": string,
+            "section": int,
+            "request": string,
+            "time": string,
+            "course_code": string,
+            "user_name": string
+        },
+        .
+        .
+        .
+    ]
+}
+
+<!-- End Get Access Requests -->
+<!-- Start Get Student Access -->
+
+<a name="GetStudentAccess"/>
+
+### Get Student Access
+
+Gets a student's access requests for a class
+
+#### Endpoint
+
+`/GetStudentAccess`
+
+#### Parameters
+
+`user_id` : ID of user to get requests for
+`class_id` : ID of class to get requests for
+
+#### Return
+
+{
+    "requests": [
+        {
+            "class_name": string,
+            "section": int,
+            "request": string,
+            "time": string,
+            "course_code": string,
+            "user_name": string
+        },
+        .
+        .
+        .
+    ]
+}
+
+<!-- End Get Student Access -->
+<!-- Start Get Majors -->
+
+<a name="GetMajors"/>
+
+### Get Majors
+
+Gets all majors in the system
+
+#### Endpoint
+
+`/GetMajors`
+
+#### Parameters
+
+None
+
+#### Return
+
+{
+     "majors": [
+        {
+            "major_id": int,
+            "major_name": string
+        },
+
+        .
+        .
+        .
+    ]
+}
+
+<!-- End Get Majors -->
+
