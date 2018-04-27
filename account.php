@@ -289,7 +289,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                     </tr>
                       <tbody id="classes">
                       <!--  Javascript builds table here   -->
-						<?php if(is_prof["is_prof"] == true){ ?>
+						<?php if($is_prof["is_prof"] == true){ ?>
 							<td> </td>
 							<td> </td>
 							<td> </td>
