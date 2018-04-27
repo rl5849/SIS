@@ -1460,7 +1460,40 @@ class MakeAdmin(Resource):
 api.add_resource(MakeAdmin, '/MakeAdmin')
 
 
+class ResetPrivileges(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
 
+    def get(self):
+        # Get course info
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int)
+        parsed = parser.parse_args()
+        user_id = parsed.get("user_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("UPDATE users "
+                    "SET user_status = 0 "
+                    "WHERE user_id = %s",
+                    [user_id])
+
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+        finally:
+            cur.close()
+
+        return jsonify(SUCCESS_MESSAGE)
+
+api.add_resource(ResetPrivileges, '/ResetPrivileges')
 
 """
 Check if student/user has admin privileges
