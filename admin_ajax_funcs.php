@@ -39,6 +39,9 @@ if (isset($_POST["action"])){
         case "make_admin":
             make_admin();
             break;
+        case "reset_privileges":
+            reset_privileges();
+            break;
         case "get_student_classes_by_semester":
             if ($_POST['semester_id'] === 'favs'){
                 get_student_favs();
@@ -182,5 +185,17 @@ function make_admin() {
     }
     else{
         echo "Could not grant admin privileges";
+    }
+}
+
+
+function reset_privileges() {
+    $result = file_get_contents("http://127.0.0.1:5002/ResetPrivileges?user_id=" . $_POST['user_id']);
+    $result = json_decode($result, true);
+    if($result == "SUCCESS"){
+        echo "Successfully reset privileges";
+    }
+    else{
+        echo "Could not reset privileges, user still holds status";
     }
 }
