@@ -219,9 +219,14 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               <input name='profile-pic' placeholder='Enter a URL' value='<?php echo $profile_picture; ?>'>
                           </td>
                           <td></td>
-                          <?php if (!$is_prof["is_prof"] && !$is_admin["is_admin"]) { ?>
-                          <td><input class='button expanded rit-orange prof-req' type="submit" name="prof-approval" value="Request Professor Approval"></td>
-                          <?php } ?>
+                          <?php if (!$is_prof["is_prof"] && !$is_admin["is_admin"]) {
+                              if($student_info["student_info"][0]['prof_requested']){
+                                  echo "<td><input class='button expanded rit-orange prof-req' type='submit' name='prof-approval' value='Professor Approval Pending' disabled></td>";
+
+                              }else{
+                                  echo "<td><input class='button expanded rit-orange prof-req' type='submit' name='prof-approval' value='Request Professor Approval'></td>";
+                              }
+                          } ?>
                       </tr>
                       <?php } // End $is_editing check ?>
 
