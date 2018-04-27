@@ -16,15 +16,6 @@ class TestAddUser(unittest.TestCase):
 		# 			"Expected '" + str(api.SUCCESS_MESSAGE) +
 		# 			"', Found '" + str(data) + "'")
 
-class TestModProfile(unittest.TestCase):
-
-	def test_mod_success(self):
-		url = "http://127.0.0.1:5002/ModProfile"
-		response = urllib2.urlopen(url)
-		data = json.load(response)
-		self.assertEqual(data, api.SUCCESS_MESSAGE,
-					"Expected '" + str(api.SUCCESS_MESSAGE) + 
-					"', Found '" + str(data) + "'")
 
 class TestGetUserIDFromLinkedInID(unittest.TestCase):
 

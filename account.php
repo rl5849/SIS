@@ -30,6 +30,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
     $dob = htmlspecialchars($_POST["dob"], ENT_QUOTES, 'UTF-8');
     $gradYear = htmlspecialchars($_POST["grad-year"], ENT_QUOTES, 'UTF-8');
     $userType = $_POST["user-type"];
+    $major = $_POST["major"];
     $profilePic = htmlspecialchars($_POST["profile-pic"], ENT_QUOTES, 'UTF-8');
 
     $profile_data = array (
@@ -39,6 +40,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
             'grad_year' => $gradYear,
             'user_type' => $userType,
             'profile_pic' => $profilePic,
+            'major' => $major,
     );
 
     $results = file_get_contents("http://127.0.0.1:5002/ModProfile?".http_build_query($profile_data));
@@ -79,6 +81,8 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
 
     $is_admin = file_get_contents("http://127.0.0.1:5002/CheckIfAdmin?id=".$student_id);
     $is_admin = json_decode($is_admin, true);
+
+    $gpaSet = file_get_contents("http://127.0.0.1:5002/SetGPA?user_id=".$student_id);
 
     ?>
 
@@ -166,7 +170,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               if ($is_editing) {
                                   $majors = file_get_contents("http://127.0.0.1:5002/GetMajors");
                                   $majors = json_decode($majors, true)["majors"];
-                                  $html = "<select>";
+                                  $html = "<select name='major'>";
                                   if (!$student_info["student_info"][0]["major"]) {
                                       $html = $html . "<option>Choose...</option>";
                                   }
@@ -176,7 +180,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                                           $current_txt = "selected";
                                       }
 
-                                      $html = $html . "<option name='major' value='" . $major['major_id'] . "' " . $current_txt . " >" . $major['major_name'] . "</option>";
+                                      $html = $html . "<option value='" . $major['major_id'] . "' " . $current_txt . " >" . $major['major_name'] . "</option>";
                                   }
                                   $html = $html . "</select>";
 
@@ -198,7 +202,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
 
                               $gpa = $student_info["student_info"][0]["GPA"];
 
-                              if ($gpa == "") {
+                              if ($gpa == "" ) {
                                   echo "N/A";
                               } else {
                                   echo $gpa;
@@ -215,9 +219,14 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                               <input name='profile-pic' placeholder='Enter a URL' value='<?php echo $profile_picture; ?>'>
                           </td>
                           <td></td>
-                          <?php if (!$is_prof["is_prof"] && !$is_admin["is_admin"]) { ?>
-                          <td><input class='button expanded rit-orange' type="submit" name="prof-approval" value="Request Professor Approval"></td>
-                          <?php } ?>
+                          <?php if (!$is_prof["is_prof"] && !$is_admin["is_admin"]) {
+                              if($student_info["student_info"][0]['prof_requested']){
+                                  echo "<td><input class='button expanded rit-orange prof-req' type='submit' name='prof-approval' value='Professor Approval Pending' disabled></td>";
+
+                              }else{
+                                  echo "<td><input class='button expanded rit-orange prof-req' type='submit' name='prof-approval' value='Request Professor Approval'></td>";
+                              }
+                          } ?>
                       </tr>
                       <?php } // End $is_editing check ?>
 
@@ -363,18 +372,39 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
             echo "<script>window.onload = function() {showMessage('success', 'Account information updated successfully.');};</script>";
         }
 
-        // If the professor approval is not an empty string, then the associated button was clicked
-        if ($_POST["prof-approval"] != "") {
-            $results = file_get_contents("http://127.0.0.1:5002/RequestProfessorApproval?user_id=".$_SESSION["user_id"]);
-            $results = json_decode($results);
-
-            // TODO if results are actually positive, report
-            echo "<script>window.onload = function() {showMessage('success', 'A request has been made to give you professor status within the system.');};</script>";
-            // TODO add undo link to callout
-        }
         ?>
 
 
+    <script>
+        //Ajax for req prof status
+        $('.prof-req').on('click', function () {
+            //Make the request
+            var success = $.ajax({
+                type: 'POST',
+                data: {'action': 'RequestProfStatus', 'user_id' : "<?php echo $user_id;?>"},
+                url: 'user_ajax_funcs.php',
+                success: function (data) {
+                    if (!(data.includes("Fail"))) {
+                        showMessage("success", data);
+                        return true;
+                    }
+                    else {
+                        showMessage("failure", data);
+                        return false;
+                    }
+                },
+                error: function (msg) {
+                    console.log(msg.responseText);
+                    return false;
+                }
+            });
+            if (success){
+                $(this).attr('value', 'Professor Status Requested');
+                $(this).attr("disabled", "disabled");
+            }
+
+        });
+    </script>
 
   </body>
 </html>

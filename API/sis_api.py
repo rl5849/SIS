@@ -368,14 +368,20 @@ class GetStudentInfo(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT students.*, majors.major_name FROM students "
+        cur.execute("SELECT students.*, majors.major_name, prof_requests.user_id FROM students "
                     "LEFT JOIN majors ON (majors.major_id = students.major) "
+                    "LEFT JOIN prof_requests ON (prof_requests.user_id = students.student_id) "
                     "WHERE student_id = %s",
                     [student_id])
 
-        query = cur.fetchall()
+        response = cur.fetchall()
 
-
+        #date_of_birth_field is displaying with a UTC time
+        #it needs to be converted back to a date
+        query = []
+        query.append(list(response[0]))
+        if query[0][2]:
+            query[0][2] =  query[0][2].strftime('%B %d, %Y')
 
 
         # Get variable names
@@ -385,6 +391,7 @@ class GetStudentInfo(Resource):
         column_names = cur.fetchall()
         column_names_clean = [x[0] for x in column_names]
         column_names_clean.append('major_name')
+        column_names_clean.append('prof_requested')
 
 
         result = {'student_info': [dict(zip(
@@ -756,8 +763,6 @@ class EnrollStudent(Resource):
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
-
-        #TODO check if student meets prereqs
 
         #check if student is already enrolled
         cur.execute("SELECT COUNT(*) FROM student_to_class "
@@ -1157,7 +1162,7 @@ api.add_resource(CheckFavoriteStatus, '/CheckFavoriteStatus')
 """
 Calculates and returns students GPA
 """
-class GetGPA(Resource):
+class SetGPA(Resource):
     config = ConfigParser.ConfigParser()
     config.read('./config.ini')
 
@@ -1178,48 +1183,70 @@ class GetGPA(Resource):
         cur = db.cursor()
 
         #gets students current gpa. Returns null if student has no grades
-        cur.execute("SELECT AVG(grade) "
+        cur.execute("SELECT grade "
                     "FROM student_to_class "
                     "WHERE student_id = %s "
                     "AND grade IS NOT NULL ",
                     [user_id])
 
-        result = cur.fetchall()
-        gpa=result[0][0]
-        cur.close()
-
+        response = cur.fetchall()
+        result = 0
+        total = 0
+        for grade in response:
+            gpa = grade[0]
         #convert grade to GPA
-        if gpa == None:
-             gpa = "-"
-        elif gpa >= 93:
-            gpa = "4.0"
-        elif gpa >= 90:
-            gpa = "3.7"
-        elif gpa >= 87:
-            gpa = "3.3"
-        elif gpa >= 83:
-            gpa = "3.0"
-        elif gpa >= 80:
-            gpa = "2.7"
-        elif gpa >= 77:
-            gpa = "2.3"
-        elif gpa >= 73:
-            gpa = "2.0"
-        elif gpa >= 70:
-            gpa = "1.7"
-        elif gpa >= 67:
-            gpa = "1.3"
-        elif gpa >= 67:
-            gpa = "1.3"
-        elif gpa >= 67:
-            gpa = "1.3"
-        elif gpa >= 65:
-            gpa = "1.0"
-        elif gpa < 65:
-            gpa = "0.0"
-        return jsonify(gpa)
+            if gpa == None:
+                gpa = None
+            elif gpa >= 93:
+                gpa = 4.0
+            elif gpa >= 90:
+                gpa = 3.7
+            elif gpa >= 87:
+                gpa = 3.3
+            elif gpa >= 83:
+                gpa = 3.0
+            elif gpa >= 80:
+                gpa = 2.7
+            elif gpa >= 77:
+                gpa = 2.3
+            elif gpa >= 73:
+                gpa = 2.0
+            elif gpa >= 70:
+                gpa = 1.7
+            elif gpa >= 67:
+                gpa = 1.3
+            elif gpa >= 67:
+                gpa = 1.3
+            elif gpa >= 67:
+                gpa = 1.3
+            elif gpa >= 65:
+                gpa = 1.0
+            elif gpa < 65:
+                gpa = 0.0
 
-api.add_resource(GetGPA, '/GetGPA')
+            if gpa:
+                result += gpa
+                total += 1
+        
+        if total > 0:
+            result = result/total
+        else:
+            result = None
+            
+        cur.execute("UPDATE students "
+            "SET GPA=%s "
+            "WHERE student_id = %s ",
+            [result, user_id])
+        
+        try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+        finally:
+            cur.close()
+        return jsonify(SUCCESS_MESSAGE)
+
+api.add_resource(SetGPA, '/SetGPA')
 
 """
 Modifies the attributes of a class
@@ -1258,8 +1285,6 @@ api.add_resource(ModCourse, '/ModCourse')
 
 """
 Modifies the attributes of a profile
-
-TODO: add php call to update account
 """
 class ModProfile(Resource):
 
@@ -1311,7 +1336,7 @@ class ModProfile(Resource):
         #parse date of birth into mysql friendly format
         if args["date_of_birth"]:
             try:
-                args["date_of_birth"] = parse(args["date_of_birth"]).strftime("%Y-%m-%d")    
+                args["date_of_birth"] = parse(args["date_of_birth"]).strftime("%Y-%m-%d")
             #if the date is invalid, dont change date of birth
             except ValueError:
                 args["date_of_birth"] = None

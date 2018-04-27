@@ -35,12 +35,13 @@ else {
         $readfile = fread($myfile,filesize("LinkedIn/config.ini"));
         $arr = explode("\n", $readfile);
         $captcha = explode("=", $arr[3])[1];
+        rewind($myfile);
 
        //check captcha
         $url = 'https://www.google.com/recaptcha/api/siteverify';
         $data = array('secret' => $captcha, 'response' => $_POST['g-recaptcha-response']);
 
-// use key 'http' even if you send the request to https://...
+        // use key 'http' even if you send the request to https://...
         $options = array(
             'http' => array(
                 'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
@@ -50,12 +51,12 @@ else {
         );
         $context  = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
-        if ($result === FALSE) { /* Handle error */ }
+        $result = json_decode($result, true);
 
-        var_dump($result);
-
-
-
+        if ($result['success'] != true) {
+            echo "You're a bot!";
+            return;
+        }
 
 
         // Get salt from config file
@@ -84,6 +85,9 @@ else {
             if ($results->message == "SUCCESS") {
                 session_start();
                 $_SESSION["user_id"] = $results->user_id;
+                $_SESSION['start'] = time(); // Taking now logged in time.
+                // Ending a session in 30 minutes from the starting time.
+                $_SESSION['expire'] = $_SESSION['start'] + (30 * 60);
                 header("Location: account.php?editprofile=true&fromregister=true");
             }
         }
@@ -141,6 +145,7 @@ else {
                         </div>
 
                         <div class="g-recaptcha" data-sitekey="6LfYx1UUAAAAADUfxmugrKx1nIZHw8Cx8EQmcNY8"></div>
+
                         <input type="submit" class="button expanded rit-orange" value="Create Account">
                     </form>
                     <!-- End new form -->

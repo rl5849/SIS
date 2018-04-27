@@ -12,30 +12,19 @@ class TestCheckEnrollmentStatus(unittest.TestCase):
 		response = urllib2.urlopen(url)
 		data = json.load(response)
 		status = data.get("enrollment_status")
-		self.assertEqual(status, "True",
+		self.assertEqual(status, "NONE",
 						 "Expected 'True', Found '" + str(status) + "'")
-
-
-class TestGetGrade(unittest.TestCase):
-
-	def test_get_success(self):
-		url = "http://127.0.0.1:5002/GetGrade"
-		response = urllib2.urlopen(url)
-		data = json.load(response)
-		grade = data.get("grade")
-		self.assertEqual(grade, "A",
-					"Expected 'A', Found '" + str(grade) + "'")
-
+		
 
 class TestGetCurrentSemester(unittest.TestCase):
 
-	def test_prof_name(self):
+	def test_semester(self):
 		url = "http://127.0.0.1:5002/GetCurrentSemester"
 		response = urllib2.urlopen(url)
 		data = json.load(response)
 		current_semester = data.get("current_semester")
-		self.assertEqual(current_semester, 1,
-						 "Expected 'false', Found '" + str(current_semester) + "'")
+		self.assertEqual(current_semester, 10,
+						 "Expected '10', Found '" + str(current_semester) + "'")
 
 
 if __name__ == '__main__':
