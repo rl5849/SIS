@@ -1158,6 +1158,51 @@ api.add_resource(CheckFavoriteStatus, '/CheckFavoriteStatus')
 
 
 #TODO : MEDIUM : add assign grade
+"""
+Assigns a Grade for a Student
+"""
+class setGrade(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get Student info
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int)
+		parser.add_argument('class_id', type=int)
+		parser.add_argument('grade',type=int)
+		
+        parsed = parser.parse_args()
+
+        user_id = parsed.get("user_id")
+		class_id = parsed.get("class_id")
+		grade = parsed.get("grade")
+)
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+
+        # Select data from table using SQL query.
+        cur.execute("UPDATE student_to_class"
+                    "SET grade = %s "
+                    "WHERE user_id = %s and class_id= %s",
+                    [grade],[user_id],[class_id])
+					
+		try:
+            db.commit()
+        except MySQLdb.IntegrityError:
+            return jsonify(FAILURE_MESSAGE)
+        finally:
+            cur.close()
+
+        return jsonify(SUCCESS_MESSAGE)
+
+api.add_resource(setGrade, '/setGrade')
+
 
 """
 Calculates and returns students GPA
