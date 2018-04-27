@@ -368,8 +368,9 @@ class GetStudentInfo(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("SELECT students.*, majors.major_name FROM students "
+        cur.execute("SELECT students.*, majors.major_name, prof_requests.user_id FROM students "
                     "LEFT JOIN majors ON (majors.major_id = students.major) "
+                    "LEFT JOIN prof_requests ON (prof_requests.user_id = students.student_id) "
                     "WHERE student_id = %s",
                     [student_id])
 
@@ -390,6 +391,7 @@ class GetStudentInfo(Resource):
         column_names = cur.fetchall()
         column_names_clean = [x[0] for x in column_names]
         column_names_clean.append('major_name')
+        column_names_clean.append('prof_requested')
 
 
         result = {'student_info': [dict(zip(
