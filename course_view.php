@@ -314,7 +314,7 @@ include 'callouts.html';
           <?php
 			//$is_enroll = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" . $class_id . "&user_id=" . $user_id);
 			//$is_enroll = json_decode($is_enroll, true);
-			if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True) || ($enrollment_status == 1)){
+			if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True) || ($enrollment_status == 0)){
 			?>
 
               <div class="large-12 medium-12 small-12 cell">
