@@ -27,16 +27,6 @@ class TestGetProfessorByID(unittest.TestCase):
 						 "Expected 'false', Found '" + str(prof_name) + "'")
 
 
-class TestModProfessor(unittest.TestCase):
-
-	def test_mod_success(self):
-		url = "http://127.0.0.1:5002/ModProfessor"
-		response = urllib2.urlopen(url)
-		data = json.load(response)
-		self.assertEqual(data, api.SUCCESS_MESSAGE,
-					"Expected '" + str(api.SUCCESS_MESSAGE) + 
-					"', Found '" + str(data) + "'")
-
 class TestRequestProfessorApproval(unittest.TestCase):
 
 	def test_request_success(self):

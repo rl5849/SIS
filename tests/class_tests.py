@@ -130,8 +130,8 @@ class TestGetClassInfo(SetupGetClassInfo):
 						
 	def test_class_name(self):
 		name = self.class_info.get("name")
-		self.assertEqual(name, "Web Eng.",
-					"Expected 'Web Eng.', Found '" + str(name) + "'")
+		self.assertEqual(name, "Web Engineering",
+					"Expected 'Web Engineering', Found '" + str(name) + "'")
 
 
 class TestAddClass(unittest.TestCase):

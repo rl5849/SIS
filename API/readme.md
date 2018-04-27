@@ -6,21 +6,19 @@
 
 1. [Get Student](#GetStudentInfo)
 2. [Get Student's Classes For Semester](#GetStudentsClassesForSemester) Needs Implementation
-3. [Add Student](#AddStudent)
-4. [Add User](#AddUser) Needs Implementation
-5. [Check if User Exists](#UserExists) Needs Implementation
-6. [Modify Profile](#ModProfile)
-7. [Modify Professor](#ModProfessor)
-8. [Request Professor Approval](#RequestProfessorApproval)
-9. [Delete Professor Request](#DeleteProfRequest) Needs Implemenation
-10. [Get Professor Requests](#GetProfessorRequests) Needs Implementation
-11. [Approve Professor Request](#ApproveProfRequest) Needs Implementation
-12. [Get Professors](#GetProfs)
-13. [Get Professor By ID](#GetProfessorByID)
-14. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
-15. [Get User ID from Login](#GetUserIDFromLogin) Needs Implementation
-16. [Check if Admin](#CheckIfAdmin) Needs Implementation
-17. [Create Login](#CreateLogin) Needs Implementation
+3. [Add User](#AddUser) Needs Implementation
+4. [Check if User Exists](#UserExists) Needs Implementation
+5. [Modify Profile](#ModProfile)
+6. [Request Professor Approval](#RequestProfessorApproval)
+7. [Delete Professor Request](#DeleteProfRequest) Needs Implementation
+8. [Get Professor Requests](#GetProfessorRequests) Needs Implementation
+9. [Approve Professor Request](#ApproveProfRequest) Needs Implementation
+10. [Get Professors](#GetProfs)
+11. [Get Professor By ID](#GetProfessorByID)
+12. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
+13. [Get User ID from Login](#GetUserIDFromLogin) Needs Implementation
+14. [Check if Admin](#CheckIfAdmin) Needs Implementation
+15. [Create Login](#CreateLogin) Needs Implementation
 
 ### [**Courses/Classes**](#CoursesClasses)
 
@@ -34,18 +32,18 @@
 8. [Add Class](#AddClass) Needs Implementation
 9. [Add Course](#AddCourse) Needs Implementation
 10. [Delete Class](#DeleteClass) Needs Implementation
-11. [Get Student's Classes](#GetStudentsClasses)
-12. [Get Students By Class ID](#GetStudentsByClassId) Needs Implementation
-13. [Enroll Student](#EnrollStudent)
-14. [Ennroll Students From Waitlist](#EnrollFromWaitlist) Needs Implementation
-15. [Drop Student](#DropStudent)
-16. [Check Enrollment Status](#CheckEnrollmentStatus) Needs Implementation
-17. [Get Favorite Classes](#GetFavoritedClasses)
-18. [Check Favorite Status](#CheckFavoriteStatus) Needs Implementation
-19. [Favorite Class](#FavoriteClass)
-20. [Unfavorite Class](#UnfavoriteClass)
-21. [Get Grade](#GetGrade)
-22. [Set GPA](#SetGPA) Needs Implementation
+11. [Delete Course](#DeleteCourse) Needs Implementation
+12. [Get Student's Classes](#GetStudentsClasses)
+13. [Get Students By Class ID](#GetStudentsByClassId) Needs Implementation
+14. [Enroll Student](#EnrollStudent)
+15. [Enroll Students From Waitlist](#EnrollFromWaitlist) Needs Implementation
+16. [Drop Student](#DropStudent)
+17. [Check Enrollment Status](#CheckEnrollmentStatus) Needs Implementation
+18. [Get Favorite Classes](#GetFavoritedClasses)
+19. [Check Favorite Status](#CheckFavoriteStatus) Needs Implementation
+20. [Favorite Class](#FavoriteClass)
+21. [Unfavorite Class](#UnfavoriteClass)
+22. [Get GPA](#GetGPA) Needs Implementation
 23. [Get Waitlist By Class](#WaitlistByClass)
 24. [Get Current Semester](#GetCurrentSemester)
 25. [Get Semesters](#GetSemesters) Needs Implementation
@@ -61,7 +59,7 @@
 
 ### Get Student
 
-Gets information about a student.
+Gets information about a student
 
 #### Endpoint
 
@@ -69,56 +67,95 @@ Gets information about a student.
 
 #### Parameters
 
-`student_id` : The ID of the student.
+`student_id` : The ID of the student
 
 #### Return
 
 ```
-{ student_info : [
+{ "student_info" : [
     {
-        profile_pic : url
-        major : string
-        gender : string
-        graduation_year : string
-        date_of_birth : string
-        student_id : int
-        student_name : string
+        "profile_pic" : url
+        "major" : string
+        "gender" : string
+        "graduation_year" : string
+        "date_of_birth" : string
+        "student_id" : int
+        "student_name" : string
     }]
 }
 ```
 
 <!-- End Get Student Info -->
-<!-- Start Add Student -->
+<!-- Start Get Student's Classes for Semester -->
+<a name="GetStudentsClassesForSemester"/>
 
-<a name="AddStudent"/>
+### Get Student's Classes for Semester
 
-### Add Student
-
-Adds a student to the database
+Gets a student's classes for a given semester
 
 #### Endpoint
 
-`/AddStudent`
+`/GetStudentsClassesForSemester`
 
 #### Parameters
 
-`student_name` : The name of the student
+`user_id` : The ID of the student  
+`semester_id` : The ID of the semester
 
-`date_of_birth` : The student's date of birth (`yyyy-dd-MM`)
+#### Return
+TODO
+```
+```
 
-`profile_pic` : A link to the student's profile picture
+<!-- End Get Student's Classes for Semester -->
+<!-- Start Add User-->
 
-`gender` : The student's gender
+<a name="AddUser"/>
 
-`graduation_year` : The student's graduation year
+### Add User
+
+Adds a user to the system
+
+#### Endpoint
+
+`/AddUser`
+
+#### Parameters
+
+`name` : The name of the user  
+`linkedin_id` : LinkedIn ID of the user  
+`profile_pic` : Link to profile picture of the user
 
 #### Return
 
 | Success            | Failure            |
 | ------------------ | ------------------ |
-| `'SUCCESS'`        | `'FAILURE'`        |
+| `'SUCCESS'`        | `'INSERT FAILED'`  |
 
-<!-- End Add Student -->
+<!-- End Add User -->
+<!-- Start User Exists-->
+
+<a name="UserExists"/>
+
+### User Exists
+
+Adds a user to the system
+
+#### Endpoint
+
+`/UserExists`
+
+#### Parameters
+
+`username` : username of user being checked
+
+#### Return
+
+```
+{ "exists" : boolean }
+```
+
+<!-- End User Exists -->
 <!-- Start Modify Profile -->
 
 <a name="ModProfile"/>
@@ -142,29 +179,6 @@ None at the moment
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Modify Profile -->
-<!-- Start Modify Professor -->
-
-<a name="ModProfessor"/>
-
-### Modify Professor
-
-Modifies information about the professor in the database
-
-#### Endpoint
-
-`/ModProfessor`
-
-#### Parameters
-
-None at the moment
-
-#### Return
-
-| Success            | Failure            |
-| ------------------ | ------------------ |
-| `'SUCCESS'`        | `'FAILURE'`        |
-
-<!-- End Modify Professor -->
 <!-- Start Request Prof Approval -->
 
 <a name="RequestProfessorApproval"/>
@@ -188,6 +202,83 @@ None at the moment
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Request Prof Approval -->
+<!-- Start Delete Prof Request -->
+
+<a name="DeleteProfRequest"/>
+
+### Delete Professor Request
+
+Deletes the request for a specific professor
+
+#### Endpoint
+
+`/DeleteProfRequest`
+
+#### Parameters
+
+`user_id` : ID of user to professor request
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Delete Prof Request -->
+<!-- Start Get Prof Requests -->
+
+<a name="GetProfessorRequests"/>
+
+### Request Professor Approval
+
+Gets all current professor requests
+
+#### Endpoint
+
+`/GetProfessorRequests`
+
+#### Parameters
+
+None
+
+#### Return
+```
+{ "requests" : [
+        [
+            "professor" : string
+            "course_code" : int
+        ],
+        .
+        .
+        .
+    ]
+}
+```
+
+<!-- End Get Prof Request -->
+<!-- Start Approve Prof Request -->
+
+<a name="ApproveProfRequest"/>
+
+### Request Professor Approval
+
+Approves the request for a specific professor
+
+#### Approve Professor Request
+
+`/ApproveProfRequest`
+
+#### Parameters
+
+`user_id` : ID of professor to approve request
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Approve Prof Request -->
 <!-- Start GetProfs -->
 
 <a name="GetProfs"/>
@@ -207,13 +298,11 @@ None at the moment
 #### Return
 
 ```
-{ profs : [
-    professor1,
-    professor2,
+{ "profs" : [
+    "professor" : string,
     .
     .
     .
-    professorN
     ]
 }
 ```
@@ -238,18 +327,17 @@ Gets the professor name associated with the professor ID
 #### Return
 
 ```
-{ professor_name : string }
+{ "professor_name" : string }
 ```
 
 <!-- End Get Professor by ID -->
-
 <!-- Start Get User Id from LinkedIn ID-->
 
 <a name="GetUserIDFromLinkedInID"/>
 
 ### Get User ID From LinlkedIn ID
 
-Gets a user id based on a provided LinkedIn authenticatiopn ID
+Gets a user ID based on a provided LinkedIn authenticatiopn ID
 
 #### Endpoint
 
@@ -257,27 +345,136 @@ Gets a user id based on a provided LinkedIn authenticatiopn ID
 
 #### Parameters
 
-`linkedin_id` : The id passed from LinkedIn
+`linkedin_id` : The ID passed from LinkedIn
 
 #### Return
 
 ```
-{ 'user_id' : int }
+{ "user_id" : int }
 ```
 
 <!-- End Get Get User ID From LinkedIn ID-->
+<!-- Start Get User Id from Login-->
 
+<a name="GetUserIDFromLogin"/>
+
+### Get User ID From Login
+
+Gets a user ID based on provided login credentials
+
+#### Endpoint
+
+`/GetUserIDFromLogin`
+
+#### Parameters
+
+`user_name` : The user's user name  
+`password` : The user's passwor
+
+#### Return
+
+```
+{ "user_id" : int }
+```
+
+<!-- End Get Get User ID From Login-->
+<!-- Start Check If Admin-->
+
+<a name="CheckIfAdmin"/>
+
+### Check if Admin
+
+Gets a user ID based on provided login credentials
+
+#### Endpoint
+
+`/CheckIfAdmin`
+
+#### Parameters
+
+`id` : The ID of the user to be checked
+
+#### Return
+
+```
+{ "is_admin" : boolean }
+```
+
+<!-- End Check If Admin-->
+<!-- Start Create Login-->
+
+<a name="CreateLogin"/>
+
+### Create Login
+
+Create user id with login credentials
+
+#### Endpoint
+
+`/CreateLogin`
+
+#### Parameters
+
+`username` : Account user name  
+`password` : Account password
+
+#### Return
+
+```
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+| `'NEW USER ID'`    |
+```
+
+<!-- End Create Login-->
 <!-- Start Courses Classes -->
 <a name="CoursesClasses"/>
 
 ## Courses/Classes
 
+<!-- Start Get Course List -->
+<a name="GetCourseList"/>
+
+### Get Course List
+
+Get all courses in the system
+
+#### Endpoint
+
+`/GetCourseList`
+
+#### Parameters
+
+None
+
+#### Return
+
+```
+{
+    "classes": [
+        {
+            "name": string,
+            "class_id": int,
+            "section": int,
+            "room_number": int,
+            "professor_name": string,
+            "time": string
+        },
+        .
+        .
+        .
+    ]
+}
+```
+
+<!-- End Get Course List -->
 <!-- Start Get Courses -->
 <a name="GetCourses"/>
 
-### Get Course(s)
+### Get Course
 
-Get all courses that match a given criteria
+Get course of a specified ID
 
 #### Endpoint
 
@@ -294,8 +491,10 @@ Get all courses that match a given criteria
     "courses": [
         {
             "course_id": int,
-            "course_description": string,
-            "course_name": string
+            "credits": int,
+            "course_code": string,
+            "course_name": string,
+            "course_description": string
         },
         .
         .
@@ -309,9 +508,9 @@ Get all courses that match a given criteria
 
 <a name="GetClasses"/>
 
-### Get Class(es)
+### Get Classes
 
-Gets all classes that match a given criteria
+Returns all classes in the system
 
 #### Endpoint
 
@@ -319,22 +518,19 @@ Gets all classes that match a given criteria
 
 #### Parameters
 
-`class_id`
+None
 
 #### Return
 
 ```
 {
-    "classs": [
+    "classes": [
         {
-            "num_enrolled": int,
-            "capacity": int,
             "name": string,
             "class_id": int,
-            "professor_id": int,
             "section": int,
             "room_number": int,
-            "credits": int,
+            "professor_name": string,
             "time": string,
             "course_id": int
         },
@@ -346,6 +542,85 @@ Gets all classes that match a given criteria
 ```
 
 <!-- End Get Classes -->
+<!-- Start Get Course Info -->
+
+<a name="GetCourseInfo"/>
+
+### Get Course Info
+
+Get course of a specified ID
+
+#### Endpoint
+
+`/GetCourseInfo`
+
+#### Parameters
+
+`course_id` : The ID of the course
+
+#### Return
+
+```
+{
+    "courses": [
+        {
+            "course_id": int,
+            "credits": int,
+            "course_code": string,
+            "course_name": string,
+            "course_description": string
+        },
+        .
+        .
+        .
+    ]
+}
+```
+
+<!-- End Get Course Info -->
+<!-- Start Get Class Info -->
+
+<a name="GetClassInfo"/>
+
+### Get Class Info
+
+Returns information for a specified class
+
+#### Endpoint
+
+`/GetClassInfo`
+
+#### Parameters
+
+`class_id` : ID of class to get info for
+
+#### Return
+
+```
+{
+    "class_info": [
+        {
+            "num_enrolled": int,
+            "semester_id": int,
+            "capacity": int,
+            "name": string,
+            "class_id": int,
+            "professor_id": int,
+            "section": int,
+            "room_number": int,
+            "credits": int,
+            "time": string,
+            "course_id": int
+
+        },
+        .
+        .
+        .
+    ]
+}
+```
+
+<!-- End Get Class Info -->
 <!-- Start Modify Course -->
 
 <a name="ModCourse"/>
@@ -392,6 +667,105 @@ None at the moment
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Modify Class -->
+<!-- Start Add Class -->
+
+<a name="AddClass"/>
+
+### Add Class
+
+Adds a new class
+
+#### Endpoint
+
+`/AddClass`
+
+#### Parameters
+
+`time` : Time of class  
+`room_number` : Room class is in  
+`course_id` : Course ID for class  
+`prof_id` : Professor ID for class  
+`capacity` : Max capacity for class  
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Add Class -->
+<!-- Start Add Course -->
+
+<a name="AddCourse"/>
+
+### Add Course
+
+Adds a new class
+
+#### Endpoint
+
+`/AddCourse`
+
+#### Parameters
+
+`course_name` : Name of course  
+`course_code` : Unique code for course  
+`course_credits` : Number of credits that course is worth  
+`course_description` : Description of course  
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Add Course -->
+<!-- Start Delete Class -->
+
+<a name="DeleteClass"/>
+
+### Delete Class
+
+Deletes a class
+
+#### Endpoint
+
+`/DeleteClass`
+
+#### Parameters
+
+`class_id` : ID of class to be deleted
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Delete Class -->
+<!-- Start Delete Course -->
+
+<a name="DeleteCourse"/>
+
+### Delete Course
+
+Deletes a course
+
+#### Endpoint
+
+`/DeleteCourse`
+
+#### Parameters
+
+`course_id` : ID of course to be deleted
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`        |
+
+<!-- End Delete Course -->
 <!-- Start Get Students Classes -->
 
 <a name="GetStudentsClasses"/>
@@ -411,18 +785,60 @@ Gets all classes for a student.
 #### Return
 
 ```
-{ students_classes : [
-    class1,
-    class2,
+{ "students_classes" : [
+    "class" : string,
     .
     .
     .
-    classN
     ]
 }
 ```
 
 <!-- End Get Classes -->
+<!-- Start Get Students by Class ID -->
+
+<a name="GetStudentsByClassId"/>
+
+### Get Students by Class ID
+
+Gets all students in a given class
+
+#### Endpoint
+
+`/GetStudentsByClassId`
+
+#### Parameters
+
+`class_id` : The ID of the class
+
+#### Return
+
+```
+{
+    "waitlisted": [
+        {
+            "user_name" : string,
+            "user_id" : string
+        },
+        .
+        .
+        .
+    ],
+    "enrolled": [
+        {
+            "grade": int,
+            "user_name": string,
+            "user_id": int
+        },
+        .
+        .
+        .
+    ]
+}
+
+```
+
+<!-- End Get Students by Class ID -->
 <!-- Start Enroll Student -->
 
 <a name="EnrollStudent"/>
@@ -438,6 +854,7 @@ Adds a student and class pair to the enrollment db
 #### Parameters
 
 `class_id` : The id of the class
+
 `user_id` : The uid of the student being enrolled
 
 #### Return
@@ -489,13 +906,11 @@ Gets all favorited classes for a student
 #### Return
 
 ```
-{ favorited_classes : [
-    class1
-    class2
+{ "favorited_classes" : [
+    "class" : string
     .
     .
     .
-    classN
     ]
 }
 ```
@@ -546,28 +961,6 @@ None at the moment
 | `'SUCCESS'`        | `'FAILURE'`        |
 
 <!-- End Unfavorite Class -->
-<!-- Start Get Grade -->
-<a name="GetGrade"/>
-
-### Get Grade
-
-Gets the grade for a student in a class
-
-#### Endpoint
-
-`/GetGrade`
-
-#### Parameters
-
-None at the moment
-
-#### Return
-
-```
-{ 'grade' : 'A' }
-```
-
-<!-- End Get Grade -->
 <!-- Start Waitlist By Class -->
 
 <a name="WaitlistByClass"/>
@@ -618,7 +1011,7 @@ None
 #### Return
 
 ```
-{current_semester : string }
+{ "current_semester" : string }
 ```
 
 <!-- End Get Current Semester -->
