@@ -246,7 +246,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">
           <div class="large-12 medium-12 small-12 columns">
               <?php
-              if(!$is_prof["is_prof"] && !$is_admin["is_admin"]){
+              if(!$is_admin["is_admin"]){
               ?>
 			  <ul class="horizontal tabs" data-tabs id="course-tabs">
               
@@ -269,14 +269,24 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                         <th align="left">Course</th>
                         <th align="left">Section</th>
                         <th align="left">Time</th>
+						<?php if($is_prof["is_prof"] != true) { ?>
                         <th align="left">Instructor</th>
+						<?php } ?>
                         <th align="left">Room</th>
+						<?php if($is_prof["is_prof"] != true) { ?>
                         <th align="left">Grade</th>
+						<?php } ?>
 
                     </tr>
                       <tbody id="classes">
-                      <!--                              Javascript builds table here-->
-
+                      <!--  Javascript builds table here   -->
+						<?php if(is_prof["is_prof"] == true){ ?>
+							<td> </td>
+							<td> </td>
+							<td> </td>
+							<td> </td>
+						
+						<?php } ?>
                       </tbody>
                 </table>
 				  <?php } ?>
