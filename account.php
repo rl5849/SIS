@@ -216,7 +216,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                           </td>
                           <td></td>
                           <?php if (!$is_prof["is_prof"] && !$is_admin["is_admin"]) { ?>
-                          <td><input class='button expanded rit-orange' type="submit" name="prof-approval" value="Request Professor Approval"></td>
+                          <td><input class='button expanded rit-orange prof-req' type="submit" name="prof-approval" value="Request Professor Approval"></td>
                           <?php } ?>
                       </tr>
                       <?php } // End $is_editing check ?>
@@ -353,18 +353,39 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
             echo "<script>window.onload = function() {showMessage('success', 'Account information updated successfully.');};</script>";
         }
 
-        // If the professor approval is not an empty string, then the associated button was clicked
-        if ($_POST["prof-approval"] != "") {
-            $results = file_get_contents("http://127.0.0.1:5002/RequestProfessorApproval?user_id=".$_SESSION["user_id"]);
-            $results = json_decode($results);
-
-            // TODO if results are actually positive, report
-            echo "<script>window.onload = function() {showMessage('success', 'A request has been made to give you professor status within the system.');};</script>";
-            // TODO add undo link to callout
-        }
         ?>
 
 
+    <script>
+        //Ajax for req prof status
+        $('.prof-req').on('click', function () {
+            //Make the request
+            var success = $.ajax({
+                type: 'POST',
+                data: {'action': 'RequestProfStatus', 'user_id' : "<?php echo $user_id;?>"},
+                url: 'user_ajax_funcs.php',
+                success: function (data) {
+                    if (!(data.includes("Fail"))) {
+                        showMessage("success", data);
+                        return true;
+                    }
+                    else {
+                        showMessage("failure", data);
+                        return false;
+                    }
+                },
+                error: function (msg) {
+                    console.log(msg.responseText);
+                    return false;
+                }
+            });
+            if (success){
+                $(this).attr('value', 'Professor Status Requested');
+                $(this).attr("disabled", "disabled");
+            }
+
+        });
+    </script>
 
   </body>
 </html>
