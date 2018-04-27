@@ -22,7 +22,7 @@
 16. [Make Admin](#MakeAdmin) Needs Implementation
 17. [Create Login](#CreateLogin) Needs Implementation
 18. [Get Users](#GetUsers) Needs Implementation
-19. [Get Prerequisites](#GetPrerequisites) Needs Implementation
+19. [Get Prerequisites](#GetPrereqs) Needs Implementation
 20. [Check Prerequisite](#CheckPrereq) Needs Implementation
 21. [Add Prerequisites](#AddPrereqs) Needs Implementation
 22. [Delete Prerequisite](#DeletePrereq) Needs Implementation
