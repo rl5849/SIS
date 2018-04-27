@@ -31,6 +31,12 @@ if (isset($_POST["action"])){
             break;
         case "RequestSpecialAccess":
             RequestSpecialAccess();
+            break;
+
+        case "RequestProfStatus":
+            RequestProfStatus();
+            break;
+
     }
 }
 
@@ -131,3 +137,14 @@ function RequestSpecialAccess() {
     }
 }
 
+function RequestProfStatus(){
+    $results = file_get_contents("http://127.0.0.1:5002/RequestProfessorApproval?user_id=".$_POST["user_id"]);
+    $results = json_decode($results);
+
+    if ($results == "SUCCESS"){
+        echo "A request has been made to give you professor status within the system.";
+    }
+    else{
+        echo "Failed to Request Access";
+    }
+}
