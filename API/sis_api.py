@@ -96,7 +96,7 @@ class AddPrereqs(Resource):
                     [prereq_type, program, year_level, prereq_course])
 
         # link prereq to course
-        cur.execute("INSERT INTO course_to_prereqs "
+        cur.execute("INSERT IGNORE INTO course_to_prereqs "
                     "(course_id, prereq_id) "
                     "VALUES (%s, ("
                     "    SELECT MAX(prereq_id) "
