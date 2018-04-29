@@ -267,18 +267,18 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
               if(!$is_admin["is_admin"]){
               ?>
 			  <ul class="horizontal tabs" data-tabs id="course-tabs">
-<<<<<<< HEAD
+
 				<?php if($is_prof["is_prof"]){ ?>
 					<li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
 				<?php } ?>
 				<li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
-=======
+
               
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
 
               
                 <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
->>>>>>> 4b7a4d5f3213eab93c07ad282d0fbd19f6e160ff
+
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[2][0]?>);"><?php echo $semesters[2][1]?></a></li>
                 <li class="tabs-title"><a href="#panel1v">Earlier</a></li>
@@ -308,8 +308,9 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
 						
                       </tbody>
                 </table>
-				  <?php } ?>
-                  <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
+                      <img style="margin:auto; width:256px " src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" id="loading-image">
+                  <?php } ?>
+
               </div>
             </div>
 
