@@ -550,7 +550,7 @@ include 'callouts.html';
             }
 		})
         });
-	}
+	
 	
 
 </script>
