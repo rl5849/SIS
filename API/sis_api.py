@@ -1174,6 +1174,7 @@ class setGrade(Resource):
 		
         parsed = parser.parse_args()
 
+
         user_id = parsed.get("user_id")
         class_id = parsed.get("class_id")
         grade = parsed.get("grade")
@@ -2097,6 +2098,11 @@ class ApproveProfRequest(Resource):
             cur.execute("DELETE FROM prof_requests "
                         "WHERE user_id = %s",
                         [user_id])
+
+            cur.execute("INSERT INTO professors "
+                        "(user_id, professor_name) "
+                        "VALUES (%s, (SELECT name FROM users WHERE user_id = %s))",
+                        [user_id, user_id])
 
             db.commit()
         except MySQLdb.IntegrityError:
