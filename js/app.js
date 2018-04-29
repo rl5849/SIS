@@ -62,7 +62,7 @@ function instantiateFilter(filter_id, listing_names, hide_by_default) {
         // Sanitize inputs
         filter_text = filter_text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
         for (var x = 0; x < list_entries.length; x++) {
-            if (list_entries[x].innerHTML.toLowerCase().indexOf(filter_text.toLowerCase()) > -1) {
+            if ($(list_entries[x]).text().toLowerCase().indexOf(filter_text.toLowerCase()) > -1) {
                 if (filter_text === '' && hide_by_default) {
                     list_entries[x].setAttribute('hidden', 'true');
                 } else {
