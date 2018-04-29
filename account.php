@@ -267,8 +267,10 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">
           <div class="large-12 medium-12 small-12 columns">
 			  <ul class="horizontal tabs" data-tabs id="course-tabs">
-                <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
-                <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
+				<?php if($is_prof["is_prof"]){ ?>
+					<li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
+				<?php } ?>
+				<li class="tabs-title is-active"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[0][0]?>)">Current Semester</a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[1][0]?>);"><?php echo $semesters[1][1]?></a></li>
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table(<?php echo $semesters[2][0]?>);"><?php echo $semesters[2][1]?></a></li>
                 <li class="tabs-title"><a href="#panel1v">Earlier</a></li>
@@ -295,13 +297,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                     </tr>
                       <tbody id="classes">
                       <!--  Javascript builds table here   -->
-						<?php if($is_prof["is_prof"] == true){ ?>
-							<td> </td>
-							<td> </td>
-							<td> </td>
-							<td> </td>
 						
-						<?php } ?>
                       </tbody>
                 </table>
 				  <?php } ?>
@@ -320,12 +316,23 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
           load_class_table(<?php echo $semesters[0][0]?>);
       });
       function load_class_table(semester){
+		  var myuser;
+		  <?php if($if_prof["is_prof"]) { ?>
+					 myuser = "prof";
+			<?php	} ?>
+			<?php else{ ?>
+					myuser = "stud";
+			<?php } ?>
+			
+				
+		  
+		  
           $('#loading-image').show();
           $.ajax({
               type : 'POST',
               url : 'admin_ajax_funcs.php',
               dataType : 'json',
-              data: {'action':'get_student_classes_by_semester', 'user_id' :  <?php echo $student_id?>, "semester_id": semester},
+              data: {'action':'get_student_classes_by_semester', 'user_id' :  <?php echo $student_id?>, "semester_id": semester, 'user_type': myuser},
               contentType: "application/x-www-form-urlencoded",
               async : false,
               //beforeSend : function(){/*loading*/},
@@ -345,9 +352,11 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                                     <td>" + item.section + "</td> \
                                     <td>" + item.time + "</td> \
                                     <td>" + item.professor_name + "</td> \
-                                    <td>" + item.room_number + "</td> \
-                                    <td>" + grade + "</td>\
-                                 </tr>";
+                                    <td>" + item.room_number + "</td> \";
+                          if(myuser == "stud"){
+								buffer +="<td>" + grade + "</td>"
+						  }
+                          buffer +="</tr>";
                       }
                       $("#classes").empty();
                       $("#classes").append(buffer);

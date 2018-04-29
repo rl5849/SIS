@@ -2187,14 +2187,14 @@ class GetClassesByProfId(Resource):
 		cur = db.cursor()
 		
 		# Select data from table using SQL query.
-		cur.execute("SELECT * FROM classes "
+		cur.execute("SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number FROM classes "
 					"WHERE professor_id = %s "
 					"AND semester_id = %s"
-					"ORDER BY name",
+					"ORDER BY classes.name",
 					[prof_id],[semester_id])
 		query = cur.fetchall()
 		
-		column_names= ["class_id", "course_id", "name", "section", "time", "room_number", "professor_name", "grade"]
+		column_names= ["class_id", "course_id", "name", "section", "time", "room_number"]
 		
 		result = {'classes': [dict(zip(
 		column_names_clean, i)) for i in query]}

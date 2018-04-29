@@ -200,9 +200,13 @@ function get_student_classes_by_semester() {
         echo [];
         return;
     }
-
-    $list = file_get_contents("http://127.0.0.1:5002/GetStudentsClassesForSemester?user_id=" . $_POST['user_id'] . "&semester_id=" . $_POST['semester_id']);
-    echo $list;
+	if($_POST['user_type'] == "prof"){
+		$list = file_get_contents("http://127.0.0.1:5002/GetClassesByProfId?prof_id=". $_POST["user_id"] . "&semester_id=". $_POST["semester_id"]);
+    }
+	else{
+		$list = file_get_contents("http://127.0.0.1:5002/GetStudentsClassesForSemester?user_id=" . $_POST['user_id'] . "&semester_id=" . $_POST['semester_id']);
+    }
+	echo $list;
 }
 
 function get_student_favs() {
