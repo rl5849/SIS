@@ -367,7 +367,7 @@ include 'callouts.html';
 											Enrolled
 										</td>
 										<?php } ?>
-										<?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
+										<?php if(($is_prof["is_prof"] == True && ($prof_id == $user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
 										  <td>
 											<form action="post">
 											<input class="grade-number" type="number" name="grade" min=0 max=100 placeholder= "0" value=<?php echo $curr_stud["grade"] ?>>
