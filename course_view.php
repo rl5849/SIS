@@ -524,11 +524,16 @@ include 'callouts.html';
 	//AJAX for submit Grade
     $('.subGrade').on('click', function () {
         var action = "";
-        
+
         //Make the request
         var success = $.ajax({
             type: 'POST',
-            data: {'action': 'submitGrade', 'user_id' : "<?php echo $user_id;?>", 'class_id' : <?php echo $class_id;?>, 'submitGrade' : action},
+            data: {
+                'action': 'submitGrade',
+                'user_id': "<?php echo $user_id;?>",
+                'class_id': <?php echo $class_id;?>,
+                'submitGrade': action
+            },
             url: 'user_ajax_funcs.php',
             success: function (data) {
                 if (data.includes("Success")) {
@@ -545,6 +550,7 @@ include 'callouts.html';
                 return false;
             }
         });
+    });
 	
 
 </script>
