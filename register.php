@@ -1,8 +1,11 @@
 <?php
     // Get post vars if they are there
-    $username = $_POST["username"];
-    $password = $_POST["password"];
-    $password_confirm = $_POST["password_confirm"];
+    if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["password_confirm"])){
+        $username = $_POST["username"];
+        $password = $_POST["password"];
+        $password_confirm = $_POST["password_confirm"];
+    }
+
 // If user hasn't entered anything
 if (!isset($_POST["username"]) && !isset($_POST["password"])) {
     // Do nothing
@@ -104,6 +107,16 @@ else {
     <title>SIS - Login</title>
     <link rel="stylesheet" href="css/app.css">
     <script src='https://www.google.com/recaptcha/api.js'></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118378709-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-118378709-1');
+    </script>
+
 </head>
 <body>
 

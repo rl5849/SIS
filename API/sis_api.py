@@ -1192,7 +1192,7 @@ class setGrade(Resource):
                     "WHERE student_id = %s and class_id= %s",
                     [grade],[student_id],[class_id])
 					
-		try:
+        try:
             db.commit()
         except MySQLdb.IntegrityError:
             return jsonify(FAILURE_MESSAGE)
@@ -2097,6 +2097,11 @@ class ApproveProfRequest(Resource):
             cur.execute("DELETE FROM prof_requests "
                         "WHERE user_id = %s",
                         [user_id])
+
+            cur.execute("INSERT INTO professors "
+                        "(professor_id, professor_name) "
+                        "VALUES (%s, (SELECT name FROM users WHERE user_id = %s))",
+                        [user_id, user_id])
 
             db.commit()
         except MySQLdb.IntegrityError:
