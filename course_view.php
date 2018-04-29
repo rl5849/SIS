@@ -475,13 +475,15 @@ include 'callouts.html';
             action = 0;//0 means you're going to unenroll in the class
         }
         //Make the request
-        var success = $.ajax({
+        var success = false;
+            $.ajax({
             type: 'POST',
             data: {'action': 'enroll', 'user_id' : "<?php echo $user_id;?>", 'class_id' : <?php echo $class_id;?>, 'enroll' : action, 'course_id' : <?php echo $course_id?>},
             url: 'user_ajax_funcs.php',
             success: function (data) {
                 if (data.includes("Success")) {
                     showMessage("success", data);
+                    success = true;
                     return true;
                 }
                 else {
