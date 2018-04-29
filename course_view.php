@@ -33,6 +33,16 @@ include 'callouts.html';
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/foundation-icons.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118378709-1"></script>
+      <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-118378709-1');
+      </script>
+
   </head>
   <body>
     <!-- Load Nav Bar and Callouts -->
