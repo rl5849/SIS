@@ -2100,7 +2100,7 @@ class ApproveProfRequest(Resource):
                         [user_id])
 
             cur.execute("INSERT INTO professors "
-                        "(user_id, professor_name) "
+                        "(professor_id, professor_name) "
                         "VALUES (%s, (SELECT name FROM users WHERE user_id = %s))",
                         [user_id, user_id])
 
