@@ -6,7 +6,7 @@
 
 1. [Get Student](#GetStudentInfo)
 2. [Get Student's Classes For Semester](#GetStudentsClassesForSemester)
-3. [Add User](#AddUser) Needs Implementation
+3. [Add User](#AddUser)
 4. [Check if User Exists](#UserExists)
 5. [Modify Profile](#ModProfile)
 6. [Request Professor Approval](#RequestProfessorApproval)
@@ -45,7 +45,7 @@
 19. [Check Favorite Status](#CheckFavoriteStatus)
 20. [Favorite Class](#FavoriteClass)
 21. [Unfavorite Class](#UnfavoriteClass)
-22. [Get GPA](#GetGPA) Needs Implementation
+22. [Get GPA](#GetGPA)
 23. [Get Waitlist By Class](#WaitlistByClass)
 24. [Get Current Semester](#GetCurrentSemester)
 25. [Get Semesters](#GetSemesters)
@@ -258,7 +258,7 @@ Deletes the request for a specific professor
 
 <a name="GetProfessorRequests"/>
 
-### Request Professor Approval
+### Get Professor Requests
 
 Gets all current professor requests
 
@@ -289,7 +289,7 @@ None
 
 <a name="ApproveProfRequest"/>
 
-### Request Professor Approval
+### Approve Professor Request
 
 Approves the request for a specific professor
 
