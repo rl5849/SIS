@@ -12,33 +12,7 @@ class SetupGetCourses(unittest.TestCase):
 		self.data = json.load(self.response)
 		self.courses = self.data.get("courses")
 
-
 class TestGetCourses(SetupGetCourses):
-	"""
-	data =
-{
-    "courses": [
-        {
-            "course_id": 1,
-            "course_description": "Getting hammered w/ Krutz",
-            "course_name": "Beers of the World"
-        },
-        {
-            "course_id": 2,
-            "course_description": "Lots of work",
-            "course_name": "Web Eng."
-        },
-        {
-            "course_id": 3,
-            "course_description": "Lame",
-            "course_name": "Art"
-        }
-    ]
-}
-	"""
-
-	# def test_print(self):
-	# 	print (json.dumps(self.data, indent=4))
 
 	def test_unique_ids(self):
 		course_ids = []
@@ -56,59 +30,15 @@ class TestGetCourses(SetupGetCourses):
 		self.assertEqual(desc, "Lots of work",
 						 "Expected 'Lots of work', Found '" + str(desc) + "'")
 
-
-class SetupGetCourseInfo(unittest.TestCase):
-	def setUp(self):
-		self.url = "http://127.0.0.1:5002/GetCourseInfo?course_id=2"
-		self.response = urllib2.urlopen(self.url)
-		self.data = json.load(self.response)
-		self.course = self.data.get("course_info")[0]
-
-
-class TestGetCourseInfo(SetupGetCourseInfo):
-
-	"""
-	data =
-{
-    "course_info": [
-        {
-            "course_id": 2,
-            "course_description": "Lots of work",
-            "course_name": "Web Eng."
-        }
-    ]
-}
-
-	"""
-
-	# def test_print(self):
-	# 	print (json.dumps(self.data, indent=4))
-
-	def test_course_id(self):
-		id = self.course.get("course_id")
-		self.assertEqual(id, 2,
-						 "Expected '2', Found '" + str(id) + "'")
-
-	def test_course_description(self):
-		desc = self.course.get("course_description")
-		self.assertEqual(desc, "Lots of work",
-						 "Expected 'Lots of work', Found '" + str(desc) + "'")
-
-	def test_course_name(self):
-		name = self.course.get("course_name")
-		self.assertEqual(name, "Web Engineering",
-						 "Expected 'Web Engineering', Found '" + str(name) + "'")
-
 class TestAddCourse(unittest.TestCase):
 
 	def test_add_success(self):
-		pass # Pass for now as this has not been implemented
-		# url = "http://127.0.0.1:5002/AddCourse"
-		# response = urllib2.urlopen(url)
-		# data = json.load(response)
-		# self.assertEqual(data, api.SUCCESS_MESSAGE,
-		# 			"Expected '" + str(api.SUCCESS_MESSAGE) +
-		# 			"', Found '" + str(data) + "'")
+		url = "http://127.0.0.1:5002/AddCourse"
+		response = urllib2.urlopen(url)
+		data = json.load(response)
+		self.assertEqual(data, api.SUCCESS_MESSAGE,
+					"Expected '" + str(api.SUCCESS_MESSAGE) +
+					"', Found '" + str(data) + "'")
 
 class TestModCourse(unittest.TestCase):
 
@@ -119,6 +49,89 @@ class TestModCourse(unittest.TestCase):
 		self.assertEqual(data, api.SUCCESS_MESSAGE,
 					"Expected '" + str(api.SUCCESS_MESSAGE) + 
 					"', Found '" + str(data) + "'")
+
+################# NEW TESTS ######################
+class SetupGetPrereqs(unittest.TestCase):
+	def setUp(self):
+		self.url = "http://127.0.0.1:5002/GetPrereqs?course_id=1"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.prereqs = self.data.get("prereqs")
+		#print (json.dumps(self.data, indent=4))
+
+class TestGetPrereqs(SetupGetPrereqs):
+	
+	def test_atleast_one_prereq(self):
+		self.assertGreaterEqual(len(self.prereqs), 1,
+						"Expected >= 1, Found '" + str(len(self.prereqs)) + "'")
+	
+	def test_return_format(self):
+		pre = self.prereqs[0]
+		self.assertTrue("program_of_enrollment" in pre)
+		self.assertTrue("year_level" in pre)
+		self.assertTrue("prereq_id" in pre)
+		self.assertTrue("prereq_course" in pre)
+		self.assertTrue("major_name" in pre)
+		self.assertTrue("prereq_course_id" in pre)
+		self.assertTrue("type" in pre)
+
+class SetupCheckPrereq(unittest.TestCase):
+	def setUp(self):
+		self.url = "http://127.0.0.1:5002/CheckPrereq?student_id=309&prereq_id=7"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.info = self.data.get("meets_prereq")
+		#print (json.dumps(self.data, indent=4))
+
+class TestCheckPrereq(SetupCheckPrereq):	
+	
+	def test_does_not_meet_prereq(self):
+		self.assertFalse(self.info)
+
+class SetupGetCourseList(unittest.TestCase):
+	def setUp(self):
+		self.url = "http://127.0.0.1:5002/GetCourseList?"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.info = self.data.get("classes")
+		#print (json.dumps(self.data, indent=4))
+
+class TestGetCourseList(SetupGetCourseList):
+
+	def test_atleast_one_prereq(self):
+		self.assertGreaterEqual(len(self.info), 1,
+						"Expected >= 1, Found '" + str(len(self.info)) + "'")
+	
+	def test_return_format(self):
+		course = self.info[0]
+		self.assertTrue("name" in course)
+		self.assertTrue("class_id" in course)
+		self.assertTrue("section" in course)
+		self.assertTrue("room_number" in course)
+		self.assertTrue("professor_name" in course)
+		self.assertTrue("time" in course)
+
+class SetupGetCourseInfo(unittest.TestCase):
+	def setUp(self):
+		self.url = "http://127.0.0.1:5002/GetCourseInfo?course_id=1"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.info = self.data.get("course_info")
+		#print (json.dumps(self.data, indent=4))
+
+class TestGetCourseInfo(SetupGetCourseInfo):	
+	
+	def test_one_course(self):
+		self.assertEqual(len(self.info), 1,
+						"Expected '1', Found '" + str(len(self.info)) + "'")
+	
+	def test_return_format(self):
+		course = self.info[0]
+		self.assertTrue("course_id" in course)
+		self.assertTrue("credits" in course)
+		self.assertTrue("course_code" in course)
+		self.assertTrue("course_name" in course)
+		self.assertTrue("course_description" in course)
 
 if __name__ == '__main__':
 	unittest.main()

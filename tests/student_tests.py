@@ -6,89 +6,32 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/
 import sis_api as api
 
 
-class SetupGetStudentsClasses(unittest.TestCase):
+class SetupGetStudentInfo(unittest.TestCase):
 	def setUp(self):
-		self.url = "http://127.0.0.1:5002/GetStudentsClasses?student_id=1"
+		self.url = "http://127.0.0.1:5002/GetStudentInfo?student_id=309"
 		self.response = urllib2.urlopen(self.url)
 		self.data = json.load(self.response)
-		self.classes = self.data.get("students_classes")
-
-class TestGetStudentsClasses(SetupGetStudentsClasses):
-
-	#def test_print(self):
+		self.info = self.data.get("student_info")
 		#print (json.dumps(self.data, indent=4))
 
-	def test_course_id(self):
-		self.assertEqual(self.classes[0].get("course_id"), 1,
-						 "Expected '1', Found '" + str(self.classes[0].get("course_id")) + "'")
-
-	def test_course_name(self):
-		self.assertEqual(self.classes[0].get("name"), "Beers of the World",
-						 "Expected 'Beers of the World', Found '" + str(self.classes[0].get("name")) + "'")
-
-	def test_number_of_courses(self):
-		self.assertEqual(len(self.classes), 5,
-						 "Expected '5', Found '" + str(len(self.classes)) + "'")
-
-	def test_same_courseId_different_classId(self):
-		self.assertEqual(self.classes[0].get("course_id"), self.classes[1].get("course_id"))
-		self.assertNotEqual(self.classes[0].get("class_id"), self.classes[1].get("class_id"))
-
-	def test_no_same_class_ID(self):
-		class_ids = []
-		for sClass in self.classes:
-			class_ids.append(sClass.get("class_id"))
-		self.assertEqual(len(class_ids), len(set(class_ids)))
-
-class SetupGetStudentInfo(unittest.TestCase):
-
-	def setUp(self):
-		self.url = "http://127.0.0.1:5002/GetStudentInfo?student_id=1"
-		self.response = urllib2.urlopen(self.url)
-		self.data = json.load(self.response)
-		self.student_info = self.data.get("student_info")[0]
-
-
-class TestGetStudentInfo(SetupGetStudentInfo):
-
-	"""Returned info for id=1
-	{
-            "profile_pic": null,
-            "major": "Software Engineering",
-            "gender": "M",
-            "graduation_year": 2100,
-            "date_of_birth": 1996-02-11,
-            "student_id": 1,
-            "student_name": "Betty White"
-        }
-"""
-
-	# def test_print(self):
-	# 	print (json.dumps(self.data, indent=4))
-
-	def test_major(self):
-		self.assertEqual(self.student_info.get("major"), "Software Engineering",
-						 "Expected 'Software Engineering, Found '" + str(self.student_info.get("major")) + "'")
-
-	def test_gender(self):
-		self.assertEqual(self.student_info.get("gender"), "M",
-						 "Expected 'M', Found '" + str(self.student_info.get("gender")) + "'")
-
-	def test_graduation_year(self):
-		self.assertEqual(self.student_info.get("graduation_year"), 2100,
-						 "Expected '2100', Found '" + str(self.student_info.get("graduation_year")) + "'")
-
-	def test_date_of_birth(self):
-		self.assertEqual(self.student_info.get("date_of_birth"), "Sat, 02 Nov 1996 00:00:00 GMT",
-						 "Expected 'Sat, 02 Nov 1996 00:00:00 GMT', Found '" + str(self.student_info.get("date_of_birth")) + "'")
-
-	def test_student_id(self):
-		self.assertEqual(self.student_info.get("student_id"), 1,
-						 "Expected '1', Found '" + str(self.student_info.get("student_id")) + "'")
-
-	def test_student_name(self):
-		self.assertEqual(self.student_info.get("student_name"), "Betty White",
-						 "Expected 'Betty White', Found '" + str(self.student_info.get("student_name")) + "'")
+class TestGetStudentInfo(SetupGetStudentInfo):	
+	
+	def test_atleast_one_info(self):
+		self.assertGreaterEqual(len(self.info), 1,
+						"Expected >= 1, Found '" + str(len(self.info)) + "'")
+	
+	def test_return_format(self):
+		list_info = self.info[len(self.info)-1]
+		self.assertTrue("profile_pic" in list_info)
+		self.assertTrue("major" in list_info)
+		self.assertTrue("gender" in list_info)
+		self.assertTrue("GPA" in list_info)
+		self.assertTrue("prof_requested" in list_info)
+		self.assertTrue("date_of_birth" in list_info)
+		self.assertTrue("major_name" in list_info)
+		self.assertTrue("graduation_year" in list_info)
+		self.assertTrue("student_name" in list_info)
+		self.assertTrue("student_id" in list_info)
 
 class TestEnrollStudent(unittest.TestCase):
 
@@ -96,25 +39,18 @@ class TestEnrollStudent(unittest.TestCase):
 		url = "http://127.0.0.1:5002/EnrollStudent"
 		response = urllib2.urlopen(url)
 		data = json.load(response)
-		self.assertEqual(data, api.SUCCESS_MESSAGE,
-					"Expected '" + str(api.SUCCESS_MESSAGE) + 
+		self.assertEqual(data, api.FAILURE_MESSAGE,
+					"Expected '" + str(api.FAILURE_MESSAGE) + 
 					"', Found '" + str(data) + "'")
                     
 class TestAddStudent(unittest.TestCase):
 	
 	def test_adding(self):
 		url = "http://127.0.0.1:5002/AddUser"
-		name = "?&student_name=Lucas%20Kretvix"
-		dob = "&date_of_birth=07-30-1996"
-		prof_pic = "&profile_pic=https://i0.wp.com/radaronline.com/wp-content/uploads/2017/05/betty-white-secret-suitor-split-pp.jpg?fit=640%2C420&ssl=1"
-		gender = "&gender=M"
-		grad_year = "&graduation_year=2020"
-		#response = urllib2.urlopen(url+name+dob+prof_pic+gender+grad_year)
 		response = urllib2.urlopen(url)
 		data = json.load(response)
 		self.assertEqual(data, "SUCCESS",
-					"Expected 'SUCCESS', Found '" + str(data) + "'")
-					
+					"Expected 'SUCCESS', Found '" + str(data) + "'")			
 					
 class TestDropStudent(unittest.TestCase):
 
@@ -122,9 +58,89 @@ class TestDropStudent(unittest.TestCase):
 		url = "http://127.0.0.1:5002/DropStudent"
 		response = urllib2.urlopen(url)
 		data = json.load(response)
-		self.assertEqual(data, api.SUCCESS_MESSAGE,
-					"Expected '" + str(api.SUCCESS_MESSAGE) + 
+		self.assertEqual(data, api.FAILURE_MESSAGE,
+					"Expected '" + str(api.FAILURE_MESSAGE) + 
 					"', Found '" + str(data) + "'")
+
+################################## NEW TESTS ####################################
+
+class SetupGetStudentsClassesForSemester(unittest.TestCase):
+	def setUp(self):
+		self.url = "http://127.0.0.1:5002/GetStudentsClassesForSemester?user_id=309&semester_id=10"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.classes = self.data.get("classes")
+		#print (json.dumps(self.data, indent=4))
+
+class TestGetStudentsClassesForSemester(SetupGetStudentsClassesForSemester):
+
+	def test_atleast_one_class(self):
+		self.assertGreater(len(self.classes), 0, 
+						"Expected > 0, Found '" + str(len(self.classes)) + "'")
+	
+	def test_return_format(self):
+		self.assertTrue(self.classes[0].get("name"),
+						"Expected 'True', Found '" + str(self.classes[0].get("name")))
+		self.assertTrue(self.classes[0].get("class_id"),
+						"Expected 'True', Found '" + str(self.classes[0].get("class_id")))
+		self.assertTrue(self.classes[0].get("section"),
+						"Expected 'True', Found '" + str(self.classes[0].get("section")))
+		self.assertTrue(self.classes[0].get("room_number"),
+						"Expected 'True', Found '" + str(self.classes[0].get("room_number")))
+		self.assertTrue(self.classes[0].get("professor_name"),
+						"Expected 'True', Found '" + str(self.classes[0].get("professor_name")))
+		self.assertFalse(self.classes[0].get("grade"),
+						"Expected 'False', Found '" + str(self.classes[0].get("grade")))
+		self.assertTrue(self.classes[0].get("time"),
+						"Expected 'True', Found '" + str(self.classes[0].get("time")))
+		self.assertTrue(self.classes[0].get("course_id"),
+						"Expected 'True', Found '" + str(self.classes[0].get("course_id")))
+
+class SetupCheckEnrollmentStatus(unittest.TestCase):
+	def setUp(self):
+		self.url = "http://127.0.0.1:5002/CheckEnrollmentStatus?user_id=309&class_id=6"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.info = self.data.get("enrollment_status")
+		self.url = "http://127.0.0.1:5002/CheckEnrollmentStatus?user_id=12345&class_id=6"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.info1 = self.data.get("enrollment_status")
+		#print (json.dumps(self.data, indent=4))
+
+class TestCheckEnrollmentStatus(SetupCheckEnrollmentStatus):	
+
+	def test_enrolled(self):
+		self.assertEquals(self.info, "ENROLLED",
+						"Expected 'ENROLLED', Found '" + str(self.info) + "'")
+	def test_not_enrolled(self):
+		self.assertEquals(self.info1, "NONE",
+						"Expected 'NONE', Found '" + str(self.info1) + "'")
+
+class SetupTestCheckOutput(unittest.TestCase):
+	
+	def setUp(self):
+		self.url = "http://127.0.0.1:5002/CheckFavoriteStatus?user_id=309&class_id=6"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.info = self.data.get("favorite_status")
+		self.url = "http://127.0.0.1:5002/CheckFavoriteStatus?user_id=309&class_id=1"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.info1 = self.data.get("favorite_status")
+		#print (json.dumps(self.data, indent=4))
+
+class TestCheckOutput(SetupTestCheckOutput):	
+	
+	def test_enrolled(self):
+		self.assertEquals(self.info, "True",
+						"Expected 'TRUE', Found '" + str(self.info) + "'")
+	
+	def test_not_enrolled(self):
+		self.assertEquals(self.info1, "False",
+						"Expected 'False', Found '" + str(self.info1) + "'")
+
+
 
 if __name__ == '__main__':
 	unittest.main()
