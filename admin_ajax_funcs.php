@@ -96,6 +96,28 @@ function add_course() {
         echo "Failed to add Course";
     }
 }
+
+function add_prereq(){
+    $url_params = urlencode($_POST['course_id']) . "&prereq_type=" . urlencode($_POST['prereq_type']);
+    if ($_POST['prereq_type'] == 0){
+        $url_params += "&year_level=" . urlencode($_POST['year']);
+    }
+    else if ($_POST['prereq_type'] == 1){
+        $url_params += "&program=" . urlencode($_POST['major']);
+    }
+    else if ($_POST['prereq_type'] == 2){
+        $url_params += "&prereq_course=" . urlencode($_POST['prereq_course']);
+    }
+    $result = file_get_contents("http://127.0.0.1:5002/AddPrereqs?course_id=" . $url_params);
+    $result = json_decode($result, true);
+    if ($result == "SUCCESS"){
+        echo "Successfully added prereq";
+    }
+    else{
+        echo "Failed to add prereq";
+    }
+
+}
 function delete_course() {
 
     $url_params = $_POST['course_id'];
