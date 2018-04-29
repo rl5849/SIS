@@ -26,10 +26,10 @@
                         <option value="none">Select year requirement</option>
                         <option value="none">N/A</option>
                         <option value="1">1st year</option>
-                        <option value="2">2st year</option>
-                        <option value="3">3st year</option>
-                        <option value="4">4st year</option>
-                        <option value="5">5st year</option>
+                        <option value="2">2nd year</option>
+                        <option value="3">3rd year</option>
+                        <option value="4">4th year</option>
+                        <option value="5">5th year</option>
                         <option value="6">Graduate</option>
                 </select>
             </div>
