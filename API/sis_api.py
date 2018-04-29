@@ -1168,17 +1168,16 @@ class setGrade(Resource):
     def get(self):
         # Get Student info
         parser = reqparse.RequestParser()
-        parser.add_argument('user_id', type=int)
-        parser.add_argument('class_id', type=int)
-        parser.add_argument('grade',type=int)
+        parser.add_argument('student_id', type=int)
+		parser.add_argument('class_id', type=int)
+		parser.add_argument('grade',type=int)
 		
         parsed = parser.parse_args()
 
-
-        user_id = parsed.get("user_id")
-        class_id = parsed.get("class_id")
-        grade = parsed.get("grade")
-
+        student_id = parsed.get("student_id")
+		class_id = parsed.get("class_id")
+		grade = parsed.get("grade")
+)
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
@@ -1190,8 +1189,8 @@ class setGrade(Resource):
         # Select data from table using SQL query.
         cur.execute("UPDATE student_to_class"
                     "SET grade = %s "
-                    "WHERE user_id = %s and class_id= %s",
-                    [grade],[user_id],[class_id])
+                    "WHERE student_id = %s and class_id= %s",
+                    [grade],[student_id],[class_id])
 					
         try:
             db.commit()
@@ -2165,6 +2164,45 @@ class GetStudentsByClassId(Resource):
 
 api.add_resource(GetStudentsByClassId, '/GetStudentsByClassId')
 
+"""
+Get Classes for a Professor
+"""
+class GetClassesByProfId(Resource):
+    config = ConfigParser.ConfigParser()
+    config.read('./config.ini')
+
+    def get(self):
+        # Get class id
+        parser = reqparse.RequestParser()
+        parser.add_argument('prof_id', type=int)
+		parser.add_argument('semester_id', type=int)
+        prof_id = parser.parse_args().get("prof_id")
+		semester_id = parser.parse_args().get("semester_id")
+
+        db = MySQLdb.connect(user=self.config.get('database', 'username'),
+                             passwd=self.config.get('database', 'password'),
+                             host=self.config.get('database', 'host'),
+                             db=self.config.get('database', 'dbname'))
+
+        cur = db.cursor()
+		
+		# Select data from table using SQL query.
+        cur.execute("SELECT * FROM classes "
+                    "WHERE professor_id = %s "
+					"AND semester_id = %s"
+                    "ORDER BY name",
+                    [prof_id],[semester_id])
+        query = cur.fetchall()
+		
+		column_names= ["class_id", "course_id", "name", "section", "time", "room_number", "professor_name", "grade"]
+		
+		result = {'classes': [dict(zip(
+        column_names_clean, i)) for i in query]}
+
+        cur.close()
+        return jsonify(result)
+
+api.add_resource(GetClassInfo, '/GetClassInfo')
 
 """
 Get Student class by student_id and semeseter code

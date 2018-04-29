@@ -324,7 +324,7 @@ include 'callouts.html';
           <?php
 			//$is_enroll = file_get_contents("http://127.0.0.1:5002/CheckEnrollmentStatus?class_id=" . $class_id . "&user_id=" . $user_id);
 			//$is_enroll = json_decode($is_enroll, true);
-			if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True) || ($enrollment_status == 0)){
+			if(($prof_id == $user_id) || ($is_admin["is_admin"] == True) || ($enrollment_status == 0)){
 			?>
 
               <div class="large-12 medium-12 small-12 cell">
@@ -371,7 +371,7 @@ include 'callouts.html';
 											<input class="grade-number" type="number" name="grade" min=0 max=100 placeholder= "0" value=<?php echo $curr_stud["grade"] ?>>
 											<p class="grade-total" style="">/100</p>
 											<input type="hidden" name="submit" value="submit_grade">
-											<input class="button expanded submit-button" type="submit" value="Submit Grade">
+											<input class="button expanded submit-button subGrade" type="submit" value="Submit Grade">
 										  </td>
                                       </form>
 										<?php } ?>
@@ -520,6 +520,32 @@ include 'callouts.html';
         });
 
     }
+	
+	//AJAX for submit Grade
+    $('.subGrade').on('click', function () {
+        var action = "";
+        
+        //Make the request
+        var success = $.ajax({
+            type: 'POST',
+            data: {'action': 'submitGrade', 'user_id' : "<?php echo $user_id;?>", 'class_id' : <?php echo $class_id;?>, 'submitGrade' : action},
+            url: 'user_ajax_funcs.php',
+            success: function (data) {
+                if (data.includes("Success")) {
+                    showMessage("success", data);
+                    return true;
+                }
+                else {
+                    showMessage("failure", data);
+                    return false;
+                }
+            },
+            error: function (msg) {
+                console.log(msg.responseText);
+                return false;
+            }
+        });
+	
 
 </script>
 
