@@ -45,7 +45,7 @@
 19. [Check Favorite Status](#CheckFavoriteStatus)
 20. [Favorite Class](#FavoriteClass)
 21. [Unfavorite Class](#UnfavoriteClass)
-22. [Get GPA](#GetGPA)
+22. [Set GPA](#SetGPA)
 23. [Get Waitlist By Class](#WaitlistByClass)
 24. [Get Current Semester](#GetCurrentSemester)
 25. [Get Semesters](#GetSemesters)
@@ -364,7 +364,7 @@ Gets the professor name associated with the professor ID
 
 <a name="GetUserIDFromLinkedInID"/>
 
-### Get User ID From LinlkedIn ID
+### Get User ID From LinkedIn ID
 
 Gets a user ID based on a provided LinkedIn authenticatiopn ID
 
