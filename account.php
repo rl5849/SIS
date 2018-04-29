@@ -261,11 +261,12 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
 
         ?>
     </div>
+        <?php
+        if(!$is_admin["is_admin"]){
+        ?>
         <div class="grid-x grid-padding-x" style="padding-top: 2%;">
           <div class="large-12 medium-12 small-12 columns">
-              <?php
-              if(!$is_admin["is_admin"]){
-              ?>
+
 			  <ul class="horizontal tabs" data-tabs id="course-tabs">
               
                 <li class="tabs-title"><a href="#panel1v" aria-selected="true" onclick="load_class_table('favs')">Favorites</a></li>
