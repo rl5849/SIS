@@ -116,10 +116,12 @@ include 'callouts.html';
         $enrolled_students = file_get_contents("http://127.0.0.1:5002/GetStudentsByClassId?class_id=" . $class_id);
         $enrolled_students = json_decode($enrolled_students, true);
 
+        
+        $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
+        $prerequisites = json_decode($prerequisites, true);
+        $prerequisites = $prerequisites["prereqs"];
+
         if($is_student){
-            $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
-            $prerequisites = json_decode($prerequisites, true);
-            $prerequisites = $prerequisites["prereqs"];
 
             $meetsPrereq = array();
             foreach ($prerequisites as $prereq){
