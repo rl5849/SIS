@@ -42,6 +42,9 @@ if (isset($_POST["action"])){
         case "reset_privileges":
             reset_privileges();
             break;
+        case "add_prereq":
+            add_prereq();
+            break;
         case "get_student_classes_by_semester":
             if ($_POST['semester_id'] === 'favs'){
                 get_student_favs();
@@ -98,26 +101,34 @@ function add_course() {
 }
 
 function add_prereq(){
-    $url_params = urlencode($_POST['course_id']) . "&prereq_type=" . urlencode($_POST['prereq_type']);
-    if ($_POST['prereq_type'] == 0){
-        $url_params += "&year_level=" . urlencode($_POST['year']);
+    if ($_POST['year_level'] != "none"){
+        $url_params = urlencode($_POST['course_id']) . "&prereq_type=1&year_level=" . urlencode($_POST['year']);
+        $result = file_get_contents("http://127.0.0.1:5002/AddPrereqs?course_id=" . $url_params);
+        $result = json_decode($result, true);
+        if ($result == "SUCCESS"){
+            echo "Successfully added prereq: Year Level";
+        }
+        else{
+            echo "Failed to add prereq: Year Level";
+        }
     }
-    else if ($_POST['prereq_type'] == 1){
-        $url_params += "&program=" . urlencode($_POST['major']);
-    }
-    else if ($_POST['prereq_type'] == 2){
-        $url_params += "&prereq_course=" . urlencode($_POST['prereq_course']);
-    }
-    $result = file_get_contents("http://127.0.0.1:5002/AddPrereqs?course_id=" . $url_params);
-    $result = json_decode($result, true);
-    if ($result == "SUCCESS"){
-        echo "Successfully added prereq";
+    if ($_POST['major'] != "none"){
+        $url_params = urlencode($_POST['course_id']) . "&prereq_type=0&program=" . urlencode($_POST['major']);
+        $result = file_get_contents("http://127.0.0.1:5002/AddPrereqs?course_id=" . $url_params);
+        $result = json_decode($result, true);
+        if ($result == "SUCCESS"){
+            echo "Successfully added prereq: Major";
+        }
+        else{
+            echo "Failed to add prereq: Major";
+        }
     }
     else{
-        echo "Failed to add prereq";
+        echo "No prereqs to add";
     }
 
 }
+
 function delete_course() {
 
     $url_params = $_POST['course_id'];
