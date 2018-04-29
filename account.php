@@ -325,12 +325,11 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
       });
       function load_class_table(semester){
 		  var myuser;
-		  <?php if($if_prof["is_prof"]) { ?>
-					 myuser = "prof";
-			<?php	} ?>
-			<?php else{ ?>
-					myuser = "stud";
-			<?php } ?>
+		  <?php if($is_prof["is_prof"]) {
+					 echo "myuser = 'prof'";
+			}else{
+                echo "myuser = 'stud'";
+          } ?>
 			
 				
 		  
