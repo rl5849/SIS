@@ -12,74 +12,13 @@ class SetupGetClasses(unittest.TestCase):
 		self.data = json.load(self.response)
 		self.classes = self.data.get("classes")  # Change to 'classes'
 
-
 class TestGetClasses(SetupGetClasses):
-
-	"""
-	data =
-{
-    "classs": [
-        {
-            "num_enrolled": 0,
-            "capacity": 23,
-            "name": "Beers of the World",
-            "class_id": 3,
-            "professor_id": 1,
-            "section": 1,
-            "room_number": 1,
-            "credits": null,
-            "time": null,
-            "course_id": 1
-        },
-        {
-            "num_enrolled": 0,
-            "capacity": 23,
-            "name": "Beers of the World",
-            "class_id": 4,
-            "professor_id": 1,
-            "section": 2,
-            "room_number": 1,
-            "credits": null,
-            "time": null,
-            "course_id": 1
-        },
-        {
-            "num_enrolled": 4,
-            "capacity": 54,
-            "name": "Web Eng.",
-            "class_id": 5,
-            "professor_id": 1,
-            "section": 1,
-            "room_number": 3,
-            "credits": null,
-            "time": null,
-            "course_id": 2
-        },
-        {
-            "num_enrolled": 4,
-            "capacity": 54,
-            "name": "Art",
-            "class_id": 6,
-            "professor_id": 1,
-            "section": 1,
-            "room_number": 3,
-            "credits": null,
-            "time": null,
-            "course_id": 3
-        }
-    ]
-}
-	"""
-	
-	#def test_print(self):
-	#	print (json.dumps(self.data, indent=4))
 
 	def test_unique_ids(self):
 		ids = []
 		for class_id in self.classes:
 			ids.append(class_id.get("class_id"))
 		self.assertEqual(len(class_id), len(set(class_id)))
-
 
 class SetupGetClassInfo(unittest.TestCase):
 	def setUp(self):
@@ -88,27 +27,8 @@ class SetupGetClassInfo(unittest.TestCase):
 		self.data = json.load(self.response)
 		self.class_info = self.data.get("class_info")[0]
 
-
 class TestGetClassInfo(SetupGetClassInfo):
 
-	"""
-	data =?
-{
-	class_info[
-	 {
-            "num_enrolled": 4,
-            "capacity": 54,
-            "name": "Web Eng.",
-            "class_id": 5,
-            "professor_id": 1,
-            "section": 1,
-            "room_number": 3,
-            "credits": null,
-            "time": null,
-            "course_id": 2
-        }
-	]
-	"""
 	#def test_print(self):
 	#	print (json.dumps(self.data, indent=4))
 
@@ -132,7 +52,6 @@ class TestGetClassInfo(SetupGetClassInfo):
 		name = self.class_info.get("name")
 		self.assertEqual(name, "Web Engineering",
 					"Expected 'Web Engineering', Found '" + str(name) + "'")
-
 
 class TestAddClass(unittest.TestCase):
 
@@ -165,7 +84,6 @@ class TestFavoriteClass(unittest.TestCase):
 					"Expected '" + str(api.SUCCESS_MESSAGE) + 
 					"', Found '" + str(data) + "'")
 
-
 class TestUnfavoriteClass(unittest.TestCase):
 
 	def test_unfavorite_success(self):
@@ -176,24 +94,6 @@ class TestUnfavoriteClass(unittest.TestCase):
 					"Expected '" + str(api.SUCCESS_MESSAGE) + 
 					"', Found '" + str(data) + "'")
 
-class SetupGetFavoritedClasses(unittest.TestCase):  # Not implemented yet
-	
-	def setUp(self):
-		self.url = "http://127.0.0.1:5002/GetFavoritedClasses"
-		self.response = urllib2.urlopen(self.url)
-		self.data = json.load(self.response)
-
-
-class TestGetFavoritedClasses(SetupGetFavoritedClasses):
-
-	# def test_print(self):
-	# 	print (json.dumps(self.data, indent=4))
-
-	def test_failure_message(self):
-		self.assertEqual(self.data, api.FAILURE_MESSAGE,
-					"Expected '" + str(api.FAILURE_MESSAGE) + 
-					"', Found '" + str(self.data) + "'")
-
 class TestWaitlistByClass(unittest.TestCase):
 
 	def test_waitlist(self):
@@ -202,6 +102,93 @@ class TestWaitlistByClass(unittest.TestCase):
 		data = json.load(response)
 		self.assertEqual(not data, True,
 						 "Expected 'false', Found '" + str(not data) + "'")
+
+################# NEW TESTS ##############
+class SetupGetClassInfo(unittest.TestCase):
+	def setUp(self):
+		self.url = "http://127.0.0.1:5002/GetClassInfo?class_id=6"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.info = self.data.get("class_info")
+		#print (json.dumps(self.data, indent=4))
+
+class TestGetClassInfo(SetupGetClassInfo):	
+	
+	def test_one_class(self):
+		self.assertEqual(len(self.info), 1,
+						"Expected '1', Found '" + str(len(self.info)) + "'")
+	
+	def test_return_format(self):
+		course = self.info[0]
+		self.assertTrue("num_enrolled" in course)
+		self.assertTrue("semester_id" in course)
+		self.assertTrue("capacity" in course)
+		self.assertTrue("name" in course)
+		self.assertTrue("class_id" in course)
+		self.assertTrue("professor_id" in course)
+		self.assertTrue("section" in course)
+		self.assertTrue("room_number" in course)
+		self.assertTrue("credits" in course)
+		self.assertTrue("time" in course)
+		self.assertTrue("course_id" in course)
+
+class SetupGetStudentsByClassId(unittest.TestCase):
+	def setUp(self):
+		self.url = "http://127.0.0.1:5002/GetStudentsByClassId?class_id=6"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.info = self.data.get("enrolled")
+		#print (json.dumps(self.data, indent=4))
+
+class TestGetStudentsByClassId(SetupGetStudentsByClassId):	
+	
+	def test_atleast_one_enrolled(self):
+		self.assertGreaterEqual(len(self.info), 1,
+						"Expected >= 1, Found '" + str(len(self.info)) + "'")
+	
+	def test_return_format(self):
+		list_info = self.info[0]
+		self.assertTrue("grade" in list_info)
+		self.assertTrue("user_name" in list_info)
+		self.assertTrue("user_id" in list_info)
+
+class SetupGetAccessRequests(unittest.TestCase):
+	def setUp(self):
+		self.url = "http://127.0.0.1:5002/GetAccessRequests?"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.info = self.data.get("requests")
+		#print (json.dumps(self.data, indent=4))
+
+class TestGetAccessRequests(SetupGetAccessRequests):	
+	
+	def test_atleast_one_request(self):
+		self.assertGreaterEqual(len(self.info), 1,
+						"Expected >= 1, Found '" + str(len(self.info)) + "'")
+	
+	def test_return_format(self):
+		list_info = self.info[len(self.info)-1]
+		self.assertTrue("class_name" in list_info)
+		self.assertTrue("section" in list_info)
+		self.assertTrue("request" in list_info)
+		self.assertTrue("time" in list_info)
+		self.assertTrue("course_code" in list_info)
+		self.assertTrue("user_name" in list_info)
+
+class SetupGetStudentAccess(unittest.TestCase):
+	def setUp(self):
+		self.url = "http://127.0.0.1:5002/GetStudentAccess?user_id=309&class_id=6"
+		self.response = urllib2.urlopen(self.url)
+		self.data = json.load(self.response)
+		self.info = self.data.get("requests")
+		#print (json.dumps(self.data, indent=4))
+
+class TestGetStudentAccess(SetupGetStudentAccess):	
+	
+	def test_atleast_one_request(self):
+		self.assertGreaterEqual(len(self.info), 1,
+						"Expected >= 1, Found '" + str(len(self.info)) + "'")
+
 
 if __name__ == '__main__':
 	unittest.main()

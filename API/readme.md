@@ -5,60 +5,59 @@
 ### [**User/Student**](#UserStudent)
 
 1. [Get Student](#GetStudentInfo)
-2. [Get Student's Classes For Semester](#GetStudentsClassesForSemester) Needs Implementation
+2. [Get Student's Classes For Semester](#GetStudentsClassesForSemester)
 3. [Add User](#AddUser) Needs Implementation
-4. [Check if User Exists](#UserExists) Needs Implementation
+4. [Check if User Exists](#UserExists)
 5. [Modify Profile](#ModProfile)
 6. [Request Professor Approval](#RequestProfessorApproval)
-7. [Delete Professor Request](#DeleteProfRequest) Needs Implementation
-8. [Get Professor Requests](#GetProfessorRequests) Needs Implementation
+7. [Delete Professor Request](#DeleteProfRequest)
+8. [Get Professor Requests](#GetProfessorRequests)
 9. [Approve Professor Request](#ApproveProfRequest) Needs Implementation
 10. [Get Professors](#GetProfs)
 11. [Get Professor By ID](#GetProfessorByID)
 12. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
-13. [Get User ID from Login](#GetUserIDFromLogin) Needs Implementation
-14. [Check if Admin](#CheckIfAdmin) Needs Implementation
-15. [Check if Professor](#CheckIfProfessor) Needs Implementation
-16. [Make Admin](#MakeAdmin) Needs Implementation
+13. [Get User ID from Login](#GetUserIDFromLogin)
+14. [Check if Admin](#CheckIfAdmin)
+15. [Check if Professor](#CheckIfProfessor)
+16. [Make Admin](#MakeAdmin)
 17. [Create Login](#CreateLogin) Needs Implementation
-18. [Get Users](#GetUsers) Needs Implementation
-19. [Get Prerequisites](#GetPrereqs) Needs Implementation
-20. [Check Prerequisite](#CheckPrereq) Needs Implementation
-21. [Add Prerequisites](#AddPrereqs) Needs Implementation
-22. [Delete Prerequisite](#DeletePrereq) Needs Implementation
+18. [Get Users](#GetUsers)
 
 ### [**Courses/Classes**](#CoursesClasses)
 
-1. [Get Course List](#GetCourseList) Needs Implementation
+1. [Get Course List](#GetCourseList)
 2. [Get Course(s)](#GetCourses)
 3. [Get Class(es)](#GetClasses)
-4. [Get Course Info](#GetCourseInfo) Needs Implementation
-5. [Get Class Info](#GetClassInfo) Needs Implementation
+4. [Get Course Info](#GetCourseInfo)
+5. [Get Class Info](#GetClassInfo)
 6. [Modify Course](#ModCourse)
 7. [Modify Class](#ModClass)
 8. [Add Class](#AddClass) Needs Implementation
 9. [Add Course](#AddCourse) Needs Implementation
 10. [Delete Class](#DeleteClass) Needs Implementation
 11. [Delete Course](#DeleteCourse) Needs Implementation
-12. [Get Student's Classes](#GetStudentsClasses)
-13. [Get Students By Class ID](#GetStudentsByClassId) Needs Implementation
-14. [Enroll Student](#EnrollStudent)
-15. [Enroll Students From Waitlist](#EnrollFromWaitlist) Needs Implementation
-16. [Drop Student](#DropStudent)
-17. [Check Enrollment Status](#CheckEnrollmentStatus) Needs Implementation
-18. [Get Favorite Classes](#GetFavoritedClasses)
-19. [Check Favorite Status](#CheckFavoriteStatus) Needs Implementation
-20. [Favorite Class](#FavoriteClass)
-21. [Unfavorite Class](#UnfavoriteClass)
-22. [Get GPA](#GetGPA) Needs Implementation
-23. [Get Waitlist By Class](#WaitlistByClass)
-24. [Get Current Semester](#GetCurrentSemester)
-25. [Get Semesters](#GetSemesters) Needs Implementation
-26. [Add Semester](#AddSemester) Needs Implementation
-27. [Request Special Access](#RequestSpecialAccess) Needs Implementation
-28. [Get Access Requests](#GetAccessRequests) Needs Implementation
-29. [Get Student Access](#GetStudentAccess) Needs Implementation
-30. [Get Majors](#GetMajors) Needs Implementation
+12. [Get Students By Class ID](#GetStudentsByClassId)
+13. [Enroll Student](#EnrollStudent)
+14. [Enroll Students From Waitlist](#EnrollFromWaitlist)
+15. [Drop Student](#DropStudent)
+16. [Check Enrollment Status](#CheckEnrollmentStatus)
+17. [Get Favorite Classes](#GetFavoritedClasses) Needs Stuff
+18. [Check Favorite Status](#CheckFavoriteStatus)
+19. [Favorite Class](#FavoriteClass)
+20. [Unfavorite Class](#UnfavoriteClass)
+21. [Get GPA](#GetGPA) Needs Implementation
+22. [Get Waitlist By Class](#WaitlistByClass)
+23. [Get Current Semester](#GetCurrentSemester)
+24. [Get Semesters](#GetSemesters)
+25. [Add Semester](#AddSemester) Needs Implementation
+26. [Request Special Access](#RequestSpecialAccess) Needs Implementation
+27. [Get Access Requests](#GetAccessRequests)
+28. [Get Student Access](#GetStudentAccess) Needs Implementation
+29. [Get Majors](#GetMajors)
+30. [Get Prerequisites](#GetPrereqs)
+31. [Check Prerequisite](#CheckPrereq)
+32. [Add Prerequisites](#AddPrereqs) Needs Implementation
+33. [Delete Prerequisite](#DeletePrereq) Needs Implementation
 
 <a name="UserStudent"/>
 
@@ -84,13 +83,16 @@ Gets information about a student
 ```
 { "student_info" : [
     {
-        "profile_pic" : url
-        "major" : string
-        "gender" : string
-        "graduation_year" : string
-        "date_of_birth" : string
+        "profile_pic" : url,
+        "major" : str,
+        "gender" : str,
+        "GPA" : int,
+        "prof_requested" : int,
+        "date_of_birth" : str,
+        "major_name" : str,
+        "graduation_year" : str,
+        "student_name" : str,
         "student_id" : int
-        "student_name" : string
     }]
 }
 ```
@@ -113,8 +115,25 @@ Gets a student's classes for a given semester
 `semester_id` : The ID of the semester
 
 #### Return
-TODO
+
 ```
+{
+    "classes": [
+        {
+            "name": str,
+            "class_id": int,
+            "section": int,
+            "room_number": int,
+            "professor_name": str,
+            "grade": str,
+            "time": str,
+            "course_id": int
+        },
+        .
+        .
+        .
+    ]
+}
 ```
 
 <!-- End Get Student's Classes for Semester -->
@@ -203,7 +222,7 @@ Flags the specified account as awaiting approval for becoming a professor
 
 #### Parameters
 
-None at the moment
+`user_id` : ID of account awaiting approval
 
 #### Return
 
@@ -226,7 +245,7 @@ Deletes the request for a specific professor
 
 #### Parameters
 
-`user_id` : ID of user to professor request
+`user_id` : ID of user to delete professor request
 
 #### Return
 
@@ -517,118 +536,6 @@ None
 ```
 
 <!-- End Get Users-->
-<!-- Start Get Prerequisites-->
-
-<a name="GetPrereqs"/>
-
-### Get Prerequisites
-
-Gets all prerequisites for a given course
-
-#### Endpoint
-
-`/GetPrereqs`
-
-#### Parameters
-
-`course_id` : ID of course to get prerequisites for
-
-#### Return
-
-```
-{
-    "prereqs": [
-        {
-            "program_of_enrollment": string,
-            "year_level": int,
-            "prereq_id": int,
-            "prereq_course": string,
-            "major_name": string,
-            "prereq_course_id": int,
-            "type": int
-        },
-        .
-        .
-        .
-    ]
-}
-```
-
-<!-- End Get Prerequisites-->
-<!-- Start Check Prerequisite-->
-
-<a name="CheckPrereq"/>
-
-### Check Prerequisite
-
-Checks if a student fulfills a specific prerequisite
-
-#### Endpoint
-
-`/CheckPrereq`
-
-#### Parameters
-
-`student_id` : ID of student to be checked  
-`prereq_id` : ID of prerequisite to be checked
-
-#### Return
-
-```
-{ "meets_prereq" : boolean }
-```
-
-<!-- End Check Prerequisite-->
-<!-- Start Add Prerequisites-->
-
-<a name="AddPrereqs"/>
-
-### Add Prerequisites
-
-Adds prerequisites to a course
-
-#### Endpoint
-
-`/AddPrereqs`
-
-#### Parameters
-  
-`course_id` : ID of course to add prerequisite to  
-`type` : Type of prerequisite  
-`program` : Program that prerequisite is for  
-`year_level` : Required year level  
-`prereq_course` : ID of prerequisite course
-
-#### Return
-
-| Success            | Failure            |
-| ------------------ | ------------------ |
-| `'SUCCESS'`        | `'FAILURE'`  |
-
-<!-- End Add Prerequisites-->
-<!-- Start Delete Prerequisite-->
-
-<a name="DeletePrereq"/>
-
-### Delete Prerequisite
-
-Checks if a student fulfills a specific prerequisite
-
-#### Endpoint
-
-`/DeletePrereq`
-
-#### Parameters
-  
-`prereq_id` : ID of prerequisite to be deleted
-
-#### Return
-
-| Success            | Failure            |
-| ------------------ | ------------------ |
-| `'SUCCESS'`        | `'FAILURE'`  |
-
-<!-- End Delete Prerequisite-->
 <!-- Start Courses Classes -->
 <a name="CoursesClasses"/>
 
@@ -763,7 +670,7 @@ Get course of a specified ID
 
 ```
 {
-    "courses": [
+    "course_info": [
         {
             "course_id": int,
             "credits": int,
@@ -812,7 +719,6 @@ Returns information for a specified class
             "credits": int,
             "time": string,
             "course_id": int
-
         },
         .
         .
@@ -1446,12 +1352,7 @@ Gets a student's access requests for a class
 {
     "requests": [
         {
-            "class_name": string,
-            "section": int,
-            "request": string,
-            "time": string,
-            "course_code": string,
-            "user_name": string
+            "request": string
         },
         .
         .
@@ -1492,4 +1393,115 @@ None
 }
 
 <!-- End Get Majors -->
+<!-- Start Get Prerequisites-->
 
+<a name="GetPrereqs"/>
+
+### Get Prerequisites
+
+Gets all prerequisites for a given course
+
+#### Endpoint
+
+`/GetPrereqs`
+
+#### Parameters
+
+`course_id` : ID of course to get prerequisites for
+
+#### Return
+
+```
+{
+    "prereqs": [
+        {
+            "program_of_enrollment": string,
+            "year_level": int,
+            "prereq_id": int,
+            "prereq_course": string,
+            "major_name": string,
+            "prereq_course_id": int,
+            "type": int
+        },
+        .
+        .
+        .
+    ]
+}
+```
+
+<!-- End Get Prerequisites-->
+<!-- Start Check Prerequisite-->
+
+<a name="CheckPrereq"/>
+
+### Check Prerequisite
+
+Checks if a student fulfills a specific prerequisite
+
+#### Endpoint
+
+`/CheckPrereq`
+
+#### Parameters
+
+`student_id` : ID of student to be checked  
+`prereq_id` : ID of prerequisite to be checked
+
+#### Return
+
+```
+{ "meets_prereq" : boolean }
+```
+
+<!-- End Check Prerequisite-->
+<!-- Start Add Prerequisites-->
+
+<a name="AddPrereqs"/>
+
+### Add Prerequisites
+
+Adds prerequisites to a course
+
+#### Endpoint
+
+`/AddPrereqs`
+
+#### Parameters
+  
+`course_id` : ID of course to add prerequisite to  
+`type` : Type of prerequisite  
+`program` : Program that prerequisite is for  
+`year_level` : Required year level  
+`prereq_course` : ID of prerequisite course
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`  |
+
+<!-- End Add Prerequisites-->
+<!-- Start Delete Prerequisite-->
+
+<a name="DeletePrereq"/>
+
+### Delete Prerequisite
+
+Checks if a student fulfills a specific prerequisite
+
+#### Endpoint
+
+`/DeletePrereq`
+
+#### Parameters
+  
+`prereq_id` : ID of prerequisite to be deleted
+
+#### Return
+
+| Success            | Failure            |
+| ------------------ | ------------------ |
+| `'SUCCESS'`        | `'FAILURE'`  |
+
+<!-- End Delete Prerequisite-->
