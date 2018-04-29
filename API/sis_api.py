@@ -1169,15 +1169,15 @@ class setGrade(Resource):
         # Get Student info
         parser = reqparse.RequestParser()
         parser.add_argument('student_id', type=int)
-		parser.add_argument('class_id', type=int)
-		parser.add_argument('grade',type=int)
-		
+        parser.add_argument('class_id', type=int)
+        parser.add_argument('grade',type=int)
+
         parsed = parser.parse_args()
 
         student_id = parsed.get("student_id")
-		class_id = parsed.get("class_id")
-		grade = parsed.get("grade")
-)
+        class_id = parsed.get("class_id")
+        grade = parsed.get("grade")
+
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
@@ -2175,9 +2175,9 @@ class GetClassesByProfId(Resource):
         # Get class id
         parser = reqparse.RequestParser()
         parser.add_argument('prof_id', type=int)
-		parser.add_argument('semester_id', type=int)
+        parser.add_argument('semester_id', type=int)
         prof_id = parser.parse_args().get("prof_id")
-		semester_id = parser.parse_args().get("semester_id")
+        semester_id = parser.parse_args().get("semester_id")
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
@@ -2185,26 +2185,26 @@ class GetClassesByProfId(Resource):
                              db=self.config.get('database', 'dbname'))
 
         cur = db.cursor()
-		
-		# Select data from table using SQL query.
 
-		cur.execute("SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number FROM classes "
-					"WHERE professor_id = %s "
-					"AND semester_id = %s"
-					"ORDER BY classes.name",
-					[prof_id],[semester_id])
-		query = cur.fetchall()
+        # Select data from table using SQL query.
 
-		
-		column_names= ["class_id", "course_id", "name", "section", "time", "room_number"]
-		
-		result = {'classes': [dict(zip(
+        cur.execute("SELECT classes.class_id, classes.course_id, classes.name, classes.section, classes.time, classes.room_number FROM classes "
+                    "WHERE professor_id = %s "
+                    "AND semester_id = %s"
+                    "ORDER BY classes.name",
+                    [prof_id],[semester_id])
+        query = cur.fetchall()
+
+
+        column_names= ["class_id", "course_id", "name", "section", "time", "room_number"]
+
+        result = {'classes': [dict(zip(
         column_names_clean, i)) for i in query]}
 
         cur.close()
         return jsonify(result)
 
-api.add_resource(GetClassInfo, '/GetClassInfo')
+api.add_resource(GetClassesByProfId, '/GetClassesByProfId')
 
 """
 Get Student class by student_id and semeseter code
