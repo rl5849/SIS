@@ -548,7 +548,7 @@ include 'callouts.html';
             }
 		})
         });
-	}
+	
 	
 
 </script>
