@@ -106,10 +106,10 @@ function add_prereq(){
         $result = file_get_contents("http://127.0.0.1:5002/AddPrereqs?course_id=" . $url_params);
         $result = json_decode($result, true);
         if ($result == "SUCCESS"){
-            echo "Successfully added prereq: Year Level";
+            echo "Successfully added prereq: Year Level<br>";
         }
         else{
-            echo "Failed to add prereq: Year Level";
+            echo "Failed to add prereq: Year Level<br>";
         }
     }
     if ($_POST['major'] != "none"){
@@ -117,10 +117,10 @@ function add_prereq(){
         $result = file_get_contents("http://127.0.0.1:5002/AddPrereqs?course_id=" . $url_params);
         $result = json_decode($result, true);
         if ($result == "SUCCESS"){
-            echo "Successfully added prereq: Major";
+            echo "Successfully added prereq: Major<br>";
         }
         else{
-            echo "Failed to add prereq: Major";
+            echo "Failed to add prereq: Major<br>";
         }
     }
     else{
