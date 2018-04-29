@@ -36,28 +36,28 @@
 9. [Add Course](#AddCourse) Needs Implementation
 10. [Delete Class](#DeleteClass) Needs Implementation
 11. [Delete Course](#DeleteCourse) Needs Implementation
-13. [Get Students By Class ID](#GetStudentsByClassId)
-14. [Enroll Student](#EnrollStudent)
-15. [Enroll Students From Waitlist](#EnrollFromWaitlist)
-16. [Drop Student](#DropStudent)
-17. [Check Enrollment Status](#CheckEnrollmentStatus)
-18. [Get Favorite Classes](#GetFavoritedClasses) Needs Stuff
-19. [Check Favorite Status](#CheckFavoriteStatus)
-20. [Favorite Class](#FavoriteClass)
-21. [Unfavorite Class](#UnfavoriteClass)
-22. [Get GPA](#GetGPA) Needs Implementation
-23. [Get Waitlist By Class](#WaitlistByClass)
-24. [Get Current Semester](#GetCurrentSemester)
-25. [Get Semesters](#GetSemesters)
-26. [Add Semester](#AddSemester) Needs Implementation
-27. [Request Special Access](#RequestSpecialAccess) Needs Implementation
-28. [Get Access Requests](#GetAccessRequests)
-29. [Get Student Access](#GetStudentAccess) Needs Implementation
-30. [Get Majors](#GetMajors)
-31. [Get Prerequisites](#GetPrereqs)
-32. [Check Prerequisite](#CheckPrereq)
-33. [Add Prerequisites](#AddPrereqs) Needs Implementation
-34. [Delete Prerequisite](#DeletePrereq) Needs Implementation
+12. [Get Students By Class ID](#GetStudentsByClassId)
+13. [Enroll Student](#EnrollStudent)
+14. [Enroll Students From Waitlist](#EnrollFromWaitlist)
+15. [Drop Student](#DropStudent)
+16. [Check Enrollment Status](#CheckEnrollmentStatus)
+17. [Get Favorite Classes](#GetFavoritedClasses) Needs Stuff
+18. [Check Favorite Status](#CheckFavoriteStatus)
+19. [Favorite Class](#FavoriteClass)
+20. [Unfavorite Class](#UnfavoriteClass)
+21. [Get GPA](#GetGPA) Needs Implementation
+22. [Get Waitlist By Class](#WaitlistByClass)
+23. [Get Current Semester](#GetCurrentSemester)
+24. [Get Semesters](#GetSemesters)
+25. [Add Semester](#AddSemester) Needs Implementation
+26. [Request Special Access](#RequestSpecialAccess) Needs Implementation
+27. [Get Access Requests](#GetAccessRequests)
+28. [Get Student Access](#GetStudentAccess) Needs Implementation
+29. [Get Majors](#GetMajors)
+30. [Get Prerequisites](#GetPrereqs)
+31. [Check Prerequisite](#CheckPrereq)
+32. [Add Prerequisites](#AddPrereqs) Needs Implementation
+33. [Delete Prerequisite](#DeletePrereq) Needs Implementation
 
 <a name="UserStudent"/>
 
