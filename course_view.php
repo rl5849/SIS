@@ -344,7 +344,7 @@ include 'callouts.html';
 								  <?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 									<th align="left">Status</th>
 								  <?php } ?>
-								  <?php if(($is_prof["is_prof"] == True && (prof_id == user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
+								  <?php if(($is_prof["is_prof"] == True && ($prof_id == $user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
                                   <th align="left">Grade</th>
 								  <?php } ?>
                               </tr>
