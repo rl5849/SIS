@@ -26,6 +26,16 @@ else{
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/foundation-icons.css">
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118378709-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-118378709-1');
+    </script>
+
 </head>
 <body>
 
@@ -181,11 +191,9 @@ else{
                 $.ajax({
                     type: 'POST',
                     data: $(this).serialize(),
-                    // dataType : 'json',
-                    // contentType: "application/x-www-form-urlencoded",
                     url: 'admin_ajax_funcs.php',
                     success: function (data) {
-                        if (data.includes("success")) {
+                        if (data.includes("approval successful")) {
                             showMessage("success", data);
                             load_prof_requests();
                         }
@@ -197,9 +205,6 @@ else{
                         console.log(msg.responseText);
                     }
                 });
-
-
-
         });
 
         });
