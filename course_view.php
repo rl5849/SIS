@@ -545,6 +545,7 @@ include 'callouts.html';
                 return false;
             }
         });
+	}
 	
 
 </script>
