@@ -384,9 +384,9 @@ include 'callouts.html';
 								  $curr_stud = json_decode($curr_stud,true);
 								  ?>
 									<tr>
-										<td src =<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>></td>
+										<td><img src ='<?php echo $curr_stud["student_info"][0]["profile_pic"] ?>' onerror="this.src='images/user_profile_placeholder.png'"></td>
 										<td><?php echo $curr_stud["student_info"][0]["student_name"] ?></td>
-										<td><?php echo $curr_stud["student_info"][0]["major"] ?></td>
+										<td><?php echo ($curr_stud["student_info"][0]["major_name"] ? $curr_stud["student_info"][0]["major_name"]  : "Not Specified"); ?></td>
 										<?php if(($is_prof["is_prof"] == True) || ($is_admin["is_admin"] == True)){ ?>
 											<td>
 												<i class="fi-minus waitlisted-minus"></i>
