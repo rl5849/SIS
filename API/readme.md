@@ -6,13 +6,13 @@
 
 1. [Get Student](#GetStudentInfo)
 2. [Get Student's Classes For Semester](#GetStudentsClassesForSemester)
-3. [Add User](#AddUser) Needs Implementation
+3. [Add User](#AddUser)
 4. [Check if User Exists](#UserExists)
 5. [Modify Profile](#ModProfile)
 6. [Request Professor Approval](#RequestProfessorApproval)
 7. [Delete Professor Request](#DeleteProfRequest)
 8. [Get Professor Requests](#GetProfessorRequests)
-9. [Approve Professor Request](#ApproveProfRequest) Needs Implementation
+9. [Approve Professor Request](#ApproveProfRequest)
 10. [Get Professors](#GetProfs)
 11. [Get Professor By ID](#GetProfessorByID)
 12. [Get User ID from LinkedIn ID](#GetUserIDFromLinkedInID)
@@ -20,7 +20,7 @@
 14. [Check if Admin](#CheckIfAdmin)
 15. [Check if Professor](#CheckIfProfessor)
 16. [Make Admin](#MakeAdmin)
-17. [Create Login](#CreateLogin) Needs Implementation
+17. [Create Login](#CreateLogin)
 18. [Get Users](#GetUsers)
 
 ### [**Courses/Classes**](#CoursesClasses)
@@ -32,32 +32,32 @@
 5. [Get Class Info](#GetClassInfo)
 6. [Modify Course](#ModCourse)
 7. [Modify Class](#ModClass)
-8. [Add Class](#AddClass) Needs Implementation
-9. [Add Course](#AddCourse) Needs Implementation
-10. [Delete Class](#DeleteClass) Needs Implementation
-11. [Delete Course](#DeleteCourse) Needs Implementation
-12. [Get Students By Class ID](#GetStudentsByClassId)
-13. [Enroll Student](#EnrollStudent)
-14. [Enroll Students From Waitlist](#EnrollFromWaitlist)
-15. [Drop Student](#DropStudent)
-16. [Check Enrollment Status](#CheckEnrollmentStatus)
-17. [Get Favorite Classes](#GetFavoritedClasses) Needs Stuff
-18. [Check Favorite Status](#CheckFavoriteStatus)
-19. [Favorite Class](#FavoriteClass)
-20. [Unfavorite Class](#UnfavoriteClass)
-21. [Get GPA](#GetGPA) Needs Implementation
-22. [Get Waitlist By Class](#WaitlistByClass)
-23. [Get Current Semester](#GetCurrentSemester)
-24. [Get Semesters](#GetSemesters)
-25. [Add Semester](#AddSemester) Needs Implementation
-26. [Request Special Access](#RequestSpecialAccess) Needs Implementation
-27. [Get Access Requests](#GetAccessRequests)
-28. [Get Student Access](#GetStudentAccess) Needs Implementation
-29. [Get Majors](#GetMajors)
-30. [Get Prerequisites](#GetPrereqs)
-31. [Check Prerequisite](#CheckPrereq)
-32. [Add Prerequisites](#AddPrereqs) Needs Implementation
-33. [Delete Prerequisite](#DeletePrereq) Needs Implementation
+8. [Add Class](#AddClass)
+9. [Add Course](#AddCourse)
+10. [Delete Class](#DeleteClass)
+11. [Delete Course](#DeleteCourse)
+13. [Get Students By Class ID](#GetStudentsByClassId)
+14. [Enroll Student](#EnrollStudent)
+15. [Enroll Students From Waitlist](#EnrollFromWaitlist)
+16. [Drop Student](#DropStudent)
+17. [Check Enrollment Status](#CheckEnrollmentStatus)
+18. [Get Favorite Classes](#GetFavoritedClasses)
+19. [Check Favorite Status](#CheckFavoriteStatus)
+20. [Favorite Class](#FavoriteClass)
+21. [Unfavorite Class](#UnfavoriteClass)
+22. [Set GPA](#SetGPA)
+23. [Get Waitlist By Class](#WaitlistByClass)
+24. [Get Current Semester](#GetCurrentSemester)
+25. [Get Semesters](#GetSemesters)
+26. [Add Semester](#AddSemester)
+27. [Request Special Access](#RequestSpecialAccess)
+28. [Get Access Requests](#GetAccessRequests)
+29. [Get Student Access](#GetStudentAccess)
+30. [Get Majors](#GetMajors)
+31. [Get Prerequisites](#GetPrereqs)
+32. [Check Prerequisite](#CheckPrereq)
+33. [Add Prerequisites](#AddPrereqs)
+34. [Delete Prerequisite](#DeletePrereq)
 
 <a name="UserStudent"/>
 
@@ -258,7 +258,7 @@ Deletes the request for a specific professor
 
 <a name="GetProfessorRequests"/>
 
-### Request Professor Approval
+### Get Professor Requests
 
 Gets all current professor requests
 
@@ -289,7 +289,7 @@ None
 
 <a name="ApproveProfRequest"/>
 
-### Request Professor Approval
+### Approve Professor Request
 
 Approves the request for a specific professor
 
@@ -364,7 +364,7 @@ Gets the professor name associated with the professor ID
 
 <a name="GetUserIDFromLinkedInID"/>
 
-### Get User ID From LinlkedIn ID
+### Get User ID From LinkedIn ID
 
 Gets a user ID based on a provided LinkedIn authenticatiopn ID
 

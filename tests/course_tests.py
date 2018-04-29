@@ -50,7 +50,6 @@ class TestModCourse(unittest.TestCase):
 					"Expected '" + str(api.SUCCESS_MESSAGE) + 
 					"', Found '" + str(data) + "'")
 
-################# NEW TESTS ######################
 class SetupGetPrereqs(unittest.TestCase):
 	def setUp(self):
 		self.url = "http://127.0.0.1:5002/GetPrereqs?course_id=1"

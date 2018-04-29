@@ -4,6 +4,12 @@ import unittest
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/API")
 import sis_api as api
+from admin_tests import *
+from class_tests import *
+from course_tests import *
+from professor_tests import *
+from student_tests import *
+from user_tests import *
 
 class TestCheckEnrollmentStatus(unittest.TestCase):
 

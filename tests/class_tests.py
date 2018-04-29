@@ -103,7 +103,6 @@ class TestWaitlistByClass(unittest.TestCase):
 		self.assertEqual(not data, True,
 						 "Expected 'false', Found '" + str(not data) + "'")
 
-################# NEW TESTS ##############
 class SetupGetClassInfo(unittest.TestCase):
 	def setUp(self):
 		self.url = "http://127.0.0.1:5002/GetClassInfo?class_id=6"

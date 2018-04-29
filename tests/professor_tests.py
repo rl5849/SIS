@@ -15,7 +15,6 @@ class TestGetProfs(unittest.TestCase):
 		self.assertGreaterEqual(len(profs), 1,
 						 "Expected >= 1, Found '" + str(len(profs)) + "'")
 
-
 class TestGetProfessorByID(unittest.TestCase):
 
 	def test_prof_name(self):
@@ -26,7 +25,6 @@ class TestGetProfessorByID(unittest.TestCase):
 		self.assertEqual(prof_name, "Dan Krutz",
 						 "Expected 'false', Found '" + str(prof_name) + "'")
 
-############################################# NEW TESTS ####################
 class SetupRequestProfessorApproval(unittest.TestCase):
 	def setUp(self):
 		self.url = "http://127.0.0.1:5002/RequestProfessorApproval?user_id=309"

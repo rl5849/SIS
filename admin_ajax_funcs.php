@@ -102,7 +102,7 @@ function add_course() {
 
 function add_prereq(){
     if ($_POST['year_level'] != "none"){
-        $url_params = urlencode($_POST['course_id']) . "&type=1&year_level=" . urlencode($_POST['year']);
+        $url_params = urlencode($_POST['course_id']) . "&prereq_type=1&year_level=" . urlencode($_POST['year']);
         $result = file_get_contents("http://127.0.0.1:5002/AddPrereqs?course_id=" . $url_params);
         $result = json_decode($result, true);
         if ($result == "SUCCESS"){
@@ -113,7 +113,7 @@ function add_prereq(){
         }
     }
     if ($_POST['major'] != "none"){
-        $url_params = urlencode($_POST['course_id']) . "&type=0&program=" . urlencode($_POST['major']);
+        $url_params = urlencode($_POST['course_id']) . "&prereq_type=0&program=" . urlencode($_POST['major']);
         $result = file_get_contents("http://127.0.0.1:5002/AddPrereqs?course_id=" . $url_params);
         $result = json_decode($result, true);
         if ($result == "SUCCESS"){

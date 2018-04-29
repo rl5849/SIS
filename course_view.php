@@ -116,7 +116,7 @@ include 'callouts.html';
         $enrolled_students = file_get_contents("http://127.0.0.1:5002/GetStudentsByClassId?class_id=" . $class_id);
         $enrolled_students = json_decode($enrolled_students, true);
 
-        
+
         $prerequisites = file_get_contents("http://127.0.0.1:5002/GetPrereqs?course_id=" . $class_info["class_info"][0]["course_id"]);
         $prerequisites = json_decode($prerequisites, true);
         $prerequisites = $prerequisites["prereqs"];
@@ -475,13 +475,15 @@ include 'callouts.html';
             action = 0;//0 means you're going to unenroll in the class
         }
         //Make the request
-        var success = $.ajax({
+        var success = false;
+            $.ajax({
             type: 'POST',
             data: {'action': 'enroll', 'user_id' : "<?php echo $user_id;?>", 'class_id' : <?php echo $class_id;?>, 'enroll' : action, 'course_id' : <?php echo $course_id?>},
             url: 'user_ajax_funcs.php',
             success: function (data) {
                 if (data.includes("Success")) {
                     showMessage("success", data);
+                    success = true;
                     return true;
                 }
                 else {
@@ -526,11 +528,16 @@ include 'callouts.html';
 	//AJAX for submit Grade
     $('.subGrade').on('click', function () {
         var action = "";
-        
+
         //Make the request
         var success = $.ajax({
             type: 'POST',
-            data: {'action': 'submitGrade', 'user_id' : "<?php echo $user_id;?>", 'class_id' : <?php echo $class_id;?>, 'submitGrade' : action},
+            data: {
+                'action': 'submitGrade',
+                'user_id': "<?php echo $user_id;?>",
+                'class_id': <?php echo $class_id;?>,
+                'submitGrade': action
+            },
             url: 'user_ajax_funcs.php',
             success: function (data) {
                 if (data.includes("Success")) {
@@ -546,9 +553,8 @@ include 'callouts.html';
                 console.log(msg.responseText);
                 return false;
             }
-		})
         });
-	
+    });
 	
 
 </script>
