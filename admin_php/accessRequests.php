@@ -1,4 +1,4 @@
-<div class="small-12 medium-6 large-4 columns">
+<div class="small-12 medium-6 large-8 columns">
     <!-- Start new form -->
     <form class="callout text-center" method="post">
         <h4>Active Student Access Requests</h4>

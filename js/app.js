@@ -78,22 +78,3 @@ function instantiateFilter(filter_id, listing_names, hide_by_default) {
     // Filters the list if the page was generated with a search_parameter in the filter box
     window.ready = function() {filter_list();};
 }
-/*
-// Transitions the registration pages from the Account creation to the Account information pages
-function transitionRegisterPages() {
-    var register = document.getElementById("register");
-    var accountInfo = document.getElementById("account-info");
-
-    MotionUI.animateOut(register,"slide-out-left", function () {
-        MotionUI.animateIn(accountInfo, "slide-in-right")
-    })
-}
-*/
-// Display profile pic load failure
-function showLoadFail() {
-    $("#load-fail-descriptor").show();
-}
-
-function hideLoadFail() {
-    $("#load-fail-descriptor").hide();
-}

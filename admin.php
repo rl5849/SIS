@@ -65,9 +65,8 @@ else{
                     case "classes":
                         printAdminHeader("Classes");
                         include("admin_php/addClass.php");
-                        include("admin_php/deleteClass.php");
                         include("admin_php/accessRequests.php");
-
+                        include("admin_php/deleteClass.php");
                         break;
                     case "users":
                         printAdminHeader("Users");
@@ -221,7 +220,7 @@ else{
                     $.each(result, function(index, val){
                         for(var i=0; i < val.length; i++){
                             var item = val[i];
-                            buffer+="<tr>\
+                            buffer+="<tr name='course_listing' hidden>\
                                             <td><a href='course_view.php?class_id=" + item.course_id + "'>" + item.name + "</a></td>\
                                             <td>" + item.time + "</td> \
                                             <td> \
@@ -263,7 +262,7 @@ else{
                     $.each(result, function(index, val){
                         for(var i=0; i < val.length; i++){
                             var item = val[i];
-                            buffer+="<tr>\
+                            buffer+="<tr name='course_listing' hidden>\
                                             <td>" + item.course_name + "</a></td>\
                                             <td>" + item.course_code + "</td> \
                                             <td>" + item.course_id + "</td> \
@@ -339,7 +338,7 @@ else{
         // Load the filter for adding a new admin. This does nothing if that element is not loaded on the page
         instantiateFilter("user_filter", "user_listing", true);
         instantiateFilter("user_filter_2", "user_listing_2", true);
-
+        instantiateFilter("course_filter", "course_listing", true)
         </script>
 </body>
 </html>

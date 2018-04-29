@@ -2,7 +2,7 @@
     <form class="callout text-center" method="post">
         <h4>Add a new Admin</h4>
         <div class="floated-label-wrapper">
-            <label for="User">User</label>
+            <label for="user_filter">User</label>
             <input type="text" id="user_filter" name="user_filter" placeholder="User">
         </div>
         <i>Start typing users name to see list</i>
