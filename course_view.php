@@ -369,7 +369,7 @@ include 'callouts.html';
 										<?php } ?>
 										<?php if(($is_prof["is_prof"] == True && ($prof_id == $user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
 										  <td>
-											<form action="post">
+											<form class="ajax" action="post">
 											<input class="grade-number" type="number" name="grade" min=0 max=100 placeholder= "0" value=<?php echo $curr_stud["grade"] ?>>
 											<p class="grade-total" style="">/100</p>
 											<input type="hidden" name="submit" value="submit_grade">
