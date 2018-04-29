@@ -71,6 +71,8 @@ else{
                         printAdminHeader("Courses");
                         include("admin_php/addCourse.php");
                         include("admin_php/deleteCourse.php");
+                        include("admin_php/addPrereq.php");
+
                         break;
                     case "classes":
                         printAdminHeader("Classes");
