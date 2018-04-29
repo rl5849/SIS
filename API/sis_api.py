@@ -1169,15 +1169,15 @@ class setGrade(Resource):
         # Get Student info
         parser = reqparse.RequestParser()
         parser.add_argument('user_id', type=int)
-		parser.add_argument('class_id', type=int)
-		parser.add_argument('grade',type=int)
+        parser.add_argument('class_id', type=int)
+        parser.add_argument('grade',type=int)
 		
         parsed = parser.parse_args()
 
         user_id = parsed.get("user_id")
-		class_id = parsed.get("class_id")
-		grade = parsed.get("grade")
-)
+        class_id = parsed.get("class_id")
+        grade = parsed.get("grade")
+
 
         db = MySQLdb.connect(user=self.config.get('database', 'username'),
                              passwd=self.config.get('database', 'password'),
@@ -1192,7 +1192,7 @@ class setGrade(Resource):
                     "WHERE user_id = %s and class_id= %s",
                     [grade],[user_id],[class_id])
 					
-		try:
+        try:
             db.commit()
         except MySQLdb.IntegrityError:
             return jsonify(FAILURE_MESSAGE)
