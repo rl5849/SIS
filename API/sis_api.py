@@ -1187,10 +1187,11 @@ class setGrade(Resource):
         cur = db.cursor()
 
         # Select data from table using SQL query.
-        cur.execute("UPDATE student_to_class"
+        cur.execute("UPDATE student_to_class "
+                    ""
                     "SET grade = %s "
                     "WHERE student_id = %s and class_id= %s",
-                    [grade],[student_id],[class_id])
+                    [grade, student_id, class_id])
 					
         try:
             db.commit()
