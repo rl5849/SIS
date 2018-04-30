@@ -370,12 +370,15 @@ include 'callouts.html';
 										<?php if(($is_prof["is_prof"] == True && ($prof_id == $user_id)  )|| ($is_admin["is_admin"] == True)) { ?>
 										  <td>
 											<form class="ajax" action="post">
-											<input class="grade-number" type="number" name="grade" min=0 max=100 placeholder= "0" value=<?php echo $curr_stud["grade"] ?>>
-											<p class="grade-total" style="">/100</p>
-											<input type="hidden" name="submit" value="submit_grade">
-											<input class="button expanded submit-button subGrade" type="submit" value="Submit Grade">
-										  </td>
-                                      </form>
+                                                <input class="grade-number" type="number" name="grade" min=0 max=100 placeholder= "0" value=<?php echo $curr_stud["grade"] ?>>
+                                                <input name="action" value="submitGrade" type="hidden">
+                                                <input name="class_id" value="<?php echo $class_id?>" type="hidden">
+                                                <input name="student_id" value="<?php echo $user_id?>" type="hidden">
+                                                <p class="grade-total" style="">/100</p>
+                                                <input class="button expanded submit-button" type="submit" value="Submit Grade">
+                                            </form>
+                                          </td>
+
 										<?php } ?>
 									</tr>
 							  <?php } ?>

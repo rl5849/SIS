@@ -36,7 +36,9 @@ if (isset($_POST["action"])){
         case "RequestProfStatus":
             RequestProfStatus();
             break;
-
+        case "submitGrade":
+            submitGrade();
+            break;
     }
 }
 
@@ -150,11 +152,11 @@ function RequestProfStatus(){
 }
 
 function submitGrade(){
-	$results = file_get_contents("http://127.0.0.1:5002/setGrade?student_id=" .$_POST["student_id"] . "&class_id=".$_POST["class_id"] . "&grade=" .$_POST["grade"]);
+	$results = file_get_contents("http://127.0.0.1:5002/setGrade?student_id=" .$_POST["student_id"] . "&class_id=" . $_POST["class_id"] . "&grade=" . $_POST["grade"]);
 	$results = json_decode($results, true);
 	
 	if ($results == "SUCCESS"){
-        echo "Grade has been Submitted";
+        echo "Successfully submitted grade!";
     }
     else{
         echo "Failed to Submit Grade";

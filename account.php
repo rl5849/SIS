@@ -354,7 +354,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "update-profile") {
                                     <td>" + item.section + "</td> \
                                     <td>" + item.time + "</td> \
                                     <td>" + item.professor_name + "</td> \
-                                    <td>" + item.room_number + "</td> \";
+                                    <td>" + item.room_number + "</td>";
                           if(myuser == "stud"){
 								buffer +="<td>" + grade + "</td>"
 						  }
